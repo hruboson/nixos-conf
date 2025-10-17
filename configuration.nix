@@ -41,8 +41,8 @@ in
 
 	# FONTS
 	fonts.packages = with pkgs; [
-		nerdfonts
-	]
+		pkgs.nerd-fonts.fira-code
+	];
 
 	# LOCALES
 	
