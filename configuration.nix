@@ -72,10 +72,15 @@ in
 		home.stateVersion = "25.05";
 		programs.neovim = {
 			enable = true;
+			package = pkgs.neovim-unwrapped;
+
+			extraConfig = ''
+				set clipboard+=unnamedplus
+			'';
 		};
 
 		home.file.".config/nvim".source = nvimConf;
-		home.packages = [ pkgs.ripgrep pkgs.fzf ];
+		home.packages = [ pkgs.ripgrep pkgs.fzf pkgs.xclip ];
 	};
 
 	# programs.firefox.enable = true;
