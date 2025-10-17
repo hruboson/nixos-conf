@@ -3,103 +3,120 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 { config, lib, pkgs, ... }:
-
+let
+home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz";
+in
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+	imports =
+		[ # Include the results of the hardware scan.
+		./hardware-configuration.nix
+			(import "${home-manager}/nixos")
+		];
 
-  # BOOT
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+# BOOT
+	boot.loader.systemd-boot.enable = true;
+	boot.loader.efi.canTouchEfiVariables = true;
 
-  # HARDWARE
+# HARDWARE
 
-  ## SOUND
-  services.pulseaudio.enable = true;
+## SOUND
+	services.pulseaudio.enable = true;
 
-  ## TOUCHPAD
-  services.libinput.enable = true;
+## TOUCHPAD
+	services.libinput.enable = true;
 
-  # NETWORK
-  networking.hostName = "nixos-vm"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
-  networking.firewall.enable = true;
+# NETWORK
+	networking.hostName = "nixos-vm"; # Define your hostname.
+# networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+		networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+		networking.firewall.enable = true;
 
-  # Enable the OpenSSH daemon and ssh-agent with keys
-  services.openssh.enable = true;
-  programs.ssh.startAgent = true;
+# Enable the OpenSSH daemon and ssh-agent with keys
+	services.openssh.enable = true;
+	programs.ssh.startAgent = true;
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+# Configure network proxy if necessary
+# networking.proxy.default = "http://user:password@proxy:port/";
+# networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # LOCALES
+# LOCALES
 
-  # i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    font = "Lat2-Terminus16";
-    keyMap = "cz-qwertz";
-  };
-  time.timeZone = "Europe/Prague";
+# i18n.defaultLocale = "en_US.UTF-8";
+	console = {
+		font = "Lat2-Terminus16";
+		keyMap = "cz-qwertz";
+	};
+	time.timeZone = "Europe/Prague";
 
-  # USERS
-  users.users.hruboson = { # Define a user account. Don't forget to set a password with ‘passwd’.
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [];
-  };
+# USERS
+	users.users.hruboson = { # Define a user account. Don't forget to set a password with ‘passwd’.
+		isNormalUser = true;
+		extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+			packages = with pkgs; [];
+	};
 
-  # programs.firefox.enable = true;
+	home-manager.backupFileExtension = ".bak";
+	home-manager.users.hruboson = { pkgs, ... }: let
+		nvimConf = pkgs.fetchFromGitHub {
+			owner = "hruboson";
+			repo = "nvim-conf";
+			rev = "main";
+			sha256 = "039cpic7brgm69h2dmnrf92vjxasqp6mns8z2vic8sqczhk2r23v";
+		};
+	in {
+		home.stateVersion = "25.05";
+		programs.neovim = {
+			enable = true;
+		};
 
-  # PROGRAMS
+		home.file.".config/nvim".source = nvimConf;
+		home.packages = [ pkgs.ripgrep pkgs.fzf ];
+	};
 
-  environment.systemPackages = with pkgs; [ # List packages installed in system profile.
-    # You can use https://search.nixos.org/ to find more packages (and options).
-    pkgs.lazygit
-    wget
-    pkgs.nix-ld
-  ];
+# programs.firefox.enable = true;
 
-  programs.git = {
-    enable = true;
-    config = {
-      user.name = "Ondřej Hruboš";
-      user.email = "hruboson@gmail.com";
-      init.defaultBranch = "main";
-      pull.rebase = true;
-    };
-  };
+# PROGRAMS
 
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-  };
+	environment.systemPackages = with pkgs; [ # List packages installed in system profile.
+# You can use https://search.nixos.org/ to find more packages (and options).
+		wget
+		pkgs.lazygit
+		pkgs.nix-ld
+		pkgs.nix-prefetch-git
+	];
 
-  # MISC
-  programs.nix-ld.enable = true;
+	programs.git = {
+		enable = true;
+		config = {
+			user.name = "Ondřej Hruboš";
+			user.email = "hruboson@gmail.com";
+			init.defaultBranch = "main";
+			pull.rebase = true;
+		};
+	};
 
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  system.copySystemConfiguration = true;
+# MISC
+	programs.nix-ld.enable = true;
 
-  # VERSION
-  # This option defines the first version of NixOS you have installed on this particular machine,
-  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
-  # Most users should NEVER change this value after the initial install, for any reason,
-  # even if you've upgraded your system to a new NixOS release.
-  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
-  # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
-  # to actually do that.
-  # This value being lower than the current NixOS release does NOT mean your system is
-  # out of date, out of support, or vulnerable.
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "25.05"; # Did you read the comment?
+# Copy the NixOS configuration file and link it from the resulting system
+# (/run/current-system/configuration.nix). This is useful in case you
+# accidentally delete configuration.nix.
+	system.copySystemConfiguration = true;
+
+# VERSION
+# This option defines the first version of NixOS you have installed on this particular machine,
+# and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
+# Most users should NEVER change this value after the initial install, for any reason,
+# even if you've upgraded your system to a new NixOS release.
+# This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
+# so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
+# to actually do that.
+# This value being lower than the current NixOS release does NOT mean your system is
+# out of date, out of support, or vulnerable.
+# Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
+# and migrated your data accordingly.
+# For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
+	system.stateVersion = "25.05"; # Did you read the comment?
 
 }
 
