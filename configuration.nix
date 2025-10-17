@@ -28,8 +28,9 @@
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
   networking.firewall.enable = true;
 
-  # Enable the OpenSSH daemon.
+  # Enable the OpenSSH daemon and ssh-agent with keys
   services.openssh.enable = true;
+  programs.ssh.startAgent = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
