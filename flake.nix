@@ -11,13 +11,17 @@
 		let
 			mainUsername = "hruon";
 			machines = {
-				raspberrypi =  {
-					system = "aarch64-linux";
-					homeFile = ./home/raspberrypi.nix;
-				};
 				workstation = {
 					system = "x86_64-linux";
 					homeFile = ./home/workstation.nix;
+				};
+				server = {
+					system = "x86_64-linux";
+					homeFile = ./home/server.nix;
+				};
+				raspberrypi =  {
+					system = "aarch64-linux";
+					homeFile = ./home/raspberrypi.nix;
 				};
 			};
 
