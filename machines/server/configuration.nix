@@ -41,7 +41,8 @@ in {
 			server_name = "nixosmatrix.local";
 			federation_domain_whitelist = [];
 			
-			enable_registration = false;
+			enable_registration = true;
+			enable_registration_without_verification = true; # for now because the registration_shared_secret doesn't work for some reason
 			registration_shared_secret = secrets.registration_shared_secret;
 		};
 

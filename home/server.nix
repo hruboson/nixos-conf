@@ -2,6 +2,7 @@
 
 {
 	home.packages = with pkgs; [
+		matrix-synapse
 	];
 
 	#programs.zsh.promptInit = ''
