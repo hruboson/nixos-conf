@@ -75,7 +75,7 @@ in
 			package = pkgs.neovim-unwrapped;
 
 			extraConfig = ''
-				set clipboard+=unnamedplus
+				set clipboard=unnamedplus
 			'';
 		};
 
