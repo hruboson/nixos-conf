@@ -31,10 +31,14 @@ Manual installation:
     - `cp -a /mnt/etc/nixos /root/nixos-config-backup` - backup the generated config
     - `rm -rf /mnt/etc/nixos/` - remove generated config
     - `git clone https://github.com/<username>/<nixos-conf.git> /mnt/etc/nixos`
-    - !!!IMPORTANT!!! copy the `hardware-configuration.nix` back: `cp /root/nixos-config-backup/hardware-configuration.nix /mnt/etc/nixos/hardware-configuration.nix`
+    - **IMPORTANT** copy the `hardware-configuration.nix` back: 
+        1. without flakes: `cp /root/nixos-config-backup/hardware-configuration.nix /mnt/etc/nixos/hardware-configuration.nix`
+        2. with flakes (adjust to your config): `cp /root/nixos-config-backup/hardware-configuration.nix /mnt/etc/nixos/hardware/<flake-name>-hardware.nix`
 - `nano /mnt/etc/nixos/configuration.nix` - edit config
-- `nixos-install -v` - Install and show all logs
-    - will ask for password
+- install and show all logs:
+    1. without flakes: `nixos-install -v`
+    2. without flakes: `nixos-install -v --flake /mnt/etc/nixos#<flake-name>`
+- after successful installation it will ask for new password, this password will be for the root account
 - `reboot` - after this it should boot to installed os
 
 ## 2. First login
@@ -50,6 +54,9 @@ Manual installation:
 - apply password to the new user: `passwd username`
 
 ## 3.1 Setting up git and github
+If you are comfortable using the GitHub CLI tool (`gh`), you can add it to your configuration. The package is `pkgs.gh`.
+
+Or the old fashioned way using SSH keys (which is still quite easy on Linux):
 - enable ssh agent and git in configuration:
     - `programs.ssh.startAgent = true;`
     - add `git` to system packages
