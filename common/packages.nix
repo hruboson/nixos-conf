@@ -4,9 +4,9 @@
 	environment.systemPackages = with pkgs; [ # List packages installed in system profile.
 		# You can use https://search.nixos.org/ to find more packages (and options).
 		wget
-		pkgs.lazygit
-		pkgs.nix-ld
-		pkgs.nix-prefetch-git
+		lazygit
+		nix-ld
+		nix-prefetch-git
 	];
 
 	programs.zsh.enable = true;
