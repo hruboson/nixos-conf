@@ -7,6 +7,7 @@
 		lazygit
 		nix-ld
 		nix-prefetch-git
+		macchina # sysinfo fetcher
 	];
 
 	programs.zsh.enable = true;

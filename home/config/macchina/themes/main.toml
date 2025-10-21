@@ -1,0 +1,6 @@
+x = 1
+y = 1
+
+[custom_ascii]
+path = "~/.config/macchina/themes/nixos"
+color = "#FFCA28"
