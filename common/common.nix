@@ -10,7 +10,7 @@
 	nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
 	## SOUND
-	services.pulseaudio.enable = true;
+	services.pulseaudio.enable = false;
 
 	## TOUCHPAD
 	services.libinput.enable = true;

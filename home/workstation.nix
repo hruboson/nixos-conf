@@ -1,8 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
-	home.packages = (config.home.packages or []) ++ (with pkgs; [
+	home.packages = lib.mkAfter (with pkgs; [
 		firefox
+
+		kdePackages.kclock
+		kdePackages.sddm-kcm
 	]);
 
 	#programs.zsh.promptInit = ''
