@@ -6,7 +6,6 @@
 	home.packages = with pkgs; [ 
 		ripgrep 
 		fzf 
-		xclip 
 	];
 
 	# NEOVIM
