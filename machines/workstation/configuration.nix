@@ -20,12 +20,14 @@
 	services.libinput.enable = true; # enable touchpad
 	services.xserver = { # keyboard settings
 		enable = true;
-		layout = "cz,us";
-		xkbVariant = "winkeys";
-		xkbOptions = "grp:shift_space_toggle";
+		xkb = {
+			layout = "cz,us";
+			variant = "winkeys";
+			options = "grp:shift_space_toggle";
+		};
 	};
 
-	services.xserver.displayManager.sddm.settings = {
+	services.displayManager.sddm.settings = {
 		X11 = {
 			KeyboardLayout = "cz,us";
 		};
