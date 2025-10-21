@@ -32,6 +32,7 @@
 	};
 
 	## Excluded packages (should produce minimal KDE environment)
+	# TODO: figure out how to remove dolphin, kate, kwrite, x-term
 	environment.plasma6.excludePackages = with pkgs.kdePackages; [
 		dolphin 		# file manager
 		konsole			# terminal

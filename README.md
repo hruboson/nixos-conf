@@ -76,3 +76,13 @@ Or the old fashioned way using SSH keys (which is still quite easy on Linux):
     - `cp -r /etc/nixos ~/`
     - after changes rebuild with `sudo nixos-rebuild -I nixos-config=/home/<username>/nixos/configuration.nix`
 - if you get prompt for username and password when pushing to git then try changing remote: `git remote set-url origin git@github.com:<username>/<repository.git>`
+
+## 3.2 Flakes
+
+## 3.3 Home-manager
+
+#### 3.3.1 Plasma-manager
+
+## 4. Desktop environment
+
+
