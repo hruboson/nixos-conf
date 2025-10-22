@@ -29,8 +29,8 @@
 	};	
 
 	# .CONFIG
-	home.file.".config/macchina/" = {
-		source = ./config/macchina;
+	home.file.".config/" = {
+		source = ./dotfiles;
 		recursive = true;
 	};
 }
