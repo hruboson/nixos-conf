@@ -8,7 +8,10 @@ installation of NixOS. See the [Manual](#Manual) section if this is your first t
 
 ## 1. Installation
 Just recently I found `sudo nix run github:km-clay/nixos-wizard --extra-experimental-features nix-command --extra-experimental-features flakes` command that runs TUI (terminal user interface) installer, maybe give it a try or follow the manual installation.
-This installations uses an EFI system partition for booting.
+You will generally want to follow the [installation for x86-64 system](#11-manual-installation-on-x86-64-system) if you have something like desktop PC or laptop. If you have more specialized hardware, such as Raspberry Pi, your installation might look a bit different. I have so far only installed NixOS on Raspberry Pi 3B. To install NixOS on Raspberry Pi (3B) follow the [Raspberry Pi](#12-raspberry-pi-3b) manual.
+
+### 1.1 Manual installation on x86-64 system
+This installations uses an EFI system partition for booting. Bear that in mind when trying this method in a virtualization tool such as [Virtualbox](https://www.virtualbox.org/).
 
 Manual installation:
 
@@ -40,6 +43,91 @@ Manual installation:
     2. without flakes: `nixos-install -v --flake /mnt/etc/nixos#<flake-name>`
 - after successful installation it will ask for new password, this password will be for the root account
 - `reboot` - after this it should boot to installed os
+
+### 1.2 Raspberry Pi 3B
+
+For the RPI installation I found [this guide](https://nix.dev/tutorials/nixos/installing-nixos-on-a-raspberry-pi.html) by [nix.dev](https://nix.dev/) to be the most useful.
+
+I was setting up my SD card on a Windows machine using Etcher to flash it.
+
+- download NixOS live image from [Hydra](https://hydra.nixos.org/job/nixos/trunk-combined/nixos.sd_image.aarch64-linux)
+    - this is different from installer - the system will already be installed on the sd card after flashing
+    - just look for the latest (newest) build
+    - at the time of writing this guide I used [nixos-image-sd-card-25.11pre882227.01f116e4df6a-aarch64-linux.img.zst](https://hydra.nixos.org/build/310514045)
+- use [7-zip](https://www.7-zip.org/) or other extracting utility to extract the downloaded archive (`nixos-image-sd-card-*.img.zst`)
+- use [Etcher](https://etcher.balena.io/) or other flashing utility to flash the `nixos-image-sd-card-*.img` onto the SD card
+    - do not use the compressed file as that will not work
+- now you can insert the SD card into the Raspberry Pi (turn it off before inserting)
+- after inserting the SD card power on the Raspberry Pi, a basic NixOS command line (tty) should show up
+    - what you see now is the live system - you will not have to install anything
+    - from here on you can go your own way if you want and bring your own configuration, be careful tho because Raspberry Pi needs some specific settings turned on
+- the basic configuration should look something like (for Raspberry Pi 3B):
+
+```nix
+# as of 24.10.2025 you can download this using (in elevated mode): curl -L https://tinyurl.com/tutorial-nixos-install-rpi4 > /etc/nixos/configuration.nix
+{ config, pkgs, lib, ... }:
+
+let
+    user = "guest";
+    password = "guest";
+    SSID = "mywifi";
+    SSIDpassword = "mypassword";
+    interface = "wlan0";
+    hostname = "myhostname";
+in {
+
+    boot = {
+        kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
+        initrd.availableKernelModules = [ "xhci_pci" "usbhid" "usb_storage" ];
+        loader = {
+            grub.enable = false;
+            generic-extlinux-compatible.enable = true;
+        };
+    };
+
+    fileSystems = {
+        "/" = {
+            device = "/dev/disk/by-label/NIXOS_SD";
+            fsType = "ext4";
+            options = [ "noatime" ];
+        };
+    };
+
+    networking = {
+        hostName = hostname;
+        wireless = {
+            enable = true;
+            networks."${SSID}".psk = SSIDpassword;
+            interfaces = [ interface ];
+        };
+    };
+
+    environment.systemPackages = with pkgs; [ vim ];
+
+    services.openssh.enable = true;
+
+    users = {
+        mutableUsers = false;
+        users."${user}" = {
+            isNormalUser = true;
+            password = password;
+            extraGroups = [ "wheel" ];
+        };
+    };
+
+    hardware.enableRedistributableFirmware = true;
+    system.stateVersion = "25.11";
+}
+```
+- replace the `user`, `password`, `SSID` (wifi name), `SSIDpassword` (wifi password), `hostname` to your desired values
+- create a swap file (otherwise rebuild takes waaaaaaaaaaaay too long):
+    - `sudo fallocate -l 4G /swap` - allocates 4GB for the swap file
+    - `sudo chmod 600 /swap`
+    - `sudo mkswap /swap`
+    - `sudo swapon /swap`
+- rebuild and reboot the system:
+    - `nixos-rebuild boot` - should take about 10-20 minutes depending on the speed of your internet connection
+    - `reboot` - reboots the system
 
 ## 2. First login
 - when first logging in the nixos login will be `root` with password you set during the `nixos-install`
@@ -84,5 +172,3 @@ Or the old fashioned way using SSH keys (which is still quite easy on Linux):
 #### 3.3.1 Plasma-manager
 
 ## 4. Desktop environment
-
-
