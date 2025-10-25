@@ -125,6 +125,7 @@ in {
     - `sudo chmod 600 /swap`
     - `sudo mkswap /swap`
     - `sudo swapon /swap`
+- to enable and set WiFi before the first rebuild you can run `nmtui`
 - rebuild and reboot the system:
     - `nixos-rebuild boot` - should take about 10-20 minutes depending on the speed of your internet connection
     - `reboot` - reboots the system
