@@ -23,13 +23,12 @@
 	time.timeZone = "Europe/Prague";
 
 	# NETWORK
-	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+	#networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 	networking.firewall.enable = true;
 
 	# Enable the OpenSSH daemon and ssh-agent with keys
 	services.openssh.enable = true;
 	programs.ssh.startAgent = true;
-
 
 	# FONTS
 	fonts.packages = with pkgs; [

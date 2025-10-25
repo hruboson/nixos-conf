@@ -12,6 +12,7 @@ in {
 	boot.loader.systemd-boot.enable = true;
 	boot.loader.efi.canTouchEfiVariables = true;
 
+	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 	networking.hostName = "hruon-nixos-server";
 	networking.firewall.allowedTCPPorts = [ 8008 ];
 	networking.hosts."nixosmatrix.local" = [ "192.168.2.188" ];
