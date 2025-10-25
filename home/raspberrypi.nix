@@ -1,11 +1,14 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
-	home.packages = (config.home.packages or []) ++ (with pkgs; [
-		neofetch
+	home.packages = lib.mkAfter (with pkgs; [
+		
 	]);
 
-	programs.zsh.promptInit = ''
-		PROMPT="%F{red}[pi]%f %~ %# "
-	'';
+	# .CONFIG
+	home.file.".config/" = {
+		source = ./dotfiles;
+		recursive = true;
+	};
+
 }
