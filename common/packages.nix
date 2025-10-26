@@ -8,6 +8,7 @@
 		nix-ld
 		nix-prefetch-git
 		macchina # sysinfo fetcher
+		dysk # pretty disk info
 	];
 
 	programs.zsh.enable = true;
