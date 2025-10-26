@@ -12,9 +12,12 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.home-manager.follows = "home-manager";
 		};
+		secrets = {
+			url = "path:/home/hruon/nixos-conf/secrets"; # must be an absolute path
+		};
 	};
 
-	outputs = { self, nixpkgs, home-manager, plasma-manager, ... }@inputs:
+	outputs = { self, nixpkgs, home-manager, plasma-manager, secrets, ... }@inputs:
 		let
 			mainUsername = "hruon";
 			machines = {
@@ -35,7 +38,7 @@
 			# helper function creating machine configurations
 			makeMachine = name: cfg: nixpkgs.lib.nixosSystem {
 				system = cfg.system;
-				specialArgs = { inherit mainUsername; };
+				specialArgs = { inherit mainUsername secrets; };
 				modules = [
 					./common/common.nix
 					./common/packages.nix

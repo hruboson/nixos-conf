@@ -4,6 +4,35 @@ This is my personal configuration for NixOS. I will most likely split this to mu
 branches for my server/workstation/other... I've also tried writing up a small tutorial for my first
 installation of NixOS. See the [Manual](#Manual) section if this is your first time installing NixOS.
 
+# Using this configuration
+
+If you want to use this configuration you first have to do few steps:
+
+1. clone the repository (duh)
+2. create a folder `secrets/` (wherever you want, I recommend inside of this repository)
+3. create `flake.nix` file in the `secrets/` folder with the folowing content:
+
+```
+{
+	description = "Local secrets (not tracked)";
+
+	outputs = { self, ... }:
+	{
+		wifiSSID = "WIFI_NAME";
+		wifiPasswd = "WIFI_PASSWD";
+	};
+}
+```
+
+4. `git init && git add .` inside of the `secrets/` folder
+5. in `flake.nix` (of this repository) change the `url` of `secrets` in inputs to your created `secrets/` folder
+
+```
+secrets = {
+	url = "path:/path/to/secrets"; #! It has to be an absolute path
+};
+```
+
 # Manual
 
 ## 1. Installation

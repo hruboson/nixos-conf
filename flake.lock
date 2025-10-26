@@ -64,7 +64,20 @@
       "inputs": {
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
-        "plasma-manager": "plasma-manager"
+        "plasma-manager": "plasma-manager",
+        "secrets": "secrets"
+      }
+    },
+    "secrets": {
+      "locked": {
+        "lastModified": 1761469811,
+        "narHash": "sha256-rWnGcFbLgBltuTP6jylnegV0Px0AdfJFPcYVFvE9ikU=",
+        "path": "/home/hruon/nixos-conf/secrets",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/hruon/nixos-conf/secrets",
+        "type": "path"
       }
     }
   },

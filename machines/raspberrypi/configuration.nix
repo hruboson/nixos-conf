@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, secrets, ... }:
 
 {
 	imports = [
@@ -10,7 +10,7 @@
 		hostName = "nixosrpi3";
 		wireless = {
 			enable = true;
-			networks."NETWORK_NAME".psk = "NETWORK_PASSWORD";
+			networks."${secrets.wifiSSID}".psk = secrets.wifiPasswd;
 			interfaces = [ "wlan0" ];
 		};
 	};
