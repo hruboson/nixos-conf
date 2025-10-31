@@ -26,6 +26,9 @@
 	#networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 	networking.firewall.enable = true;
 
+	# USB DRIVES
+	services.udisks2.enable = true; # enable backend, then in home manager configure udiskie (frontend)
+
 	# Enable the OpenSSH daemon and ssh-agent with keys
 	services.openssh.enable = true;
 	programs.ssh.startAgent = true;
