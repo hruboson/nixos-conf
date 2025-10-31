@@ -1,10 +1,20 @@
-{ config, pkgs, secrets, ... }:
+{ config, pkgs, secrets, lib, ... }:
 
 {
 	imports = [
 		../../common/common.nix
 		../../hardware/raspberrypi-hardware.nix
 	];
+
+	environment.systemPackages = lib.mkAfter (with pkgs; [
+		jellyfin
+		jellyfin-web
+		jellyfin-ffmpeg
+	]);
+
+	hardware.graphics = {
+		enable = true;	
+	};
 
 	networking = {
 		hostName = "nixosrpi3";
@@ -21,5 +31,10 @@
 		publish.enable = true;
 		publish.domain = true;
 		publish.addresses = true;
+	};
+
+	services.jellyfin = {
+		enable = true;
+		openFirewall = true;
 	};
 }
