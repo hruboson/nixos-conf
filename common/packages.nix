@@ -9,6 +9,7 @@
 		nix-prefetch-git
 		macchina # sysinfo fetcher
 		dysk # pretty disk info
+		btop # pretty process info
 	];
 
 	programs.zsh.enable = true;
