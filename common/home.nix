@@ -6,6 +6,7 @@
 	home.packages = with pkgs; [ 
 		ripgrep 
 		fzf 
+		bashmount
 	];
 
 	# NEOVIM
@@ -17,6 +18,8 @@
 			set clipboard=unnamedplus
 			'';
 	};
+
+	programs.bashmount.enable = true;
 
 	home.file.".config/nvim".source = pkgs.fetchFromGitHub{ # fetch config from github
 		owner = "hruboson";
