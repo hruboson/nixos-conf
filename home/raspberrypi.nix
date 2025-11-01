@@ -2,7 +2,7 @@
 
 {
 	home.packages = lib.mkAfter (with pkgs; [
-		
+		w3m	
 	]);
 
 	# .CONFIG
@@ -10,5 +10,4 @@
 		source = ./dotfiles;
 		recursive = true;
 	};
-
 }
