@@ -1,4 +1,4 @@
-{ config, pkgs, secrets, lib, ... }:
+{ config, pkgs, secrets, mainUsername, lib, ... }:
 
 {
 	imports = [
@@ -36,5 +36,6 @@
 	services.jellyfin = {
 		enable = true;
 		openFirewall = true;
+		user = "${mainUsername}";
 	};
 }
