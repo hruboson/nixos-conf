@@ -10,6 +10,7 @@
 		macchina # sysinfo fetcher
 		dysk # pretty disk info
 		btop # pretty process info
+		bashmount # drive mounting dialog
 	];
 
 	programs.zsh.enable = true;
