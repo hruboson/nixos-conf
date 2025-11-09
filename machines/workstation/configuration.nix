@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, hostname, ... }:
 
 {
 	imports = [
@@ -11,7 +11,7 @@
 	boot.loader.efi.canTouchEfiVariables = true;
 
 	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
-	networking.hostName = "hruon-nixos-ws";
+	networking.hostName = hostname;
 
 	# DESKTOP ENVIRONMENT
 	services.displayManager.sddm.enable = true;
