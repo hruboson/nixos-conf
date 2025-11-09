@@ -20,6 +20,8 @@ If you want to use this configuration you first have to do few steps:
 	{
 		wifiSSID = "WIFI_NAME";
 		wifiPasswd = "WIFI_PASSWD";
+
+        apiNasaKey = "NASA_API_KEY";
 	};
 }
 ```
