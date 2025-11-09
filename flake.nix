@@ -13,23 +13,26 @@
 			inputs.home-manager.follows = "home-manager";
 		};
 		secrets = {
-			url = "path:/home/hruon/nixos-conf/secrets"; # must be an absolute path
+			url = "git+file:///home/hruon/nixos-conf/secrets"; # must be an absolute path
 		};
 	};
 
 	outputs = { self, nixpkgs, home-manager, plasma-manager, secrets, ... }@inputs:
 		let
-			mainUsername = "hruon";
+			username = "hruon";
 			machines = {
 				workstation = {
+					hostname = "worknix";
 					system = "x86_64-linux";
 					homeFile = ./home/workstation.nix;
 				};
 				server = {
+					hostname = "servernix";
 					system = "x86_64-linux";
 					homeFile = ./home/server.nix;
 				};
 				raspberrypi =  {
+					hostname = "nixosrpi3";
 					system = "aarch64-linux";
 					homeFile = ./home/raspberrypi.nix;
 				};
@@ -38,7 +41,10 @@
 			# helper function creating machine configurations
 			makeMachine = name: cfg: nixpkgs.lib.nixosSystem {
 				system = cfg.system;
-				specialArgs = { inherit mainUsername secrets; };
+				specialArgs = { 
+					inherit username secrets; 
+					hostname = cfg.hostname;
+				};
 				modules = [
 					./common/common.nix
 					./common/packages.nix
@@ -52,7 +58,7 @@
 						home-manager.useGlobalPkgs = true;
 						home-manager.useUserPackages = true;
 						home-manager.sharedModules = [ ./common/home.nix plasma-manager.homeModules.plasma-manager ]; # common for all machines
-						home-manager.users.${mainUsername} = import cfg.homeFile;
+						home-manager.users.${username} = import cfg.homeFile;
 					}
 				];
 			};

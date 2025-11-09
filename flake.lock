@@ -23,11 +23,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1760580664,
-        "narHash": "sha256-/YdfibIrnqXAL8p5kqCU345mzpHoOtuVIkMiI2pF4Dc=",
+        "lastModified": 1762498405,
+        "narHash": "sha256-Zg/SCgCaAioc0/SVZQJxuECGPJy+OAeBcGeA5okdYDc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "98ff3f9af2684f6136c24beef08f5e2033fc5389",
+        "rev": "6faeb062ee4cf4f105989d490831713cc5a43ee1",
         "type": "github"
       },
       "original": {
@@ -47,11 +47,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1759321049,
-        "narHash": "sha256-8XkU4gIrLT2DJZWQyvsP5woXGZF5eE/7AnKfwQkiwYU=",
+        "lastModified": 1762274591,
+        "narHash": "sha256-Vbhluvk15qwiyNDyPd9tjJh9gxIfUjbKVT79c05Pd3I=",
         "owner": "nix-community",
         "repo": "plasma-manager",
-        "rev": "205dcfd4a30d4a5d1b4f28defee69daa7c7252cd",
+        "rev": "6296d7100cc84b2ff732b7c103a50c2856974cf6",
         "type": "github"
       },
       "original": {
@@ -70,14 +70,17 @@
     },
     "secrets": {
       "locked": {
-        "lastModified": 1761469811,
-        "narHash": "sha256-rWnGcFbLgBltuTP6jylnegV0Px0AdfJFPcYVFvE9ikU=",
-        "path": "/home/hruon/nixos-conf/secrets",
-        "type": "path"
+        "lastModified": 1762609386,
+        "narHash": "sha256-kwHabQx4IdA1iYr5DvbCgDQgPRHxyyyrxbN7CFP9B4o=",
+        "ref": "refs/heads/main",
+        "rev": "0578ce57ad72db4349e78213cb0c567399fe4203",
+        "revCount": 2,
+        "type": "git",
+        "url": "file:///home/hruon/nixos-conf/secrets"
       },
       "original": {
-        "path": "/home/hruon/nixos-conf/secrets",
-        "type": "path"
+        "type": "git",
+        "url": "file:///home/hruon/nixos-conf/secrets"
       }
     }
   },
