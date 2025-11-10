@@ -41,16 +41,19 @@ secrets = {
 Just recently I found `sudo nix run github:km-clay/nixos-wizard --extra-experimental-features nix-command --extra-experimental-features flakes` command that runs TUI (terminal user interface) installer, maybe give it a try or follow the manual installation.
 You will generally want to follow the [installation for x86-64 system](#11-manual-installation-on-x86-64-system) if you have something like desktop PC or laptop. If you have more specialized hardware, such as Raspberry Pi, your installation might look a bit different. I have so far only installed NixOS on Raspberry Pi 3B. To install NixOS on Raspberry Pi (3B) follow the [Raspberry Pi](#12-raspberry-pi-3b) manual.
 
-### 1.1 Manual installation on x86-64 system
-This installations uses an EFI system partition for booting. Bear that in mind when trying this method in a virtualization tool such as [Virtualbox](https://www.virtualbox.org/).
+When installing NixOS in an virtual environment (such as in Virtualbox or VMware) be careful of the settings. I tried installing and running this config in both Virtualbox and VMware, both were quite a pain in the ass when working on Windows. Running this configuration in Virtualbox on Linux (Fedora 42) was easy and painless (damn you Windows!).
 
-Manual installation:
+Be sure to enable EFI when creating the machine (this configuration probably won't work without EFI enabled). On Virtualbox I experienced brutal graphical lags when running KDE Plasma 6. I fixed this by switching to older graphics controller (VBoxSVGA or VBoxVGA). The newer graphics controller (VMSVGA) did not work, I was getting tons of visual glitches and the interface was so laggy I could not get anything done.
+
+VMware seemed to run much smoother, altough at the time of writing this I have not figured out how to enable EFI in the settings.
+
+### 1.1 Manual installation on x86-64 system
 
 - (optional) `sudo loadkeys cz-qwertz` - change keyboard locale
 - `sudo -s`
 - `lsblk` ... check drives
 - create partition
-    - `(sudo) fdisk /dev/sda`
+    - `fdisk /dev/sda`
     - `g`, `n` - UEFI boot partition, `<enter><enter>+500M` (500MB UEFI), `t` change partition type, `1` - EFI system, `n` - Swap partition, `<enter><enter>+4096M` (4GB swap), `t` change partition type, `2` - choose partition number (swap is 2, uefi 1), `19` - Linux swap partition number (see `L` for all), `n` - System partition, `<enter><enter><enter>` (Allocates rest),
     - `w` - write changes to disk
 - `mkfs.fat /dev/sda1` - make FAT partition
