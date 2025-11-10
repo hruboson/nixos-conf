@@ -37,6 +37,22 @@
         "type": "github"
       }
     },
+    "nvim-conf": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1761900800,
+        "narHash": "sha256-PdIp/McbZzUxr6yF3Q0Of9z7gdZ5EOJUsuNmh33kUwc=",
+        "owner": "hruboson",
+        "repo": "nvim-conf",
+        "rev": "5b42f9605ccbc652c9e91adca7f1fd6f826b6dbc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hruboson",
+        "repo": "nvim-conf",
+        "type": "github"
+      }
+    },
     "plasma-manager": {
       "inputs": {
         "home-manager": [
@@ -64,6 +80,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
+        "nvim-conf": "nvim-conf",
         "plasma-manager": "plasma-manager",
         "secrets": "secrets"
       }

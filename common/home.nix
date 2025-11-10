@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, nvim-conf, ... }:
 
 {
 	home.stateVersion = "25.05";
@@ -21,10 +21,5 @@
 
 	programs.bashmount.enable = true;
 
-	home.file.".config/nvim".source = pkgs.fetchFromGitHub{ # fetch config from github
-		owner = "hruboson";
-		repo = "nvim-conf";
-		rev = "main";
-		sha256 = "039cpic7brgm69h2dmnrf92vjxasqp6mns8z2vic8sqczhk2r23v";
-	};
+	home.file.".config/nvim".source = nvim-conf;
 }

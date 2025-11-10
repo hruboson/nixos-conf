@@ -12,12 +12,16 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.home-manager.follows = "home-manager";
 		};
+		nvim-conf = {
+			url = "github:hruboson/nvim-conf";
+			flake = false;
+		};
 		secrets = {
 			url = "git+file:///home/hruon/nixos-conf/secrets"; # must be an absolute path
 		};
 	};
 
-	outputs = { self, nixpkgs, home-manager, plasma-manager, secrets, ... }@inputs:
+	outputs = { self, nixpkgs, home-manager, plasma-manager, nvim-conf, secrets, ... }@inputs:
 		let
 			username = "hruon";
 			machines = {
@@ -59,6 +63,9 @@
 						home-manager.useUserPackages = true;
 						home-manager.sharedModules = [ ./common/home.nix plasma-manager.homeModules.plasma-manager ]; # common for all machines
 						home-manager.users.${username} = import cfg.homeFile;
+						home-manager.extraSpecialArgs = {
+							inherit nvim-conf;
+						};
 					}
 				];
 			};
