@@ -7,6 +7,7 @@
 
 	home.packages = lib.mkAfter (with pkgs; [
 		firefox # todo replace with waterfox later
+		kdePackages.filelight
 
 		kdePackages.kclock
 		kdePackages.sddm-kcm
