@@ -41,6 +41,15 @@
 	# MISC
 	programs.nix-ld.enable = true;
 
+	# if build is too slow change this line to nix.optimise.automatic = true;
+	nix.settings.auto-optimise-store = true; # optimise /nix/store space
+
+	# garbage collector
+	nix.gc = {
+		automatic = true;
+		options = "--delete-older-than 14d";
+	};
+
 	# SYSTEM
 
 	# VERSION
