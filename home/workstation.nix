@@ -28,10 +28,4 @@
 			};
 		};
 	};	
-
-	# .CONFIG
-	home.file.".config/" = {
-		source = ./dotfiles;
-		recursive = true;
-	};
 }

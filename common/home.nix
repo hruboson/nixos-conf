@@ -21,5 +21,10 @@
 
 	programs.bashmount.enable = true;
 
+	# .CONFIG
+	home.file.".config/" = {
+		source = ../dotfiles;
+		recursive = true;
+	};
 	home.file.".config/nvim".source = nvim-conf;
 }
