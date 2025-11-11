@@ -21,6 +21,8 @@
 
 	programs.bashmount.enable = true;
 
+	home.file.".bashrc".source = ../dotfiles/.bashrc;
+	
 	# .CONFIG
 	home.file.".config/" = {
 		source = ../dotfiles;
