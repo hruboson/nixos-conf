@@ -1,0 +1,10 @@
+# set Mod key
+set $mod Mod4
+
+input "type:keyboard" {
+	xkb_layout "cz"
+	xkb_variant "winkeys"
+	xkb_options "grp:alt_shift_toggle"
+}
+
+bindsym $mod+Return exec kitty
