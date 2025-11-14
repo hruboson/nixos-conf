@@ -22,4 +22,6 @@ fi
 unset rc
 
 # Fetch
-macchina
+if  [[ $- == *i* ]]; then # ensures scp works
+	macchina
+fi
