@@ -47,13 +47,31 @@ Be sure to enable EFI when creating the machine (this configuration probably won
 
 VMware seemed to run much smoother, altough at the time of writing this I have not figured out how to enable EFI in the settings.
 
+If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland** and want to run **NixOS in virtual machine on Windows**, **I strongly recommend** using [QEMU](https://www.qemu.org/) - see section [installing NixOS on QEMU virtual machine](#13-Installing-NixOS-on-virtual-machine-on-Windows-host-using-QEMU). I have not been able to run any Wayland compositor through Virtualbox or VMware on Windows.
+
 ### 1.1 Manual installation on x86-64 system
+
+#### Using NixOS graphical installer
+
+Installing NixOS using the graphical intaller is quite straightforward. I found it to be no harder than installing Fedora or Ubuntu.
+
+Boot up your NixOS graphical installer and just follow the installer. You will be prompted to choose your Location, Keyboard layout, set up your user and root account, choose your desktop environment (choose whichever you like the most, if you want Windows-like choose KDE Plasma, if you want Mac-like choose Gnome), allow unfree software... 
+
+Set up partitions - here you will have to select on which drive the system will install and also whether to erase the whole disk or manually partition. If you have a laptop or PC where there will only be one system (NixOS) you can select *Erase disk*. Also select a swap partition to be created, otherwise there is a good chance you might run out of RAM during the installation. If you want to utilize hybernation also select that. Oterwise every other settings should stay default. Click your way through the next buttons and start the installation by clicking the *Install* button. This process can take a while (about 30mins or more) depending on your hardware and your internet speed.
+
+If it gets stuck at **46%** DO NOT PANICK. This is normal and it will take a while (could be up to an hour depending on your internet speed). At this point the NixOS installer is downloading all the necessary packages. You can see what it is downloading by clicking the *Toggle logs* button.
+
+Once the system is installed you can reboot and remove the usb drive/cd/where you have nixos installation on. Then create a new config or bring already existing. Follow the [first login](#2-First-login) section for basic NixOS configuration and rebuild.
+
+#### Using NixOS minimal iso
+
+Boot up your NixOS minimal iso and run the following commands. Pay attention to some of the arguments to different commands as they may vary on your system.
 
 - (optional) `sudo loadkeys cz-qwertz` - change keyboard locale
 - `sudo -s`
 - `lsblk` ... check drives
 - create partition
-    - `fdisk /dev/sda`
+    - `fdisk /dev/sda` (instead of `sda` your drive might have a different name, such as `sdb` or `sdc`)
     - `g`, `n` - UEFI boot partition, `<enter><enter>+500M` (500MB UEFI), `t` change partition type, `1` - EFI system, `n` - Swap partition, `<enter><enter>+4096M` (4GB swap), `t` change partition type, `2` - choose partition number (swap is 2, uefi 1), `19` - Linux swap partition number (see `L` for all), `n` - System partition, `<enter><enter><enter>` (Allocates rest),
     - `w` - write changes to disk
 - `mkfs.fat /dev/sda1` - make FAT partition
@@ -164,6 +182,118 @@ in {
     - `nixos-rebuild boot` - should take about 10-20 minutes depending on the speed of your internet connection
     - `reboot` - reboots the system
 
+### 1.3 Installing NixOS on virtual machine on Windows host using QEMU
+
+If you plan on running any Wayland compositor (such as *Sway* or *Hyprland*) through virtual machine on Windows, this is probably the best way to do it. I could not figure out how to run any Wayland compositor through Virtualbox or VMware.
+
+Although setting up a QEMU virtual machine is much more difficult than just running Virtualbox or VMware, I found it to be much smoother experience once you have it set up. It also allows you to run Wayland compositors.
+
+Install QEMU using the [Windows installer (20250819)](https://qemu.weilnetz.de/w64/qemu-w64-setup-20250819.exe) (or choose a newer version [here](https://qemu.weilnetz.de/w64/)). By default the QEMU binaries (.exe files) might not be in PATH. To add them, go to the directory where you installed QEMU, copy the path and add it to environment variables: in Windows search bar search for *environment variables*, click on *edit the system environment variables*, click on *Environment variables...*, double click the item Path under User (or System) variables, click *New* and paste the QEMU directory.
+
+Also download the `OVMF/OVMF_CODE.fd` to be able to run UEFI instead of BIOS. At the time of writing this guide (14.11.2025) you can download it [here](https://github.com/kholia/OSX-KVM/raw/refs/heads/master/OVMF_CODE.fd).
+
+The last piece of software you might need is a [TAP-windows 9.21.x](https://swupdate.openvpn.org/community/releases/tap-windows-9.21.2.exe). This program allows you to create a bridged connection for your virtual machine. This guide uses that and I recommend it, mostly just to be able to connect through ssh to your virtual machine. Setting it up in Windows is quite easy:
+
+1. Install [TAP-windows 9.21.x](https://swupdate.openvpn.org/community/releases/tap-windows-9.21.2.exe) or newer version if installation fails
+2. On Windows: go to Contzrol Panel -> Network and Sharing Center -> Change adapter settings
+3. Select both Ethernet and your new TAP adapter (something like Ethernet 2 or Ethernet 3) - remember this one as you will need it later when running the QEMU virtual machine
+4. Right click -> Bridge Connections
+5. new bridge should be created
+
+Now you are ready to actually set up the virtual machine.
+
+First start by creating your disk image. To create a qcow2 image using QEMU, you can use the command: 
+
+```
+qemu-img.exe create -f qcow2 your_image_name.img size
+```
+
+Replace `your_image_name.img` with your desired file name and `size` with the size you want, such as 64G for 64 gigabytes. I recommend this size as its not too big but also not too small. In my experience a NixOS can get quite big if you don't optimise or clear your generations properly. 
+
+I recommend installing the system using a graphical installer iso. Start the virtual machine with:
+
+```
+qemu-system-x86_64.exe ^
+    -m 4096 -cpu max -smp 4 ^
+    -device virtio-vga -display sdl ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -nic user,model=virtio-net-pci ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -cdrom "C:\Path\to\iso\nixos.iso" ^
+    -boot d ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+
+Change the `drive file="..."`,`-cdrom "..."` and `-bios "..."` arguments to paths to your files on your system.
+
+Now you are in a graphical installer and the rest should be quite straightforward. Follow the [graphical installation manual](#Using_NixOS_graphical_installer). Once you are done you can shut down the virtual machine (either manually through the guest system or just close the QEMU window). At this point NixOS should be installed on your virtual drive (`your_drive.qcow2`).
+
+When running installed system you don't have to specify the `-cdrom` path, so your qemu command should look something like:
+
+```
+qemu-system-x86_64.exe ^
+    -m 4096 -cpu max -smp 4 ^
+    -device virtio-vga -display sdl ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -nic user,model=virtio-net-pci ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+Again change the `drive file="..."`,`-cdrom "..."` and `-bios "..."` arguments. This should boot up virtual machine with NixOS installed.
+
+I have also compiled a list of commands that might come in handy depending on what you are trying to achieve:
+
+1. running QEMU with a bridged TAP adapter:
+
+```
+qemu-system-x86_64.exe ^
+    -m 4096 -cpu max -smp 4 ^
+    -device virtio-vga -display sdl ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -netdev tap,id=mynet0,ifname="Ethernet 3",script=no,downscript=no ^
+    -device virtio-net-pci,netdev=mynet0 ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+Change the `ifname` in `-netdev` argument to the name of your newly created adapter (the one you created at the beginning of this installation).
+
+2. running Sway, Hyprland or any Wayland compositor
+
+```
+qemu-system-x86_64.exe ^
+    -m 4096 -cpu max -smp 4 ^
+    -device virtio-vga-gl ^
+    -display sdl,gl=on ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -netdev tap,id=mynet0,ifname="Ethernet 3",script=no,downscript=no ^
+    -device virtio-net-pci,netdev=mynet0 ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+This runs much smoother by using the `virtio-vga-gl` and `-display sdl,gl=on`, but takes a bit longer to load. If all you see is black screen try resizing the QEMU window few times.
+Change the `ifname` in `-netdev` argument to the name of your network adapter.
+
+3. my cursor is upside down
+
+To fix the goofy bug when your cursor is upside down but everything else looks perfect, you can try running:
+
+```
+qemu-system-x86_64.exe ^
+    -m 4096 -cpu max -smp 4 ^
+    -vga qxl ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -netdev tap,id=mynet0,ifname="Ethernet 3",script=no,downscript=no ^
+    -device virtio-net-pci,netdev=mynet0 ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+
+AND before running `sway` be sure to run `export WLR_NO_HARDWARE_CURSORS=1` (or set the environment variable somewhere).
+
+### 1.4 Dualbooting with Windows
+
+TODO
+
 ## 2. First login
 - when first logging in the nixos login will be `root` with password you set during the `nixos-install`
 - update channels (package repositories): `nix-channel --update`
@@ -204,6 +334,10 @@ Or the old fashioned way using SSH keys (which is still quite easy on Linux):
 
 ## 3.3 Home-manager
 
-#### 3.3.1 Plasma-manager
+### 3.3.1 Plasma-manager
 
 ## 4. Desktop environment
+
+### 4.1 Sway
+
+### 4.2 Hyprland
