@@ -28,4 +28,8 @@
 			};
 		};
 	};	
+
+	xdg.configFile."sway/config".text = ''
+		include ~/.config/sway/*.conf
+	'';
 }
