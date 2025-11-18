@@ -6,11 +6,10 @@
 	#'';
 
 	home.packages = lib.mkAfter (with pkgs; [
+		home-manager
+
 		firefox # todo replace with waterfox later
 		kdePackages.filelight
-
-		kdePackages.kclock
-		kdePackages.sddm-kcm
 	]);
 
 	# PLASMA MANAGER

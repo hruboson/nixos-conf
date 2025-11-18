@@ -31,6 +31,15 @@
 	services.xserver.enable = false; # disable X11
 	security.polkit.enable = true;
 
+	services.pipewire = {
+		enable = true;
+		wireplumber.enable = true;
+
+		alsa.enable = true;
+		pulse.enable = true;
+	};
+	services.dbus.enable = true;
+
 	# for QEMU
 	services.xserver.videoDrivers = [ "virtio" ];
 	environment.variables.WLR_NO_HARDWARE_CURSORS = "1";
@@ -48,6 +57,8 @@
 		swaybg
 		swaylock
 		swayidle
-		kitty
 	]);
+
+	# sway components
+	programs.waybar.enable = true;
 }

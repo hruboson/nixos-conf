@@ -4,6 +4,7 @@
 	imports = [
 		../../common/common.nix
 		../../hardware/workstation-hardware.nix
+		./packages.nix
 		./sway.nix
 		#./kde.nix
 	];

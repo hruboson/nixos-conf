@@ -38,8 +38,7 @@
 
 	## DE-related packages
 	environment.systemPackages = lib.mkAfter (with pkgs; [
-			wl-clipboard
-			wayland-utils
-			kitty
+			kdePackages.kclock
+			kdePackages.sddm-kcm
 	]);
 }
