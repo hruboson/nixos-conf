@@ -341,3 +341,17 @@ Or the old fashioned way using SSH keys (which is still quite easy on Linux):
 ### 4.1 Sway
 
 ### 4.2 Hyprland
+
+## 5. NixOS optimizations
+
+### 5.1 Optimizing storage
+
+You can remove all but the current generation using the command `sudo nix-collect-garbage -d`. This is especially useful on devices with lower total storage space (like Raspberry Pi). To also remove unused store paths run `nix-store --gc`.
+
+If you want to keep only the last three generations and delete the other use the command `nix-env --delete-generations +3 --profile /nix/var/nix/profiles/system`.
+
+Setting a maximum number of stored generations can be done by applying following settings in your nix configuration:
+
+```
+boot.loader.generations = 3; # keeps only last three generations
+```
