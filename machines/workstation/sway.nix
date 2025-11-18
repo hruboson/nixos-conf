@@ -57,6 +57,7 @@
 		swaybg
 		swaylock
 		swayidle
+		sway-launcher-desktop	# TUI application launcher
 	]);
 
 	# sway components
