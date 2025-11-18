@@ -58,6 +58,8 @@
 		swaylock
 		swayidle
 		sway-launcher-desktop	# TUI application launcher
+		grim					# Screenshot utility
+		slurp					# Select region for grim
 	]);
 
 	# sway components

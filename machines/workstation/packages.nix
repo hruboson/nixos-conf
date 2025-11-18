@@ -5,6 +5,8 @@
 		wl-clipboard
 		wayland-utils
 		kitty
+
+		gimp3
 	]);
 }
 
