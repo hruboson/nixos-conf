@@ -37,7 +37,25 @@ secrets = {
 
 # Manual
 
-## 1. Installation
+**Table of contents**
+1. [Installation](#installation)
+    1. [Graphical installer](#graphical-installer)
+    1. [Minimal installer](#minimal-installer)
+    1. [Raspberry pi 3B](#installation-raspberry)
+    1. [QEMU on Windows host](#qemu-windows)
+    1. [QEMU on Linux host](#qemu-linux)
+1. [First login](#first-login)
+1. [Git](#git)
+1. [Flakes](#flakes)
+1. [Home-manager](#home-manager)
+    1. [Plasma manager](#plasma-manager)
+1. [Desktop environment](#desktop-environment)
+    1. [KDE](#desktop-environment-kde)
+    1. [Sway](#desktop-environment-sway)
+    1. [Hyprland](#desktop-environment-hyprland)
+1. [NixOS optimizations](#nixos-optimizations)
+
+## 1. Installation <a name="installation"></a>
 Just recently I found `sudo nix run github:km-clay/nixos-wizard --extra-experimental-features nix-command --extra-experimental-features flakes` command that runs TUI (terminal user interface) installer, maybe give it a try or follow the manual installation.
 You will generally want to follow the [installation for x86-64 system](#11-manual-installation-on-x86-64-system) if you have something like desktop PC or laptop. If you have more specialized hardware, such as Raspberry Pi, your installation might look a bit different. I have so far only installed NixOS on Raspberry Pi 3B. To install NixOS on Raspberry Pi (3B) follow the [Raspberry Pi](#12-raspberry-pi-3b) manual.
 
@@ -49,9 +67,9 @@ VMware seemed to run much smoother, altough at the time of writing this I have n
 
 If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland** and want to run **NixOS in virtual machine on Windows**, **I strongly recommend** using [QEMU](https://www.qemu.org/) - see section [installing NixOS on QEMU virtual machine](#13-Installing-NixOS-on-virtual-machine-on-Windows-host-using-QEMU). I have not been able to run any Wayland compositor through Virtualbox or VMware on Windows. This tutorial might be a bit advanced than just using Virtualbox or VMware, but you should be able to customize the virtual machine more and mainly, as previously stated, be able to run **Wayland**.
 
-### 1.1 Manual installation on x86-64 system
+### 1.1 Manual installation on x86-64 system <a name="installation"></a>
 
-#### Using NixOS graphical installer
+#### Using NixOS graphical installer <a name="graphical-installer"></a>
 
 Installing NixOS using the graphical intaller is quite straightforward. I found it to be no harder than installing Fedora or Ubuntu.
 
@@ -63,7 +81,7 @@ If it gets stuck at **46%** DO NOT PANICK. This is normal and it will take a whi
 
 Once the system is installed you can reboot and remove the usb drive/cd/where you have nixos installation on. Then create a new config or bring already existing. Follow the [first login](#2-First-login) section for basic NixOS configuration and rebuild.
 
-#### Using NixOS minimal iso
+#### Using NixOS minimal iso <a name="minimal-installer"></a>
 
 Boot up your NixOS minimal iso and run the following commands. Pay attention to some of the arguments to different commands as they may vary on your system.
 
@@ -96,7 +114,7 @@ Boot up your NixOS minimal iso and run the following commands. Pay attention to 
 - after successful installation it will ask for new password, this password will be for the root account
 - `reboot` - after this it should boot to installed os
 
-### 1.2 Raspberry Pi 3B
+### 1.2 Raspberry Pi 3B <a name="installation-raspberry"></a>
 
 For the RPI installation I found [this guide](https://nix.dev/tutorials/nixos/installing-nixos-on-a-raspberry-pi.html) by [nix.dev](https://nix.dev/) to be the most useful.
 
@@ -182,7 +200,7 @@ in {
     - `nixos-rebuild boot` - should take about 10-20 minutes depending on the speed of your internet connection
     - `reboot` - reboots the system
 
-### 1.3 Installing NixOS on virtual machine on Windows host using QEMU
+### 1.3 Installing NixOS on virtual machine on Windows host using QEMU <a name="qemu-windows"></a>
 
 If you plan on running any Wayland compositor (such as *Sway* or *Hyprland*) through virtual machine on Windows, this is probably the best way to do it. I could not figure out how to run any Wayland compositor through Virtualbox or VMware.
 
@@ -290,7 +308,7 @@ qemu-system-x86_64.exe ^
 
 AND before running `sway` be sure to run `export WLR_NO_HARDWARE_CURSORS=1` (or set the environment variable somewhere).
 
-### 1.4 Installing NixOS on virtual machine on Linux host using QEMU
+### 1.4 Installing NixOS on virtual machine on Linux host using QEMU <a name="qemu-linux"></a>
 
 This section covers how to install and run QEMU on Fedora. On Linux I did not bother with bridge and just used NAT. If you are using QEMU with a network bridge I'd appreciate if you opened a pull request and shared the steps you did to make it work :-).
 
@@ -362,7 +380,7 @@ sudo systemctl enable --now libvirtd
 
 TODO
 
-## 2. First login
+## 2. First login <a name="first-login"></a>
 - when first logging in the nixos login will be `root` with password you set during the `nixos-install`
 - update channels (package repositories): `nix-channel --update`
 - edit configuration in `/etc/nixos/configuration.nix`, use `nano /etc/nixos/configuration.nix` to edit that file
@@ -374,7 +392,7 @@ TODO
 - then **rebuild** nix using the `nixos-rebuild switch` (will probably take a while), it will take the configuration file and apply the changes we made in it
 - apply password to the new user: `passwd username`
 
-## 3.1 Setting up git and github
+## 3.1 Setting up git and github <a name="git"></a>
 If you are comfortable using the GitHub CLI tool (`gh`), you can add it to your configuration. The package is `pkgs.gh`.
 
 Or the old fashioned way using SSH keys (which is still quite easy on Linux):
@@ -398,19 +416,27 @@ Or the old fashioned way using SSH keys (which is still quite easy on Linux):
     - after changes rebuild with `sudo nixos-rebuild -I nixos-config=/home/<username>/nixos/configuration.nix`
 - if you get prompt for username and password when pushing to git then try changing remote: `git remote set-url origin git@github.com:<username>/<repository.git>`
 
-## 3.2 Flakes
+## 3.2 Flakes <a name="flakes"></a>
 
-## 3.3 Home-manager
+I'm currently in the process of reading [NixOS & Flakes Book - An unofficial book for beginners](https://nixos-and-flakes.thiscute.world/) because I feel like flakes are a bit advanced topic and I don't want to get things wrong. Once I feel more confident I will complete this section.
 
-### 3.3.1 Plasma-manager
+## 3.3 Home-manager <a name="home-manager"></a>
 
-## 4. Desktop environment
+### 3.3.1 Plasma-manager <a name="plasma-manager"></a>
 
-### 4.1 Sway
+Plasma-manager is a tool for managing your KDE configuration declaratively.
 
-### 4.2 Hyprland
+## 4. Desktop environment <a name="desktop-environment"></a>
 
-## 5. NixOS optimizations
+### 4.1 KDE <a name="desktop-environment-kde"></a>
+
+### 4.2 Sway <a name="desktop-environment-sway"></a>
+
+Both Sway and Hyprland are a bit more complicated than a simple KDE. They are not a desktop environments as per se. Officialy they are "window managers". That basically means that you have to configure everything else yourself - from lock screen to taskbar.
+
+### 4.3 Hyprland <a name="desktop-environment-hyprland"></a>
+
+## 5. NixOS optimizations <a name="nixos-optimizations"></a>
 
 ### 5.1 Optimizing storage
 
