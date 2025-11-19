@@ -239,7 +239,7 @@ qemu-system-x86_64.exe ^
     -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
     -bios "C:\Path\to\qemu\OVMF_CODE.fd"
 ```
-Again change the `drive file="..."`,`-cdrom "..."` and `-bios "..."` arguments. This should boot up virtual machine with NixOS installed.
+Again change the `drive file="..."` and `-bios "..."` arguments. This should boot up virtual machine with NixOS installed.
 
 I have also compiled a list of commands that might come in handy depending on what you are trying to achieve:
 
@@ -296,13 +296,13 @@ This section covers how to install and run QEMU on Fedora. On Linux I did not bo
 
 I'm using the Fedora 42 distro. If you are on Ubuntu or Arch your installation will most likely be different. See [QEMU installation](https://www.qemu.org/download/#linux) manual for your specific distribution.
 
-1. First check if virtualization is enabled in BIOS:
+First check if virtualization is enabled in BIOS:
 ```
 egrep -c '(vmx|svm)' /proc/cpuinfo
 ```
 If the output of this command is **0** virtualization is disabled in BIOS.
 
-2. Fedora ships with everything required to run QEMU/KVM efficiently. All you need to do is install the virutalization group:
+Fedora ships with everything required to run QEMU/KVM efficiently. All you need to do is install the virutalization group:
 
 ```
 sudo dnf install @virtualization
@@ -316,12 +316,12 @@ sudo dnf install qemu-kvm libvirt virt-install bridge-utils
 
 After that you should be ready to run QEMU. Check that `which qemu` returns a valid path. If it does you are all set.
 
-3. From now on the commands will be basically the same as in the Windows tutorial section. Create a virtual drive:
+From now on the commands will be basically the same as in the Windows tutorial section. Create a virtual drive:
 ```
 qemu-img create -f qcow2 your_image_name.img size
 ```
 
-4. Run with graphical installer:
+Run with graphical installer:
 ```
 qemu-system-x86_64 \
     -m 4096 -cpu host -smp 4 \
@@ -334,10 +334,12 @@ qemu-system-x86_64 \
     -bios /path/to/your/ovmf/OVMF_CODE.fd \
     --enable-kvm
 ```
-
+Change the drive file="...",-cdrom "..." and -bios "..." arguments to paths to your files on your system.
 The `OVMF_CODE.fd` file should be located at `/usr/share/edk2/ovmf/OVMF_CODE.fd`. If not just download it [here](https://github.com/kholia/OSX-KVM/raw/refs/heads/master/OVMF_CODE.fd) and pass the path to the file in the `-bios` argument.
 
-5. After installation you don't have to include the installation iso:
+Now you are in a graphical installer and the rest should be quite straightforward. Follow the graphical installation manual. Once you are done you can shut down the virtual machine (either manually through the guest system or just close the QEMU window). At this point NixOS should be installed on your virtual drive (`your_drive.qcow2`).
+
+After installation you don't have to include the installation iso:
 ```
 qemu-system-x86_64 \
     -m 4096 -cpu host -smp 4 \
@@ -349,6 +351,7 @@ qemu-system-x86_64 \
     -bios /path/to/your/ovmf/OVMF_CODE.fd \
     --enable-kvm
 ```
+Again change the `drive file="..."` and `-bios "..."` arguments. This should boot up virtual machine with NixOS installed.
 
 If you are having problems running QEMU, try manually enabling the libvirtd service.
 ```
