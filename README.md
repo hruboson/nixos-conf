@@ -6,7 +6,7 @@ installation of NixOS. See the [Manual](#Manual) section if this is your first t
 
 # Using this configuration
 
-If you want to use this configuration you first have to do few steps:
+If you want to use this configuration you first have to do few steps (currently only applies for #server and #raspberrypi flakes, #workstation should be fine without secrets):
 
 1. clone the repository (duh)
 2. create a folder `secrets/` (wherever you want, I recommend inside of this repository)
@@ -26,7 +26,7 @@ If you want to use this configuration you first have to do few steps:
 }
 ```
 
-4. `git init && git add .` inside of the `secrets/` folder
+4. `git init && git add . && git commit -m "Secrets"` inside of the `secrets/` folder
 5. in `flake.nix` (of this repository) change the `url` of `secrets` in inputs to your created `secrets/` folder
 
 ```
@@ -47,7 +47,7 @@ Be sure to enable EFI when creating the machine (this configuration probably won
 
 VMware seemed to run much smoother, altough at the time of writing this I have not figured out how to enable EFI in the settings.
 
-If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland** and want to run **NixOS in virtual machine on Windows**, **I strongly recommend** using [QEMU](https://www.qemu.org/) - see section [installing NixOS on QEMU virtual machine](#13-Installing-NixOS-on-virtual-machine-on-Windows-host-using-QEMU). I have not been able to run any Wayland compositor through Virtualbox or VMware on Windows.
+If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland** and want to run **NixOS in virtual machine on Windows**, **I strongly recommend** using [QEMU](https://www.qemu.org/) - see section [installing NixOS on QEMU virtual machine](#13-Installing-NixOS-on-virtual-machine-on-Windows-host-using-QEMU). I have not been able to run any Wayland compositor through Virtualbox or VMware on Windows. This tutorial might be a bit advanced than just using Virtualbox or VMware, but you should be able to customize the virtual machine more and mainly, as previously stated, be able to run **Wayland**.
 
 ### 1.1 Manual installation on x86-64 system
 
@@ -290,7 +290,72 @@ qemu-system-x86_64.exe ^
 
 AND before running `sway` be sure to run `export WLR_NO_HARDWARE_CURSORS=1` (or set the environment variable somewhere).
 
-### 1.4 Dualbooting with Windows
+### 1.4 Installing NixOS on virtual machine on Linux host using QEMU
+
+This section covers how to install and run QEMU on Fedora. On Linux I did not bother with bridge and just used NAT. If you are using QEMU with a network bridge I'd appreciate if you opened a pull request and shared the steps you did to make it work :-).
+
+I'm using the Fedora 42 distro. If you are on Ubuntu or Arch your installation will most likely be different. See [QEMU installation](https://www.qemu.org/download/#linux) manual for your specific distribution.
+
+1. First check if virtualization is enabled in BIOS:
+```
+egrep -c '(vmx|svm)' /proc/cpuinfo
+```
+If the output of this command is **0** virtualization is disabled in BIOS.
+
+2. Fedora ships with everything required to run QEMU/KVM efficiently. All you need to do is install the virutalization group:
+
+```
+sudo dnf install @virtualization
+```
+
+and some additional tools (might not be needed depending on your distro):
+
+```
+sudo dnf install qemu-kvm libvirt virt-install bridge-utils
+```
+
+After that you should be ready to run QEMU. Check that `which qemu` returns a valid path. If it does you are all set.
+
+3. From now on the commands will be basically the same as in the Windows tutorial section. Create a virtual drive:
+```
+qemu-img create -f qcow2 your_image_name.img size
+```
+
+4. Run with graphical installer:
+```
+qemu-system-x86_64 \
+    -m 4096 -cpu host -smp 4 \
+    -device virtio-vga -display sdl \
+    -device virtio-keyboard-pci -device virtio-mouse-pci \
+    -nic user,model=virtio-net-pci \
+    -drive file="/path/to/your/vm/nixos.qcow2",if=virtio,format=qcow2 \
+    -cdrom "/path/to/your/iso/nixos-installer.iso" \
+    -boot d \
+    -bios /path/to/your/ovmf/OVMF_CODE.fd \
+    --enable-kvm
+```
+
+The `OVMF_CODE.fd` file should be located at `/usr/share/edk2/ovmf/OVMF_CODE.fd`. If not just download it [here](https://github.com/kholia/OSX-KVM/raw/refs/heads/master/OVMF_CODE.fd) and pass the path to the file in the `-bios` argument.
+
+5. After installation you don't have to include the installation iso:
+```
+qemu-system-x86_64 \
+    -m 4096 -cpu host -smp 4 \
+    -device virtio-vga -display sdl \
+    -device virtio-keyboard-pci -device virtio-mouse-pci \
+    -nic user,model=virtio-net-pci \
+    -drive file="/path/to/your/vm/nixos.qcow2",if=virtio,format=qcow2 \
+    -boot d \
+    -bios /path/to/your/ovmf/OVMF_CODE.fd \
+    --enable-kvm
+```
+
+If you are having problems running QEMU, try manually enabling the libvirtd service.
+```
+sudo systemctl enable --now libvirtd
+```
+
+### 1.5 Dualbooting with Windows
 
 TODO
 
