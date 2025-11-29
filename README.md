@@ -21,6 +21,8 @@ If you want to use this configuration you first have to do few steps (currently 
 		wifiSSID = "WIFI_NAME";
 		wifiPasswd = "WIFI_PASSWD";
 
+        nextcloudAdminPassword = "NEXTCLOUD_ADMIN_PASSWORD";
+
         apiNasaKey = "NASA_API_KEY";
 	};
 }

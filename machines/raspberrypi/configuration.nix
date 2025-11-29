@@ -10,6 +10,8 @@
 		jellyfin
 		jellyfin-web
 		jellyfin-ffmpeg
+
+		ntfs3g
 	]);
 
 	hardware.graphics = {
@@ -25,7 +27,7 @@
 		};
 
 		firewall = {
-			allowedTCPPorts = [ 1111 3000 2222 8096 ];
+			allowedTCPPorts = [ 1111 3000 2222 8096 4444 80 443 ];
 		};
 	};
 
@@ -60,6 +62,28 @@
 			service = {
 				DISABLE_REGISTRATION = true; # false only when registering admin for the first time
 			};
+		};
+	};
+
+	environment.etc."nextcloud-admin-pass".text = secrets.nextcloudAdminPassword;
+	services.nextcloud = {
+		enable = true;
+		hostName = "${config.networking.hostName}.local";
+		https = false; # since I'm on local network now I don't need https
+		config = {
+			adminuser = "admin";
+			adminpassFile = "/etc/nextcloud-admin-pass";
+			dbtype = "sqlite";
+		};
+
+		datadir = "/var/lib/nextcloud";	# where Nextcloud stores uploaded files
+		settings = { # extra recommended PHP/Nextcloud config
+			trusted_domains = [
+				"${config.networking.hostName}.local"
+				"localhost"
+			];
+			overwrite.cli.url = "http://${config.networking.hostName}.local";
+			overwriteprotocol = "http";
 		};
 	};
 
@@ -141,6 +165,7 @@
 						type = "monitor";
 						title = "Services";
 						cache = "1m";
+						timeout = "15s";
 						sites = [
 						{
 							title = "Forgejo";
@@ -151,6 +176,11 @@
 							title = "Jellyfin";
 							url = "http://${config.networking.hostName}.local:8096";
 							icon = "di:jellyfin";
+						}
+						{
+							title = "Nextcloud";
+							url = "http://${config.networking.hostName}.local:4444";
+							icon = "di:nextcloud";
 						}
 						];
 					}
