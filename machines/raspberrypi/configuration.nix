@@ -67,7 +67,7 @@
 		};
 	};
 
-	environment.etc."nextcloud-admin-pass".text = secrets.nextcloudAdminPassword;
+	environment.etc."nextcloud-admin-pass".text = secrets.nextcloudPass;
 	services.nextcloud = {
 		enable = true;
 		hostName = "${config.networking.hostName}.local";
