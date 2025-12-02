@@ -101,11 +101,14 @@
 							timeout = "15s";
 							allow-insecure = true;
 						}
+						{
+							title = "Plik";
+							url = "http://${config.networking.hostName}.local:4004";
+							icon = "sh:psitransfer";
+							timeout = "10s";
+							allow-insecure = true;
+						}
 						];
-					}
-					{
-						type = "search";
-						search-engine = "duckduckgo";
 					}
 					{
 						type = "bookmarks";
