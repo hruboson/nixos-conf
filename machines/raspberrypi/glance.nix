@@ -133,7 +133,7 @@
 							color = "210 70 50";
 							links = [
 							{ title = "Mastodon"; url = "https://techhub.social/"; icon = "https://www.google.com/s2/favicons?domain=techhub.social"; }
-							{ title = "Reddit"; url = "https://old.reddit.com/"; icon = "https://www.google.com/s2/favicons?domain=old.reddit.com"; }
+							{ title = "Reddit"; url = "https://old.reddit.com/"; icon = "https://www.google.com/s2/favicons?domain=reddit.com"; }
 							{ title = "Instagram"; url = "https://www.instagram.com/"; icon = "https://www.google.com/s2/favicons?domain=instagram.com"; }
 							];
 						}
