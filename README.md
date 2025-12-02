@@ -354,6 +354,23 @@ qemu-system-x86_64 \
     -bios /path/to/your/ovmf/OVMF_CODE.fd \
     --enable-kvm
 ```
+If you have trouble with the mouse (jittering, too fast, unresponsive), try switching the display to `-display gtk,gl=on`. This should work with no problem on Linux. The command would look something like:
+
+```
+qemu-system-x86_64  \
+	-m 4096 -cpu host -smp 4 \
+	-display gtk,gl=on \
+	-device virtio-vga \
+	-device virtio-keyboard-pci \
+	-device virtio-mouse-pci \
+	-nic user,model=virtio-net-pci \
+	-drive file="/path/to/your/vm/nixos.qcow2",if=virtio,format=qcow2 \
+    -cdrom "/path/to/your/iso/nixos-installer.iso" \
+    -boot d \
+    -bios /path/to/your/ovmf/OVMF_CODE.fd \
+    --enable-kvm
+```
+
 Change the drive file="...",-cdrom "..." and -bios "..." arguments to paths to your files on your system.
 The `OVMF_CODE.fd` file should be located at `/usr/share/edk2/ovmf/OVMF_CODE.fd`. If not just download it [here](https://github.com/kholia/OSX-KVM/raw/refs/heads/master/OVMF_CODE.fd) and pass the path to the file in the `-bios` argument.
 
