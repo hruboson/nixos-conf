@@ -338,7 +338,7 @@ After that you should be ready to run QEMU. Check that `which qemu` returns a va
 
 From now on the commands will be basically the same as in the Windows tutorial section. Create a virtual drive:
 ```
-qemu-img create -f qcow2 your_image_name.img size
+qemu-img create -f qcow2 your_image_name.qcow2 size
 ```
 
 Run with graphical installer:
