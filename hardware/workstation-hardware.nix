@@ -8,10 +8,12 @@
     [ (modulesPath + "/profiles/qemu-guest.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "ata_piix" "virtio_pci" "floppy" "sr_mod" "virtio_blk" ];
+  boot.initrd.availableKernelModules = [ "9p" "9pnet_virtio" "ata_piix" "virtio_pci" "floppy" "sr_mod" "virtio_blk" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
+  boot.kernelModules = [ "kvm-amd" "kvm" "virtio" "virtio_pci" "virtio_blk" "virtio_net" ];
   boot.extraModulePackages = [ ];
+  hardware.cpu.amd.updateMicrocode = true;
+  
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/68be620c-721f-4c95-a9c6-293248643a27";
