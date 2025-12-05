@@ -8,7 +8,7 @@
 			default_session = {
 				# border=yellow;text=cyan;prompt=cyan;time=yellow;input=yellow;container=black;button=cyan;title=yellow 
 				command = ''
-				${pkgs.greetd.tuigreet}/bin/tuigreet --time 
+				${pkgs.tuigreet}/bin/tuigreet --time 
 				--theme "border=yellow;text=cyan"
 				--remember --remember-session --cmd sway";
 				user = "greeter'';
@@ -51,9 +51,11 @@
 
 	# sway utils
 	environment.systemPackages = lib.mkAfter(with pkgs; [
-		greetd.tuigreet
+		wev
 		wayland
 		wlr-randr
+
+		tuigreet
 		swaybg
 		swaylock
 		swayidle
@@ -61,6 +63,7 @@
 		grim					# Screenshot utility
 		slurp					# Select region for grim
 		nwg-panel				# Taskbar
+		nwg-wrapper				# custom widget displayer
 	]);
 
 	# sway components
