@@ -12,11 +12,7 @@
 	# NEOVIM
 	programs.neovim = {
 		enable = true;
-		package = pkgs.neovim-unwrapped;
-
-		extraConfig = ''
-			set clipboard=unnamedplus
-			'';
+		defaultEditor = true;
 	};
 
 	programs.bashmount.enable = true;
