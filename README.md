@@ -281,17 +281,19 @@ Change the `ifname` in `-netdev` argument to the name of your newly created adap
 
 ```
 qemu-system-x86_64.exe ^
+    -accel whpx -M q35 ^
     -m 4096 -cpu max -smp 4 ^
-    -device virtio-vga-gl ^
-    -display sdl,gl=on ^
+    -device qxl-vga,vgamem_mb=4096 ^
     -device virtio-keyboard-pci -device virtio-mouse-pci ^
     -netdev tap,id=mynet0,ifname="Ethernet 3",script=no,downscript=no ^
     -device virtio-net-pci,netdev=mynet0 ^
+    -usb -device usb-tablet ^
     -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
     -bios "C:\Path\to\qemu\OVMF_CODE.fd"
 ```
-This runs much smoother by using the `virtio-vga-gl` and `-display sdl,gl=on`, but takes a bit longer to load. If all you see is black screen try resizing the QEMU window few times.
+
 Change the `ifname` in `-netdev` argument to the name of your network adapter.
+This runs much smoother by using the `-accel whpx` and `-device qxl-vga`. If all you see is black screen try resizing the QEMU window few times.
 
 3. my cursor is upside down
 
@@ -299,8 +301,9 @@ To fix the goofy bug when your cursor is upside down but everything else looks p
 
 ```
 qemu-system-x86_64.exe ^
+    -accel whpx -M q35 ^
     -m 4096 -cpu max -smp 4 ^
-    -vga qxl ^
+    -device qxl-vga,vgamem_mb=4096 ^
     -device virtio-keyboard-pci -device virtio-mouse-pci ^
     -netdev tap,id=mynet0,ifname="Ethernet 3",script=no,downscript=no ^
     -device virtio-net-pci,netdev=mynet0 ^
@@ -308,7 +311,7 @@ qemu-system-x86_64.exe ^
     -bios "C:\Path\to\qemu\OVMF_CODE.fd"
 ```
 
-AND before running `sway` be sure to run `export WLR_NO_HARDWARE_CURSORS=1` (or set the environment variable somewhere).
+AND before running `sway` or `hyprland` be sure to run `export WLR_NO_HARDWARE_CURSORS=1` (or set the environment variable somewhere).
 
 ### 1.4 Installing NixOS on virtual machine on Linux host using QEMU <a name="qemu-linux"></a>
 
