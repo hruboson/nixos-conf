@@ -1,0 +1,83 @@
+{ config, pkgs, lib, inputs, ... }:
+
+with lib; let
+	hyprPluginPkgs = inputs.hyprland-plugins.packages.${pkgs.system};
+	hypr-plugin-dir = pkgs.symlinkJoin {
+		name = "hyprland-plugins";
+		paths = with hyprPluginPkgs; [
+			hyprbars
+		];
+	};
+in
+{
+	environment.sessionVariables = { HYPR_PLUGIN_DIR = hypr-plugin-dir; };
+
+	programs.hyprland = {
+		enable = true;
+		withUWSM = true;
+		xwayland.enable = true;
+		
+		package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+	};
+
+	# hypr utils
+	environment.systemPackages = lib.mkAfter(with pkgs; [
+		wev
+		wayland
+		wlr-randr
+		tuigreet
+
+		hyprpaper
+		hypridle
+		hyprlock
+		#inputs.hyprland-plugins.packages."${pkgs.system}".hyprbars
+
+		grim					# Screenshot utility
+		slurp					# Select region for grim
+		nwg-wrapper				# Custom widget displayer
+		vicinae					# Launcher
+	]);
+
+	services.xserver.enable = false;
+	security.polkit.enable = true;
+	services.dbus.enable = true;
+	hardware.graphics.enable = true;
+	
+	# QEMU-specific config
+	services.xserver.videoDrivers = [ "virtio" ];
+	environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
+
+	services.pipewire = {
+		enable = true;
+		wireplumber.enable = true;
+		alsa.enable = true;
+		pulse.enable = true;
+	};
+
+	# graphical login screen (greetd+tuigreet)
+	services.greetd = {
+		enable = true;
+		settings = {
+			default_session = {
+				# border=yellow;text=cyan;prompt=cyan;time=yellow;input=yellow;container=black;button=cyan;title=yellow 
+				command = ''
+				${pkgs.tuigreet}/bin/tuigreet --time 
+				--theme "border=yellow;text=cyan"
+				--remember --remember-session --cmd start-hyprland";
+				user = "greeter'';
+			};
+		};
+	};
+
+	# https://github.com/sjcobb2022/nixos-conf/blob/main/hosts/common/optional/greetd.nix
+	systemd.services.greetd.serviceConfig = {
+		Type = "idle";
+		StandardInput = "tty";
+		StandardOutput = "tty";
+		StardardError = "journal";
+		TTYReset = true;
+		TTYYVHangup = true;
+		TTYVTDisallocate = true;
+	};
+
+}

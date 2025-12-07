@@ -12,6 +12,11 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.home-manager.follows = "home-manager";
 		};
+		hyprland.url = "github:hyprwm/Hyprland";
+		hyprland-plugins = {
+			url = "github:hyprwm/hyprland-plugins";
+			inputs.hyprland.follows = "hyprland";
+		};
 		nvim-conf = {
 			url = "github:hruboson/nvim-conf";
 			flake = false;
@@ -46,7 +51,7 @@
 			makeMachine = name: cfg: nixpkgs.lib.nixosSystem {
 				system = cfg.system;
 				specialArgs = { 
-					inherit username secrets; 
+					inherit username secrets inputs; 
 					hostname = cfg.hostname;
 				};
 				modules = [
@@ -64,7 +69,7 @@
 						home-manager.sharedModules = [ ./common/home.nix plasma-manager.homeModules.plasma-manager ]; # common for all machines
 						home-manager.users.${username} = import cfg.homeFile;
 						home-manager.extraSpecialArgs = {
-							inherit nvim-conf;
+							inherit nvim-conf inputs;
 						};
 					}
 				];

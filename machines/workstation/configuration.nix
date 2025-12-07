@@ -5,7 +5,8 @@
 		../../common/common.nix
 		../../hardware/workstation-hardware.nix
 		./packages.nix
-		./sway.nix
+		./hypr.nix
+		#./sway.nix
 		#./kde.nix
 	];
 
@@ -15,4 +16,6 @@
 
 	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 	networking.hostName = hostname;
+
+	services.power-profiles-daemon.enable = true;
 }

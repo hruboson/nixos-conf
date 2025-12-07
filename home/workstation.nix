@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, inputs, ... }:
 
 {
 	#programs.zsh.promptInit = ''
@@ -31,4 +31,42 @@
 	xdg.configFile."sway/config".text = ''
 		include ~/.config/sway/*.conf
 	'';
+
+	# HYPRLAND PLUGINS
+	/*wayland.windowManager.hyprland = {
+		enable = true; # allows home-manager to configure hyprland
+		package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+		plugins = [
+			inputs.hyprland-plugins.packages."${pkgs.system}".hyprbars
+			inputs.hyprland-plugins.packages."${pkgs.system}".borders-plus-plus
+		];
+
+		/*settings = {
+			"plugin:borders-plus-plus" = {
+				add_borders = 1;
+				"col.border_1" = "rgb(ffffff)";
+				"col.border_2" = "rgb(2222ff)";
+
+				border_size_1 = 10;
+				border_size_2 = -1;
+
+				natural_rounding = "yes";
+			};
+			"plugin:hyprbars" = {
+				bar_height = 38;
+				bar_color = "rgb(141415)";
+				col.text = "rgb(ffffff)";
+		        bar_text_size = 12;
+				bar_text_font = "Nerd Font Mono Bold";
+				bar_button_padding = 12;
+				bar_padding = 10;
+				bar_precedence_over_border = true;
+				hyprbars-button = [
+					"\$color1, 20, , hyprctl dispatch killactive"
+					"\$color3, 20, , hyprctl dispatch fullscreen 2"
+					"\$color4, 20, _, hyprctl dispatch togglefloating"
+				];
+			};
+		};
+	};*/
 }
