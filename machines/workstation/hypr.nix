@@ -30,6 +30,7 @@ in
 		hyprpaper
 		hypridle
 		hyprlock
+		waybar
 		#inputs.hyprland-plugins.packages."${pkgs.system}".hyprbars
 
 		grim					# Screenshot utility
