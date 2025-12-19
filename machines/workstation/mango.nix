@@ -1,43 +1,11 @@
 { config, pkgs, lib, inputs, ... }:
 
-with lib; let
-	hyprPluginPkgs = inputs.hyprland-plugins.packages.${pkgs.system};
-	hypr-plugin-dir = pkgs.symlinkJoin {
-		name = "hyprland-plugins";
-		paths = with hyprPluginPkgs; [
-			hyprbars
-		];
-	};
-in
 {
-	environment.sessionVariables = { HYPR_PLUGIN_DIR = hypr-plugin-dir; };
+	imports = [ inputs.mangowc.nixosModules.mango ];
 
-	programs.hyprland = {
+	programs.mango = {
 		enable = true;
-		withUWSM = true;
-		xwayland.enable = true;
-		
-		package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 	};
-
-	# hypr utils
-	environment.systemPackages = lib.mkAfter(with pkgs; [
-		wev
-		wayland
-		wlr-randr
-		tuigreet
-
-		hyprpaper
-		hypridle
-		hyprlock
-		waybar
-		#inputs.hyprland-plugins.packages."${pkgs.system}".hyprbars
-
-		grim					# Screenshot utility
-		slurp					# Select region for grim
-		nwg-wrapper				# Custom widget displayer
-		vicinae					# Launcher
-	]);
 
 	services.xserver.enable = false;
 	security.polkit.enable = true;
@@ -55,6 +23,37 @@ in
 		pulse.enable = true;
 	};
 
+	environment.systemPackages = lib.mkAfter(with pkgs; [
+		foot
+		rofi
+		waybar
+		grim
+		slurp
+		swaybg
+		swaynotificationcenter
+		swayidle
+		swaylock-effects
+		wlogout
+
+		wl-clipboard
+		cliphist
+		wl-clip-persist
+
+		wlr-randr
+		brightnessctl
+		wlsunset
+
+		pamixer
+		sox
+		sway-audio-idle-inhibit
+
+		grim
+		slurp
+		satty
+
+		swayosd
+	]);
+
 	# graphical login screen (greetd+tuigreet)
 	services.greetd = {
 		enable = true;
@@ -64,7 +63,7 @@ in
 				command = ''
 				${pkgs.tuigreet}/bin/tuigreet --time 
 				--theme "border=yellow;text=cyan"
-				--remember --remember-session --cmd start-hyprland";
+				--remember --remember-session --cmd mango";
 				user = "greeter'';
 			};
 		};

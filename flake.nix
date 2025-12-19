@@ -17,6 +17,10 @@
 			url = "github:hyprwm/hyprland-plugins";
 			inputs.hyprland.follows = "hyprland";
 		};
+		mangowc = {
+			url = "github:DreamMaoMao/mango";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 		nvim-conf = {
 			url = "github:hruboson/nvim-conf";
 			flake = false;
@@ -26,7 +30,7 @@
 		};
 	};
 
-	outputs = { self, nixpkgs, home-manager, plasma-manager, nvim-conf, secrets, ... }@inputs:
+	outputs = { self, nixpkgs, home-manager, plasma-manager, mangowc, nvim-conf, secrets, ... }@inputs:
 		let
 			username = "hruon";
 			machines = {
@@ -66,7 +70,10 @@
 					home-manager.nixosModules.home-manager {
 						home-manager.useGlobalPkgs = true;
 						home-manager.useUserPackages = true;
-						home-manager.sharedModules = [ ./common/home.nix plasma-manager.homeModules.plasma-manager ]; # common for all machines
+						home-manager.sharedModules = [ # common for all machines
+							./common/home.nix 
+							plasma-manager.homeModules.plasma-manager 
+						];
 						home-manager.users.${username} = import cfg.homeFile;
 						home-manager.extraSpecialArgs = {
 							inherit nvim-conf inputs;
