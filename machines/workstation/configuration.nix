@@ -5,8 +5,8 @@
 		../../common/common.nix
 		../../hardware/workstation-hardware.nix
 		./packages.nix
-		#./hypr.nix
-		./mango.nix
+		./hypr.nix
+		#./mango.nix
 		#./sway.nix
 		#./kde.nix
 	];
