@@ -1,7 +1,7 @@
 { config, pkgs, lib, inputs, ... }:
 
 with lib; let
-	hyprPluginPkgs = inputs.hyprland-plugins.packages.${pkgs.system};
+	hyprPluginPkgs = inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system};
 	hypr-plugin-dir = pkgs.symlinkJoin {
 		name = "hyprland-plugins";
 		paths = with hyprPluginPkgs; [
@@ -17,7 +17,7 @@ in
 		withUWSM = true;
 		xwayland.enable = true;
 		
-		package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+		package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
 	};
 
 	# hypr utils
@@ -25,13 +25,13 @@ in
 		wev
 		wayland
 		wlr-randr
+		wdisplays
 		tuigreet
 
 		hyprpaper
 		hypridle
 		hyprlock
 		waybar
-		#inputs.hyprland-plugins.packages."${pkgs.system}".hyprbars
 
 		grim					# Screenshot utility
 		slurp					# Select region for grim
