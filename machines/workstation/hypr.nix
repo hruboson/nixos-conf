@@ -22,6 +22,8 @@ in
 
 	# hypr utils
 	environment.systemPackages = lib.mkAfter(with pkgs; [
+		killall
+
 		wev
 		wayland
 		wlr-randr
@@ -37,6 +39,7 @@ in
 		slurp					# Select region for grim
 		nwg-wrapper				# Custom widget displayer
 		vicinae					# Launcher
+		pwvucontrol				# volume and sound control
 	]);
 
 	services.xserver.enable = false;
