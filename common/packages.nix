@@ -7,6 +7,7 @@
 		lazygit
 		nix-ld
 		nix-prefetch-git
+		kitty
 		macchina # sysinfo fetcher
 		dysk # pretty disk info
 		btop # pretty process info
