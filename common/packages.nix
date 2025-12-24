@@ -11,6 +11,7 @@
 		macchina # sysinfo fetcher
 		dysk # pretty disk info
 		btop # pretty process info
+		xxd # sometimes neovim does not install this automatically --- needed for treesitter
 	];
 
 	programs.zsh.enable = true;

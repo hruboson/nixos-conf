@@ -82,7 +82,7 @@
 						sites = [
 						{
 							title = "Forgejo";
-							url = "http://${config.networking.hostName}.local:3000";
+							url = "http://${config.networking.hostName}.local:2020";
 							icon = "di:git";
 							timeout = "10s";
 							allow-insecure = true;
@@ -105,6 +105,13 @@
 							title = "Plik";
 							url = "http://${config.networking.hostName}.local:4004";
 							icon = "sh:psitransfer";
+							timeout = "10s";
+							allow-insecure = true;
+						}
+						{
+							title = "Linkwarden";
+							url = "http://${config.networking.hostName}.local:3000";
+							icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/linkwarden.png";
 							timeout = "10s";
 							allow-insecure = true;
 						}

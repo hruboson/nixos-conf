@@ -29,7 +29,7 @@
 		};
 
 		firewall = {
-			allowedTCPPorts = [ 1111 3000 2222 8096 4444 4004 80 443 ];
+			allowedTCPPorts = [ 1111 3000 2020 2222 8096 4444 4004 80 443 ];
 		};
 	};
 
@@ -56,8 +56,8 @@
 		settings = {
 			server = {
 				DOMAIN = "${config.networking.hostName}.local";
-				ROOT_URL = "http://${config.networking.hostName}.local:3000/";
-				HTTP_PORT = 3000;
+				ROOT_URL = "http://${config.networking.hostName}.local:2020/";
+				HTTP_PORT = 2020;
 				SSH_DOMAIN = "${config.networking.hostName}.local";
 				HTTP_ADDR = "0.0.0.0";
 			};
