@@ -15,6 +15,8 @@
 	boot.loader.grub.useOSProber = true;
 
 	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+	nixpkgs.config.allowUnfree = true; # Needed for minecraft-server
+
 
 	programs.wayvnc.enable = true;
 	security.polkit.enable = true;
@@ -30,7 +32,7 @@
 	networking = {
 		hostName = hostname;
 		firewall = {
-			allowedTCPPorts = [ 1111 3000 2020 2222 8096 4444 4004 80 443 5900 ];
+			allowedTCPPorts = [ 1111 3000 2020 2222 8096 4444 4004 80 443 5900 43000 ];
 		};
 	};
 
@@ -126,5 +128,30 @@
 			name = "linkwarden";
 			user = "linkwarden";
 		};
+	};
+
+	### MINECRAFT SERVER ###
+	services.minecraft-server = {
+		enable = true;
+		eula = true;
+		openFirewall = true;
+		declarative = true;
+
+		# get UUIDs of player at mcuuid.net
+		whitelist = {
+			Shiftoss = "966c4864-da7b-48b9-b904-986d6bd0d117";
+		};
+
+		serverProperties = {
+			server-port = 43000;
+			difficulty = 3;
+			gamemode = 0;
+			max-players = 10;
+			motd = "NixOS Minecraft server!";
+			white-list = true;
+			allow-cheats = true;
+		};
+
+		jvmOpts = "-Xms2048M -Xmx4096M";
 	};
 }
