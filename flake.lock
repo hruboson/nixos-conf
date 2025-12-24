@@ -531,11 +531,11 @@
     "nvim-conf": {
       "flake": false,
       "locked": {
-        "lastModified": 1765563323,
+        "lastModified": 1766581127,
         "narHash": "sha256-wxF2mjo8cFdjo+t2JG46XLqTNoDFLCiJgjpp+uoJJq0=",
         "owner": "hruboson",
         "repo": "nvim-conf",
-        "rev": "350d13f846333bc5d6602c192da4fa58b9d84a2c",
+        "rev": "53daff4d5fa1219c090e52d729ed7a16f9e60554",
         "type": "github"
       },
       "original": {
@@ -625,11 +625,11 @@
     },
     "secrets": {
       "locked": {
-        "lastModified": 1766417034,
-        "narHash": "sha256-+nhJhLYvbV9uD0C+LuEY1oQ18t5Ey1ruVqNz2CMwOzY=",
+        "lastModified": 1766574215,
+        "narHash": "sha256-WtEKKSIEgN3xKIjZxUD3XczaHQJiIUPuuuR9GUlWcZw=",
         "ref": "refs/heads/master",
-        "rev": "b71f31436a09d912b2c7e6ca92e7fe63fbcbd376",
-        "revCount": 1,
+        "rev": "5049190534a08c53408a75995b04bb980f086adc",
+        "revCount": 2,
         "type": "git",
         "url": "file:///home/hruon/nixos-conf/secrets"
       },
