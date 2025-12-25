@@ -625,11 +625,11 @@
     },
     "secrets": {
       "locked": {
-        "lastModified": 1766574215,
-        "narHash": "sha256-WtEKKSIEgN3xKIjZxUD3XczaHQJiIUPuuuR9GUlWcZw=",
+        "lastModified": 1766657726,
+        "narHash": "sha256-DxNbuu0R15LpOitqN9x+bTlMXWm2+dTHClms0rscbBo=",
         "ref": "refs/heads/master",
-        "rev": "5049190534a08c53408a75995b04bb980f086adc",
-        "revCount": 2,
+        "rev": "50d739e0cb64282118520306859aee0e2679774b",
+        "revCount": 3,
         "type": "git",
         "url": "file:///home/hruon/nixos-conf/secrets"
       },

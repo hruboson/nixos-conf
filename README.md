@@ -22,6 +22,8 @@ If you want to use this configuration you first have to do few steps (currently 
 		wifiPasswd = "WIFI_PASSWD";
 
         nextcloudPass = "NEXTCLOUD_ADMIN_PASSWORD";
+        delugePass = "DELUGE_PASSWORD";
+        linkwardenPass = "LINKWARDEN_PASSWORD";
 
         apiNasaKey = "NASA_API_KEY";
 	};

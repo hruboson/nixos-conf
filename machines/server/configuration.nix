@@ -4,19 +4,19 @@
 	imports = [
 		../../common/common.nix
 		../../hardware/server-hardware.nix
-		../raspberrypi/glance.nix
-		./hypr.nix
+
+		./deluge.nix
+		./glance.nix
 	];
 
 	# BOOT
 	
 	boot.loader.grub.enable = true;
 	boot.loader.grub.device = "/dev/sda";
-	boot.loader.grub.useOSProber = true;
+	boot.loader.grub.useOSProber = false; # Only nixos running on this server (no other system)
 
 	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 	nixpkgs.config.allowUnfree = true; # Needed for minecraft-server
-
 
 	programs.wayvnc.enable = true;
 	security.polkit.enable = true;
@@ -32,8 +32,26 @@
 	networking = {
 		hostName = hostname;
 		firewall = {
-			allowedTCPPorts = [ 1111 3000 2020 2222 8096 4444 4004 80 443 5900 43000 ];
+			allowedTCPPorts = [ 
+ 				80 
+				443
+				1111 # Glance
+				3000 # Linkwarden
+				2020 # Forgejo
+				8096 # Jellyfin
+				8112 # Deluge
+				4004 # Plikd
+				43000 # Minecraft server
+			];
+
+			extraCommands = ''
+				# Allow Deluge Web UI from local network only
+				#iptables -A INPUT -p tcp --dport 8112 -s 192.168.2.0/24 -j ACCEPT
+				#iptables -A INPUT -p tcp --dport 8112 -j DROP
+				#ip6tables -A INPUT -p tcp --dport 8112 -j DROP
+			'';
 		};
+
 	};
 
 	hardware.graphics = {
@@ -46,6 +64,12 @@
 		publish.enable = true;
 		publish.domain = true;
 		publish.addresses = true;
+	};
+
+	services.jellyfin = {
+		enable = true;
+		openFirewall = true;
+		user = "${username}";
 	};
 
 	services.forgejo = {
