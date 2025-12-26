@@ -94,6 +94,13 @@
 							timeout = "15s";
 							allow-insecure = true;
 						}
+						{
+							title = "Deluge";
+							url = "http://${config.networking.hostName}.local:8112";
+							icon = "di:deluge";
+							timeout = "15s";
+							allow-insecure = true;
+						}
 						/*{
 							title = "Nextcloud";
 							url = "http://${config.networking.hostName}.local";

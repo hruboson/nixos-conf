@@ -4,6 +4,7 @@
 	imports = [
 		../../common/common.nix
 		../../hardware/server-hardware.nix
+		./drives.nix
 
 		./deluge.nix
 		./glance.nix
@@ -66,6 +67,7 @@
 		publish.addresses = true;
 	};
 
+	users.users.${username}.extraGroups = [ "deluge" ];
 	services.jellyfin = {
 		enable = true;
 		openFirewall = true;
