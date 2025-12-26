@@ -19,6 +19,12 @@
 	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 	nixpkgs.config.allowUnfree = true; # Needed for minecraft-server
 
+	powerManagement.cpuFreqGovernor = "powersave";
+	services.tlp.enable = true;
+	services.printing.enable = false;
+	hardware.bluetooth.enable = false;
+	powerManagement.powertop.enable = true;
+
 	programs.wayvnc.enable = true;
 	security.polkit.enable = true;
 
