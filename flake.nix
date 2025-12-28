@@ -28,9 +28,12 @@
 		secrets = {
 			url = "git+file:///home/hruon/nixos-conf/secrets"; # must be an absolute path
 		};
+		nix-minecraft = {
+			url = "github:Infinidoge/nix-minecraft";
+		};
 	};
 
-	outputs = { self, nixpkgs, home-manager, plasma-manager, mangowc, nvim-conf, secrets, ... }@inputs:
+	outputs = { self, nixpkgs, home-manager, plasma-manager, mangowc, nvim-conf, nix-minecraft, secrets, ... }@inputs:
 		let
 			username = "hruon";
 			machines = {

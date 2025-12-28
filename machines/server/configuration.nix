@@ -8,6 +8,7 @@
 
 		./deluge.nix
 		./glance.nix
+		./minecraft-server.nix
 		#./matrix.nix
 	];
 
@@ -45,7 +46,8 @@
 				8096 # Jellyfin
 				8112 # Deluge
 				4004 # Plikd
-				43000 # Minecraft server
+				43000 # Minecraft Vanilla
+				43001 # Minecraft Papermc
 			];
 
 			extraCommands = ''
@@ -156,30 +158,5 @@
 			name = "linkwarden";
 			user = "linkwarden";
 		};
-	};
-
-	### MINECRAFT SERVER ###
-	services.minecraft-server = {
-		enable = true;
-		eula = true;
-		openFirewall = true;
-		declarative = true;
-
-		# get UUIDs of player at mcuuid.net
-		whitelist = {
-			Shiftoss = "966c4864-da7b-48b9-b904-986d6bd0d117";
-		};
-
-		serverProperties = {
-			server-port = 43000;
-			difficulty = 3;
-			gamemode = 0;
-			max-players = 10;
-			motd = "NixOS Minecraft server!";
-			white-list = true;
-			allow-cheats = true;
-		};
-
-		jvmOpts = "-Xms2048M -Xmx4096M";
 	};
 }
