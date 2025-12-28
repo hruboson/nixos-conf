@@ -8,6 +8,7 @@
 
 		./deluge.nix
 		./glance.nix
+		#./matrix.nix
 	];
 
 	# BOOT
@@ -18,12 +19,6 @@
 
 	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 	nixpkgs.config.allowUnfree = true; # Needed for minecraft-server
-
-	powerManagement.cpuFreqGovernor = "powersave";
-	services.tlp.enable = true;
-	services.printing.enable = false;
-	hardware.bluetooth.enable = false;
-	powerManagement.powertop.enable = true;
 
 	programs.wayvnc.enable = true;
 	security.polkit.enable = true;
@@ -38,6 +33,7 @@
 
 	networking = {
 		hostName = hostname;
+		domain = "${hostname}.local";
 		firewall = {
 			allowedTCPPorts = [ 
  				80 
@@ -45,6 +41,7 @@
 				1111 # Glance
 				3000 # Linkwarden
 				2020 # Forgejo
+				8008 # Synapse Matrix
 				8096 # Jellyfin
 				8112 # Deluge
 				4004 # Plikd
@@ -61,8 +58,23 @@
 
 	};
 
-	hardware.graphics = {
-		enable = true;	
+	hardware.graphics.enable = true;
+
+	services.postgresql = {
+		enable = true;
+
+		ensureDatabases = [ "linkwarden" ];
+		ensureUsers = [
+		{
+			name = "linkwarden";
+			ensureDBOwnership = true;
+		}
+		];
+
+		authentication = lib.mkOverride 10 ''
+			local   all             all                                     trust
+			host    linkwarden      linkwarden      127.0.0.1/32            trust
+			'';
 	};
 
 	services.avahi = {
@@ -116,22 +128,6 @@
 	};
 
 	### LINKWARDEN ###
-	services.postgresql = {
-		enable = true;
-
-		ensureDatabases = [ "linkwarden" ];
-		ensureUsers = [
-		{
-			name = "linkwarden";
-			ensureDBOwnership = true;
-		}
-		];
-
-		authentication = lib.mkOverride 10 ''
-			local   all             all                                     trust
-			host    linkwarden      linkwarden      127.0.0.1/32            trust
-			'';
-	};
 	environment.etc."linkwarden/nextauth-secret" = {
 		text = secrets.linkwardenPass;
 		mode = "0600";
