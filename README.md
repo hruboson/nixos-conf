@@ -22,8 +22,6 @@ If you want to use this configuration you first have to do few steps (currently 
 		wifiPasswd = "WIFI_PASSWD";
 
         nextcloudPass = "NEXTCLOUD_ADMIN_PASSWORD";
-        delugePass = "DELUGE_PASSWORD";
-        linkwardenPass = "LINKWARDEN_PASSWORD";
 
         apiNasaKey = "NASA_API_KEY";
 	};
@@ -446,6 +444,8 @@ I'm currently in the process of reading [NixOS & Flakes Book - An unofficial boo
 
 ## 3.3 Home-manager <a name="home-manager"></a>
 
+Home-manager lets you manage user files (typically dotfiles) through nix configuration. This can be quite nice if you have a certain themes, keybinds or other settings you want to apply to multiple programs at once in your nix configuration.
+
 ### 3.3.1 Plasma-manager <a name="plasma-manager"></a>
 
 Plasma-manager is a tool for managing your KDE configuration declaratively.
@@ -460,9 +460,21 @@ Both Sway and Hyprland are a bit more complicated than a simple KDE. They are no
 
 ### 4.3 Hyprland <a name="desktop-environment-hyprland"></a>
 
-## 5. NixOS optimizations <a name="nixos-optimizations"></a>
+### 5.1 Minecraft Server
 
-### 5.1 Optimizing storage
+An example of running Minecraft server using the PaperMC server package can be found in `machines/server/minecraft-server.nix`. To connect using RCON (Remote Console) you can use programs such as `ARRCON` (Windows) or `rcon-cli` (Linux).
+
+I personally manage the Minecraft server through a Windows machine using `ARRCON`.
+
+```
+ARRCON.exe -H SERVER_ADDRESS -P RCON_PORT -p PASSWORD
+```
+
+The default port (if unspecified) is `25575`.
+
+## 6. NixOS optimizations <a name="nixos-optimizations"></a>
+
+### 6.1 Optimizing storage
 
 You can remove all but the current generation using the command `sudo nix-collect-garbage -d`. This is especially useful on devices with lower total storage space (like Raspberry Pi). To also remove unused store paths run `nix-store --gc`.
 
