@@ -20,7 +20,7 @@ in
 	fileSystems."/mnt/CUTUP" = {
 		device = "/dev/disk/by-uuid/E45A03115A02E062";
 		fsType = "ntfs3";
-		options = [ "rw" "noatime" "uid=1000" "gid=100" "big_writes" ];
+		options = [ "rw" "noatime" "uid=1000" "gid=100" ];
 	};
 
 	fileSystems."/mnt/JARK" = {
