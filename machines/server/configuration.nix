@@ -40,12 +40,12 @@
  				80 
 				443
 				1111 # Glance
-				3000 # Linkwarden
 				2020 # Forgejo
+				3000 # Linkwarden
+				4004 # Plikd
 				8008 # Synapse Matrix
 				8096 # Jellyfin
 				8112 # Deluge
-				4004 # Plikd
 				43000 # Minecraft Vanilla
 				43001 # Minecraft Papermc
 			];
