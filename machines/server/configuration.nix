@@ -6,10 +6,12 @@
 		../../hardware/server-hardware.nix
 		./drives.nix
 
-		./deluge.nix
+		#./deluge.nix
+		#./matrix.nix
+
+		./qbittorrent.nix
 		./glance.nix
 		./minecraft-server.nix
-		#./matrix.nix
 	];
 
 	# BOOT
@@ -87,7 +89,6 @@
 		publish.addresses = true;
 	};
 
-	users.users.${username}.extraGroups = [ "deluge" ];
 	services.jellyfin = {
 		enable = true;
 		openFirewall = true;
