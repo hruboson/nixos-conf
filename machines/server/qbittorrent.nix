@@ -39,10 +39,10 @@
 
 				Connection = {
 					GlobalMaxConnections = 200;
-					GlobalMaxUploads = -1;
-					MaxUploadsPerTorrent = -1;
-					UploadRateLimit = 0;
-					UploadRateLimitPerTorrent = 0;
+					GlobalMaxUploads = 0;
+					MaxUploadsPerTorrent = 0;
+					UploadRateLimit = 1;
+					UploadRateLimitPerTorrent = 1;
 				};
 
 				BitTorrent = {

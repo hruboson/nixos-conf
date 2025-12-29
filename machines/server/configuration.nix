@@ -6,10 +6,10 @@
 		../../hardware/server-hardware.nix
 		./drives.nix
 
-		#./deluge.nix
+		#./qbittorrent.nix
 		#./matrix.nix
 
-		./qbittorrent.nix
+		./deluge.nix
 		./glance.nix
 		./minecraft-server.nix
 	];
@@ -51,15 +51,7 @@
 				43000 # Minecraft Vanilla
 				43001 # Minecraft Papermc
 			];
-
-			extraCommands = ''
-				# Allow Deluge Web UI from local network only
-				#iptables -A INPUT -p tcp --dport 8112 -s 192.168.2.0/24 -j ACCEPT
-				#iptables -A INPUT -p tcp --dport 8112 -j DROP
-				#ip6tables -A INPUT -p tcp --dport 8112 -j DROP
-			'';
 		};
-
 	};
 
 	hardware.graphics.enable = true;
