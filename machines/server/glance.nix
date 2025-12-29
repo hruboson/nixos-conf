@@ -95,9 +95,9 @@
 							allow-insecure = true;
 						}
 						{
-							title = "Deluge";
+							title = "Qbittorrent";
 							url = "http://${config.networking.hostName}.local:8112";
-							icon = "di:deluge";
+							icon = "di:vuetorrent";
 							timeout = "15s";
 							allow-insecure = true;
 						}
