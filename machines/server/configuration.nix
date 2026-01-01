@@ -11,6 +11,7 @@
 
 		./deluge.nix
 		./glance.nix
+		./kavita.nix
 		./minecraft-server.nix
 	];
 
@@ -46,6 +47,7 @@
 				3000 # Linkwarden
 				4004 # Plikd
 				8008 # Synapse Matrix
+				8060 # Kavita
 				8096 # Jellyfin
 				8112 # Deluge
 				43000 # Minecraft Vanilla

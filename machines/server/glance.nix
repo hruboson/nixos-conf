@@ -95,6 +95,13 @@
 							allow-insecure = true;
 						}
 						{
+							title = "Kavita";
+							url = "http://${config.networking.hostName}.local:8060";
+							icon = "di:kavita";
+							timeout = "15s";
+							allow-insecure = true;
+						}
+						{
 							title = "Deluge";
 							url = "http://${config.networking.hostName}.local:8112";
 							icon = "di:deluge";

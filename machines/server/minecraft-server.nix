@@ -71,6 +71,10 @@
 						url = "https://hangarcdn.papermc.io/plugins/TheNextLvl/Worlds/versions/3.11.0-mc1.21.4/PAPER/worlds-3.11.0-mc1.21.4-all.jar";
 						hash = "sha256-3rfaAAiPBXCTTePQ4a82w1AhvSbR2tgJ6tdVrfF65cc=";
 					};
+					"plugins/Fahare.jar" = pkgs.fetchurl {
+						url = "https://hangarcdn.papermc.io/plugins/qixils/Fahare/versions/1.2.1/PAPER/Fahare-1.2.1.jar";
+						hash = "sha256-fkE+LGG+Z6AcGOCPetsm1/TLyWX7ejkxzZVVay4qkWI=";
+					};
 				};
 
 				jvmOpts = "-Xms2048M -Xmx4096M";
