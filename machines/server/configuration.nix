@@ -8,11 +8,13 @@
 
 		#./qbittorrent.nix
 		#./matrix.nix
+		#./kavita.nix
+		#./suwayomi/suwayomi-server.nix
 
 		./deluge.nix
 		./glance.nix
-		./kavita.nix
 		./minecraft-server.nix
+		./komga.nix
 	];
 
 	# BOOT

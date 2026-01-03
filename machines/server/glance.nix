@@ -95,9 +95,9 @@
 							allow-insecure = true;
 						}
 						{
-							title = "Kavita";
+							title = "Komga";
 							url = "http://${config.networking.hostName}.local:8060";
-							icon = "di:kavita";
+							icon = "di:komga";
 							timeout = "15s";
 							allow-insecure = true;
 						}
