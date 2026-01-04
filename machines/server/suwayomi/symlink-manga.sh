@@ -12,7 +12,6 @@ find "$LOCAL_DIR" -maxdepth 1 -type l -exec rm {} \;
 for src in "${SOURCES[@]}"; do
 	for manga in "$src"/*; do
 		mangaName=$(basename "$manga")
-		[[ "$mangaName" == "Zornhwa" ]] && continue
 		ln -sfn "$manga" "$LOCAL_DIR/$mangaName"
 	done
 done
