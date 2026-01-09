@@ -147,7 +147,7 @@
 							title = "Development";
 							color = "130 60 45";
 							links = [
-							{ title = "RPI Dashboard"; url = "http://nixosrpi3.local:1111"; icon = "https://www.google.com/s2/favicons?domain=nixosrpi3.local"; }
+							{ title = "Server Dashboard"; url = "http://servernix.local:1111"; icon = "di:glance"; }
 							{ title = "Github"; url = "https://github.com/hruboson"; icon = "https://www.google.com/s2/favicons?domain=github.com"; }
 							{ title = "Portfolio"; url = "http://www.hrubos.dev/"; icon = "https://hrubos.dev/img/logo-courier-sm.ico"; }
 							];
@@ -168,7 +168,7 @@
 							{ title = "YouTube"; url = "https://www.youtube.com/"; icon = "https://www.google.com/s2/favicons?domain=youtube.com"; }
 							{ title = "Titch"; url = "https://www.twitch.tv/"; icon = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fclipartcraft.com%2Fimages%2Ftwitch-logo-png-twitter.png&f=1&nofb=1&ipt=dd77af44814daaac82c721ad5d86a6e34ecafcfaf2ed12b9133d94d7cec93f71&ipo=images"; }
 							{ title = "CSFD"; url = "https://www.csfd.cz/"; icon = "https://www.google.com/s2/favicons?domain=csfd.cz"; }
-							{ title = "Movies"; url = "https://www.beech.watch/"; icon = "https://www.google.com/s2/favicons?domain=beech.watch"; }
+							{ title = "Movies"; url = "https://www.cineby.gd/"; icon = "https://www.google.com/s2/favicons?domain=cineby.gd"; }
 							{ title = "Miruro"; url = "https://www.miruro.to"; icon = "https://www.google.com/s2/favicons?domain=miruro.to"; }
 							{ title = "AL"; url = "https://anilist.co/"; icon = "https://www.google.com/s2/favicons?domain=anilist.co"; }
 							{ title = "Letterboxd"; url = "http://letterboxd.com"; icon = "https://www.google.com/s2/favicons?domain=letterboxd.com"; }
@@ -192,9 +192,17 @@
 							{ title = "Zoom Earth"; url = "https://www.zoom.earth/"; icon = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fzoom.earth%2Fassets%2Fimages%2Ficon-400.jpg&f=1&nofb=1&ipt=9672bf7b3ab9914afd3dad9ff596693da7fbfa4b760ea678cfa26cb1b62e7c17&ipo=images"; }
 							{ title = "Trading212"; url = "https://www.trading212.com/"; icon = "https://www.google.com/s2/favicons?domain=trading212.com"; }
 							{ title = "Messenger"; url = "https://www.messenger.com/"; icon = "https://www.google.com/s2/favicons?domain=messenger.com"; }
+							{ title = "Deviantart"; url = "https://www.deviantart.com/"; icon = "https://www.google.com/s2/favicons?domain=deviantart.com"; }
+							{ title = "Pixiv"; url = "https://www.pixiv.net/en/"; icon = "https://www.google.com/s2/favicons?domain=pixiv.net"; }
 							];
 						}
 						];
+					}
+
+					{
+						type = "hacker-news";
+						limit = 15;
+						collapse-after = 5;
 					}
 
 					{
