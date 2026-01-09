@@ -15,6 +15,7 @@
 		./glance.nix
 		./minecraft-server.nix
 		./komga.nix
+		./audiobookshelf.nix
 	];
 
 	# BOOT
@@ -51,6 +52,7 @@
 				3000 # Linkwarden
 				4004 # Plikd
 				8008 # Synapse Matrix
+				8010 # Audiobookshelf
 				8060 # Kavita
 				8096 # Jellyfin
 				8112 # Deluge

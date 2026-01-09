@@ -102,6 +102,13 @@
 							allow-insecure = true;
 						}
 						{
+							title = "Library";
+							url = "http://${config.networking.hostName}.local:8010";
+							icon = "di:audiobookshelf";
+							timeout = "15s";
+							allow-insecure = true;
+						}
+						{
 							title = "Deluge";
 							url = "http://${config.networking.hostName}.local:8112";
 							icon = "di:deluge";
