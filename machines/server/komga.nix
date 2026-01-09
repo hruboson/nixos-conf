@@ -4,10 +4,10 @@
 	services.komga = {
 		enable = true;
 		openFirewall = true;
-		port = 8060;
 
 		settings = {
 			server = {
+				port = 8060;
 				host = "0.0.0.0";
 			};
 		};
