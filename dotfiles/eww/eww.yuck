@@ -1,0 +1,24 @@
+(include "modules/launcher.yuck")
+
+(defwidget dock []
+	(box
+		:class "dock"
+		:orientation "h"
+		:spacing 10
+
+		(launcher
+			:image "assets/icons/firefox.jpg"
+			:command "firefox"
+			:tooltip "Firefox"
+		)
+	)
+)
+
+(defwindow dock_window
+	:monitor 0
+	:geometry (geometry :x "20px" :y "20px" :width "20px" :height "20px")
+	:anchor "top left"
+	:exclusive false
+	:layer "bottom"
+	(dock)
+)

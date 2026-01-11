@@ -34,6 +34,7 @@ in
 		hypridle
 		hyprlock
 		waybar
+		eww
 
 		grim					# Screenshot utility
 		slurp					# Select region for grim
