@@ -7,4 +7,5 @@
 		host = "0.0.0.0";
 		openFirewall = true;
 	};
+	users.users.audiobookshelf.extraGroups = [ "media" ];
 }
