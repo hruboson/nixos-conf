@@ -1,11 +1,12 @@
 { config, pkgs, lib, inputs, ... }:
 
 with lib; let
-	hyprPluginPkgs = inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system};
+	hyprPluginPkgs = inputs.hyprland-plugins.packages.${pkgs.system};
 	hypr-plugin-dir = pkgs.symlinkJoin {
 		name = "hyprland-plugins";
 		paths = with hyprPluginPkgs; [
 			hyprbars
+			hyprexpo
 		];
 	};
 in
@@ -17,7 +18,7 @@ in
 		withUWSM = true;
 		xwayland.enable = true;
 		
-		package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
+		package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 	};
 
 	# hypr utils
