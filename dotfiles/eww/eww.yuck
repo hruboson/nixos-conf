@@ -3,8 +3,7 @@
 
 (defwindow portals_window_left
 	:monitor 0
-	:geometry (geometry :x "1%" :y "20px" :width "25%" :height "92%")
-	:anchor "top left"
+	:geometry (geometry :x "1%" :y "20px" :height "92%" :anchor "top left")
 	:exclusive false
 	:layer "bottom"
 	(portals_widget :config portals_left)
@@ -12,8 +11,7 @@
 
 (defwindow portals_window_right
 	:monitor 0
-	:geometry (geometry :x "74%" :y "20px" :width "25%" :height "92%")
-	:anchor "top right"
+	:geometry (geometry :x "1%" :y "20px" :height "92%" :anchor "top right")
 	:exclusive false
 	:layer "bottom"
 	(portals_widget :config portals_right)

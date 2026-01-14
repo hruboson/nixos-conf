@@ -1,15 +1,16 @@
+(defvar portals_max_shortcuts_in_row 7) ;; How many shortcuts in one row (determines width)
 (defvar portals_left '[
 	{
 		"portal_name": "hello world",
 		"expanded": true,
 		"shortcuts": 
-		[{ "name": "firefox" },{ "name": "firefox" }]
+		[{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" }]
 	},
 	{
 		"portal_name": "second",
 		"expanded": false,
 		"shortcuts": 
-		[{ "name": "firefox" },{ "name": "firefox" }]
+		[{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" }]
 	}
 ]')
 
@@ -18,6 +19,6 @@
 		"portal_name": "hello world",
 		"expanded": true,
 		"shortcuts": 
-		[{ "name": "firefox" },{ "name": "firefox" }]
+		[{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" },{ "name": "firefox" }]
 	}
 ]')
