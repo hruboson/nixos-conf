@@ -1,24 +1,20 @@
-(include "modules/launcher.yuck")
+(include "modules/portals/config.yuck")
+(include "modules/portals/portals.yuck")
 
-(defwidget dock []
-	(box
-		:class "dock"
-		:orientation "h"
-		:spacing 10
-
-		(launcher
-			:image "assets/icons/firefox.jpg"
-			:command "firefox"
-			:tooltip "Firefox"
-		)
-	)
-)
-
-(defwindow dock_window
+(defwindow portals_window_left
 	:monitor 0
-	:geometry (geometry :x "20px" :y "20px" :width "20px" :height "20px")
+	:geometry (geometry :x "1%" :y "20px" :width "25%" :height "92%")
 	:anchor "top left"
 	:exclusive false
 	:layer "bottom"
-	(dock)
+	(portals_widget :config portals_left)
+)
+
+(defwindow portals_window_right
+	:monitor 0
+	:geometry (geometry :x "74%" :y "20px" :width "25%" :height "92%")
+	:anchor "top right"
+	:exclusive false
+	:layer "bottom"
+	(portals_widget :config portals_right)
 )

@@ -1,0 +1,43 @@
+(defwidget portals_widget [config]
+	(box
+		:class "portal"
+		:orientation "v"
+		:width 400
+		:vexpand false
+		
+		(label :text "Portals app v0.0.1")
+
+		(for p in { jq(config, "[.[]]") }
+			(expander
+				:vexpand false
+				:name {p.portal_name}
+				:expanded {p.expanded == "true"}
+				(box
+					:class "portal-shortcuts"
+					:orientation "h"
+					(for s in { jq(p.shortcuts, "[.[]]") }
+						(shortcut
+							:image "assets/icons/${s.name}.jpg"
+							:command "${s.name}"
+							:tooltip "${s.name}"
+						)
+					)
+				)
+			)
+		)
+	)
+)
+
+(defvar image-size 35)
+(defwidget shortcut [image command tooltip]
+	(button
+		:class "portal-shortcut"
+		:onclick command
+		:tooltip tooltip
+		(image
+			:path image
+			:image-width {image-size}
+			:image-height {image-size}
+		)
+	)
+)

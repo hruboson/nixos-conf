@@ -1,0 +1,23 @@
+(defvar portals_left '[
+	{
+		"portal_name": "hello world",
+		"expanded": true,
+		"shortcuts": 
+		[{ "name": "firefox" },{ "name": "firefox" }]
+	},
+	{
+		"portal_name": "second",
+		"expanded": false,
+		"shortcuts": 
+		[{ "name": "firefox" },{ "name": "firefox" }]
+	}
+]')
+
+(defvar portals_right '[
+	{
+		"portal_name": "hello world",
+		"expanded": true,
+		"shortcuts": 
+		[{ "name": "firefox" },{ "name": "firefox" }]
+	}
+]')
