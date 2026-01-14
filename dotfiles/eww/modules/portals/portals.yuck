@@ -1,11 +1,15 @@
 (defvar rev false)
+(defvar image-size 35)
 (defwidget portals_widget [config]
+	(scroll
+		:width {(image-size*portals_max_shortcuts_in_row)+(portals_max_shortcuts_in_row*15)+10}
+		:vscroll true
 	(box
 		:class "portal"
 		:orientation "v"
 		:width "100%"
 		:space-evenly false
-		
+
 		(label :text "Portals app v0.0.1")
 
 		(for p in { jq(config, "[.[]]") }
@@ -24,7 +28,7 @@
 							:space-evenly false
 							(for s in { row }
 								(shortcut
-									:image "assets/icons/${s.name}.jpg"
+									:image "${s.image}"
 									:command "${s.name}"
 									:tooltip "${s.name}"
 								)
@@ -34,7 +38,7 @@
 				)
 			)
 		)
-	)
+	))
 )
 
 ; possible slide values: "slideright", "slideleft", "slideup", "slidedown", "crossfade", "none"
@@ -47,7 +51,6 @@
 	)
 )
 
-(defvar image-size 35)
 (defwidget shortcut [image command tooltip]
 	(button
 		:class "portal-shortcut"
