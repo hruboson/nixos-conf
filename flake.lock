@@ -622,11 +622,11 @@
     "nvim-conf": {
       "flake": false,
       "locked": {
-        "lastModified": 1766581127,
-        "narHash": "sha256-wxF2mjo8cFdjo+t2JG46XLqTNoDFLCiJgjpp+uoJJq0=",
+        "lastModified": 1768558218,
+        "narHash": "sha256-kdmrVjL8ctAu0vmXZH3RDkr6BY7x6bNCcCThgWfFB3Y=",
         "owner": "hruboson",
         "repo": "nvim-conf",
-        "rev": "53daff4d5fa1219c090e52d729ed7a16f9e60554",
+        "rev": "e7e3e1cffbb7b39a0d91897fdfdb6934617fd629",
         "type": "github"
       },
       "original": {
