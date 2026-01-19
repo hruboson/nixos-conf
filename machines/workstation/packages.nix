@@ -7,12 +7,14 @@
 		# system
 		wl-clipboard
 		wayland-utils
+		nwg-displays
 
 		# img, video, audio
 		gimp3
 
 		# programming
 		libgcc
+		gh
 	]);
 }
 
