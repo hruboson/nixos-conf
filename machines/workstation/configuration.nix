@@ -25,5 +25,13 @@
 	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 	networking.hostName = hostname;
 
+	services.avahi = { # enables .local address resolution
+		enable = true;
+		nssmdns = true;
+		openFirewall = true;
+		ipv4 = true;
+		ipv6 = true;
+	};
+
 	services.power-profiles-daemon.enable = true;
 }
