@@ -28,6 +28,28 @@
 		};
 	};	
 
+	services.udiskie.enable = true;
+	services.udiskie.settings = {
+		automount = true; # automatically mount drives
+		automount_options = ["rw" "uid=1000" "gid=100"]; # UID/GID matches user
+		notify = true; # desktop notifications
+		file_manager = pkgs.doublecmd; # integrate with file manager
+	};
+
+	xdg.mimeApps = {
+		enable = true;
+		defaultApplications = {
+			"image/jpeg" = "oculante.desktop";
+			"image/png" = "oculante.desktop";
+			"image/webp" = "oculante.desktop";
+			"image/gif" = "oculante.desktop";
+			"image/bmp" = "oculante.desktop";
+			"image/tiff" = "oculante.desktop";
+			"image/svg+xml" = "oculante.desktop";
+			"inode/directory" = "doublecmd.desktop";
+		};
+	};
+
 	xdg.configFile."sway/config".text = ''
 		include ~/.config/sway/*.conf
 	'';

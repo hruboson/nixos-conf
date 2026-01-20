@@ -51,15 +51,8 @@ in
 	hardware.graphics.enable = true;
 	
 	# QEMU-specific config
-	services.xserver.videoDrivers = [ "virtio" ];
-	environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
-
-	services.pipewire = {
-		enable = true;
-		wireplumber.enable = true;
-		alsa.enable = true;
-		pulse.enable = true;
-	};
+	#services.xserver.videoDrivers = [ "virtio" ];
+	#environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
 
 	# graphical login screen (greetd+tuigreet)
 	services.greetd = {
@@ -70,7 +63,7 @@ in
 				command = ''
 				${pkgs.tuigreet}/bin/tuigreet --time 
 				--theme "border=yellow;text=cyan"
-				--remember --remember-session --cmd start-hyprland";
+				--remember --remember-session --asterisks --cmd start-hyprland";
 				user = "greeter'';
 			};
 		};
