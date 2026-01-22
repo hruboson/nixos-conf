@@ -15,12 +15,14 @@
 
 		# utils
 		doublecmd
+		filezilla
 
 		# img, video, audio
 		gimp3
 		oculante
 		quodlibet
 		spotify
+		bambu-studio # 3d printing software for Bambulab printer
 
 		# programming
 		libgcc
