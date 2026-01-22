@@ -1,5 +1,13 @@
 { pkgs, lib, inputs, ... }:
 
+let
+  wallpapers = pkgs.fetchFromGitHub {
+    owner = "hruboson";
+    repo = "wallpapers";
+    rev = "076ef62d06dfe05a64d97f695d89c9d133ab20f5";
+    sha256 = "sha256-uT6SFrHbARkz7eRLg2KBJUNgMM+jrVltv+qBmBMA0uM=";
+  };
+in
 {
 	#programs.zsh.promptInit = ''
 	#	PROMPT="%F{blue}[ws]%f %~ %# "
@@ -11,6 +19,12 @@
 		firefox # todo replace with waterfox later
 		kdePackages.filelight
 	]);
+
+	# source wallpapers from github repo to .config/wallpapers
+	home.file.".config/wallpapers" = {
+		source = wallpapers;
+		force = true;
+	};
 
 	# PLASMA MANAGER
 	programs.plasma = {
