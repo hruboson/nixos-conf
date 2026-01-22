@@ -7,13 +7,16 @@
 	# audio
 	# set default with `wpctl set-default <id>`, find the id by running `wpctl status`
 	#TODO find a way to set default audio output device declaratively
+	security.rtkit.enable = true;
 	services.pipewire = {
 		enable = true;
-		wireplumber.enable = true;
-		alsa.enable = true;
-		alsa.support32Bit = true;
-		jack.enable = true;
+		audio.enable = true;
 		pulse.enable = true;
+		alsa = {
+			enable = true;
+			support32Bit = true;
+		};
+		jack.enable = true;
 	};
 
 	# bluetooth
@@ -31,5 +34,4 @@
 	};
 
 	services.power-profiles-daemon.enable = true;
-
 }

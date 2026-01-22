@@ -12,7 +12,8 @@ with lib; let
 	};
 in
 {
-	environment.sessionVariables = { HYPR_PLUGIN_DIR = hypr-plugin-dir; };
+	environment.sessionVariables.HYPR_PLUGIN_DIR = hypr-plugin-dir;
+	environment.sessionVariables.NIXOS_OZONE_WL = "1"; # This variable fixes electron apps in wayland
 
 	programs.hyprland = {
 		enable = true;
@@ -22,15 +23,41 @@ in
 		package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 	};
 
+	xdg.portal.enable = true;
+	xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+	services.xserver.enable = true;
+	services.displayManager.sddm = {
+		enable = true;
+		extraPackages = [ pkgs.sddm-astronaut ];
+		theme = "sddm-astronaut-theme";
+		autoLogin.relogin = false;
+		wayland.enable = true;
+		settings = {
+			Autologin = {
+				Session = "start-hyprland";
+				User = "hruon";
+				Relogin = false;
+			};
+			#Theme = {
+			#	Current = "sddm-astronaut-theme";
+			#};
+		};
+	};
+
+	security.polkit.enable = true;
+	services.dbus.enable = true;
+	hardware.graphics.enable = true;
+
 	# hypr utils
 	environment.systemPackages = lib.mkAfter(with pkgs; [
 		killall
+		sddm-astronaut
 
 		wev
 		wayland
 		wlr-randr
 		wdisplays
-		tuigreet
 
 		hyprpaper
 		hypridle
@@ -44,40 +71,4 @@ in
 		vicinae					# Launcher
 		pwvucontrol				# volume and sound control
 	]);
-
-	services.xserver.enable = false;
-	security.polkit.enable = true;
-	services.dbus.enable = true;
-	hardware.graphics.enable = true;
-	
-	# QEMU-specific config
-	#services.xserver.videoDrivers = [ "virtio" ];
-	#environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
-
-	# graphical login screen (greetd+tuigreet)
-	services.greetd = {
-		enable = true;
-		settings = {
-			default_session = {
-				# border=yellow;text=cyan;prompt=cyan;time=yellow;input=yellow;container=black;button=cyan;title=yellow 
-				command = ''
-				${pkgs.tuigreet}/bin/tuigreet --time 
-				--theme "border=yellow;text=cyan"
-				--remember --remember-session --asterisks --cmd start-hyprland";
-				user = "greeter'';
-			};
-		};
-	};
-
-	# https://github.com/sjcobb2022/nixos-conf/blob/main/hosts/common/optional/greetd.nix
-	systemd.services.greetd.serviceConfig = {
-		Type = "idle";
-		StandardInput = "tty";
-		StandardOutput = "tty";
-		StandardError = "journal";
-		TTYReset = true;
-		TTYYVHangup = true;
-		TTYVTDisallocate = true;
-	};
-
 }
