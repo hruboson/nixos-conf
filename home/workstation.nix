@@ -34,11 +34,14 @@ in
 		platformTheme.name = "kde";
 		style.name = "breeze";
 	};
-	home.file.".config/kdeglobals" = {
-		text = ''
-			${builtins.readFile "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors"}
-		'';
-	};
+	home.activation.initKdeGlobals =
+		lib.hm.dag.entryAfter ["writeBoundary"] ''
+		if [ ! -f "$HOME/.config/kdeglobals" ]; then
+			install -Dm644 \
+			${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors \
+			"$HOME/.config/kdeglobals"
+		fi
+	'';
 
 	# PLASMA MANAGER
 	programs.plasma = {
