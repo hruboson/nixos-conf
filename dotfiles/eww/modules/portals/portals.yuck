@@ -1,19 +1,16 @@
 (defvar rev false)
-(defvar image-size 35)
-(defwidget portals_widget [config]
+(defwidget portals_widget [config row_width ?image_size]
 	(scroll
-		:width {(image-size*portals_max_shortcuts_in_row)+(portals_max_shortcuts_in_row*15)+10}
+		:width {((image_size ?: 35)*row_width)+(row_width*15)+10}
 		:vscroll true
 	(box
-		:class "portal"
 		:orientation "v"
 		:width "100%"
 		:space-evenly false
 
-		(label :text "Portals app v0.0.1")
-
 		(for p in { jq(config, "[.[]]") }
 			(expander
+				:class "portals-container"
 				:name {p.portal_name}
 				:expanded {p.expanded == "true"}
 				:width "100%"
@@ -21,7 +18,7 @@
 					:class "portal-shortcuts"
 					:orientation "v"
 					:width "100%"
-					(for row in { jq(p.shortcuts, "to_entries | group_by(.key/${portals_max_shortcuts_in_row}|floor) | map(map(.value))") } ;; 5 per row
+					(for row in { jq(p.shortcuts, "to_entries | group_by(.key/${row_width}|floor) | map(map(.value))") } ;; 5 per row
 						(box
 							:orientation "h"
 							:spacing 5
@@ -29,7 +26,8 @@
 							(for s in { row }
 								(shortcut
 									:image "${s.image}"
-									:command "${s.name}"
+									:size {image_size ?: 35}
+									:command "${s.name}&"
 									:tooltip "${s.name}"
 								)
 							)
@@ -42,25 +40,25 @@
 )
 
 ; possible slide values: "slideright", "slideleft", "slideup", "slidedown", "crossfade", "none"
-(defwidget portals_widget_animated [config animation]
+(defwidget portals_widget_animated [config row_width ?image_size animation]
 	(revealer
 		:reveal rev
 		:transition "${animation}"
 		:duration "0.5s"
-		(portals_widget :config config)
+		(portals_widget :config config :row_width row_width :image_size image_size)
 	)
 )
 
-(defwidget shortcut [image command tooltip]
+(defwidget shortcut [image size command tooltip]
 	(button
 		:class "portal-shortcut"
 		:onclick command
 		:tooltip tooltip
-		:width {image-size}
+		:width {size}
 		(image
 			:class "portal-shortcut-image"
-			:path image
-			:image-width {image-size}
+			:path "${image}"
+			:image-width {size}
 		)
 	)
 )

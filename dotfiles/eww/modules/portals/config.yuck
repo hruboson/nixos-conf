@@ -1,109 +1,69 @@
-(defvar portals_max_shortcuts_in_row 3) ;; How many shortcuts in one row (determines width)
-(defvar portals_left '[
+(defvar portals_dev '[
 	{
-		"portal_name": "first",
+		"portal_name": "Development",
 		"expanded": true,
 		"shortcuts": [
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" }
+			{ "name": "neovide", "image":"/home/hruon/.config/eww/assets/icons/neovide.svg" },
+			{ "name": "kitty", "image":"/home/hruon/.config/eww/assets/icons/kitty.svg" }
 		]
-	},
+	}
+]')
+
+(defvar portals_office '[
 	{
-		"portal_name": "second",
-		"expanded": false,
+		"portal_name": "Office",
+		"expanded": true,
 		"shortcuts": [
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" }
+			{ "name": "libreoffice", "image":"/home/hruon/.config/eww/assets/icons/libreoffice.svg" },
+			{ "name": "scalc", "image":"/home/hruon/.config/eww/assets/icons/scalc.svg" },
+			{ "name": "swriter", "image":"/home/hruon/.config/eww/assets/icons/swriter.svg" },
+			{ "name": "simpress", "image":"/home/hruon/.config/eww/assets/icons/simpress.svg" }
 		]
-	},
+	}
+]')
+
+(defvar portals_img_video_audio '[
 	{
-		"portal_name": "third",
-		"expanded": false,
+		"portal_name": "Img Video Audio",
+		"expanded": true,
 		"shortcuts": [
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" }
+			{ "name": "oculante", "image":"/home/hruon/.config/eww/assets/icons/oculante.png" },
+			{ "name": "gimp", "image":"/home/hruon/.config/eww/assets/icons/gimp.svg" },
+
+			{ "name": "spotify", "image":"/home/hruon/.config/eww/assets/icons/spotify.png" },
+			{ "name": "quodlibet", "image":"/home/hruon/.config/eww/assets/icons/quodlibet.svg" },
+
+			{ "name": "vlc", "image":"/home/hruon/.config/eww/assets/icons/vlc.svg" }
 		]	
 	}
 ]')
 
-(defvar portals_right '[
+(defvar portals_utils '[
 	{
-		"portal_name": "hello world",
+		"portal_name": "Utilities",
 		"expanded": true,
 		"shortcuts": [
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
-			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" },
+			{ "name": "doublecmd", "image":"/home/hruon/.config/eww/assets/icons/doublecmd.svg" },
+			{ "name": "filezilla", "image":"/home/hruon/.config/eww/assets/icons/filezilla.svg" }
+		]	
+	}
+]')
+
+(defvar portals_comms '[
+	{
+		"portal_name": "Communications",
+		"expanded": false,
+		"shortcuts": [
+			{ "name": "discord", "image":"/home/hruon/.config/eww/assets/icons/discord.png" }
+		]	
+	}
+]')
+
+(defvar portals_browsers '[
+	{
+		"portal_name": "Browsers",
+		"expanded": false,
+		"shortcuts": [
 			{ "name": "firefox", "image":"/home/hruon/.config/eww/assets/icons/firefox.png" }
 		]
 	}

@@ -18,12 +18,16 @@
 		doublecmd
 		filezilla
 
+		# office
+		libreoffice-fresh
+
 		# img, video, audio
 		gimp3
 		oculante
 		quodlibet
 		spotify
 		bambu-studio # 3d printing software for Bambulab printer
+		vlc
 
 		# programming
 		libgcc
