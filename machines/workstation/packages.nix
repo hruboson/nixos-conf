@@ -12,6 +12,7 @@
 		gvfs     # Filesystem integration
 		udiskie  # Auto-mount daemon
 		playerctl # Audio control daemon
+		polychromatic # Razer devices color management
 
 		# utils
 		doublecmd

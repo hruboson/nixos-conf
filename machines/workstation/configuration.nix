@@ -1,4 +1,4 @@
-{ config, pkgs, lib, hostname, ... }:
+{ config, pkgs, lib, hostname, username, ... }:
 
 {
 	imports = [
@@ -34,4 +34,7 @@
 			iptables -I INPUT -p udp -m udp --match multiport --dports 1990,2021 -j ACCEPT
 			'';
 	};
+
+	hardware.openrazer.enable = true;
+	hardware.openrazer.users = ["${username}"];
 }
