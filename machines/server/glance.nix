@@ -187,6 +187,7 @@
 							links = [
 							{ title = "Lichess"; url = "http://lichess.org"; icon = "https://www.google.com/s2/favicons?domain=lichess.org"; }
 							{ title = "Chess.com"; url = "https://www.chess.com"; icon = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.chesscomfiles.com%2Fuploads%2Fv1%2Fimages_users%2Ftiny_mce%2FSamCopeland%2FphpmeXx6V.png&f=1&nofb=1&ipt=8761ef6305d20fff4bc2538f125a3ee514f036b762b0e879a59434e6d6486d62&ipo=images"; }
+							{ title = "Royal Ur"; url = "https://royalur.net"; icon = "https://www.google.com/s2/favicons?domain=royalur.net"; }
 							{ title = "Typeracer"; url = "http://play.typeracer.com"; icon = "https://www.google.com/s2/favicons?domain=play.typeracer.com"; }
 							{ title = "lolesports"; url = "https://lolesports.com/en-GB/"; icon = "https://www.google.com/s2/favicons?domain=lolesports.com"; }
 							{ title = "valorantesports"; url = "https://valorantesports.com/"; icon = "https://www.google.com/s2/favicons?domain=valorantesports.com"; }
