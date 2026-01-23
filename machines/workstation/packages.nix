@@ -39,6 +39,7 @@
 
 		# games
 		prismlauncher # minecraft foss launcher
+		osu-lazer-bin
 	]);
 }
 

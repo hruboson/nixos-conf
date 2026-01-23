@@ -6,6 +6,7 @@
 		../../hardware/workstation-hardware.nix
 		./packages.nix
 		./services.nix
+		./games.nix
 
 		./hypr.nix
 		#./mango.nix
