@@ -33,15 +33,13 @@ in
 		theme = "sddm-astronaut-theme";
 		autoLogin.relogin = false;
 		wayland.enable = true;
+		# All available settings can be found using the man commang: `man sddm.conf` or online: https://manpages.debian.org/trixie/sddm/sddm.conf.5.en.html
 		settings = {
 			Autologin = {
 				Session = "start-hyprland";
 				User = "hruon";
 				Relogin = false;
 			};
-			#Theme = {
-			#	Current = "sddm-astronaut-theme";
-			#};
 		};
 	};
 

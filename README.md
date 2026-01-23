@@ -547,6 +547,9 @@ security.polkit.enable = true;
 services.dbus.enable = true;
 hardware.graphics.enable = true;
 
+xdg.portal.enable = true;
+xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
 # QEMU-specific config
 services.xserver.videoDrivers = [ "virtio" ];
 environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
@@ -558,6 +561,7 @@ And some packages with that please:
 # hypr utils
 environment.systemPackages = lib.mkAfter(with pkgs; [
     killall
+    sddm-astronaut # SDDM login screen
 
     wev
     wayland
@@ -579,7 +583,7 @@ environment.systemPackages = lib.mkAfter(with pkgs; [
 ]);
 ```
 
-And other configuration, such as pipewire and TUI components:
+And other configuration, such as pipewire and login screen components:
 ```
 services.pipewire = {
     enable = true;
@@ -588,30 +592,24 @@ services.pipewire = {
     pulse.enable = true;
 };
 
-# graphical login screen (greetd+tuigreet)
-services.greetd = {
-    enable = true;
-    settings = {
-        default_session = {
-            command = ''
-            ${pkgs.tuigreet}/bin/tuigreet --time 
-            --theme "border=yellow;text=cyan"
-            --remember --remember-session --cmd start-hyprland";
-            user = "greeter'';
-        };
-    };
+services.xserver.enable = true;
+# Login screen using sddm and sddm-astronaut theme
+services.displayManager.sddm = {
+	enable = true;
+	extraPackages = [ pkgs.sddm-astronaut ];
+	theme = "sddm-astronaut-theme";
+	autoLogin.relogin = false;
+	wayland.enable = true;
+    # All available settings can be found using the man commang: `man sddm.conf` or online: https://manpages.debian.org/trixie/sddm/sddm.conf.5.en.html
+	settings = {
+		Autologin = {
+			Session = "start-hyprland";
+			User = "username"; # Change this to your user name
+			Relogin = false;
+		};
+	};
 };
 
-# https://github.com/sjcobb2022/nixos-conf/blob/main/hosts/common/optional/greetd.nix
-systemd.services.greetd.serviceConfig = {
-    Type = "idle";
-    StandardInput = "tty";
-    StandardOutput = "tty";
-    StandardError = "journal";
-    TTYReset = true;
-    TTYYVHangup = true;
-    TTYVTDisallocate = true;
-};
 ```
 
 ### 4.2.2 Sway <a name="wayland-compositor-sway"></a>
