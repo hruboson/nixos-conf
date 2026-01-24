@@ -9,6 +9,7 @@
     "height": 41,
     "modules-left": [
         "custom/os_button",
+		"custom/portals_button",
         "hyprland/workspaces",
         "wlr/taskbar"
     ],
@@ -39,6 +40,11 @@
     "custom/os_button": {
         "format": "",
         "on-click": "vicinae toggle",
+        "tooltip": false
+    },
+    "custom/portals_button": {
+        "format": "󰨝",
+        "on-click": "~/.config/hypr/scripts/toggle_portals.sh",
         "tooltip": false
     },
     "cpu": {
