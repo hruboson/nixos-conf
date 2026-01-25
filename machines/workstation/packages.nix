@@ -17,6 +17,7 @@
 		# utils
 		doublecmd
 		filezilla
+		bottles
 
 		# office
 		libreoffice-fresh
