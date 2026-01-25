@@ -19,6 +19,7 @@
 		filezilla
 		bottles
 		scrcpy # Mirror and control Android device
+		wayscriber # Live annotation tool, trigger by $mod s
 
 		# office
 		libreoffice-fresh
