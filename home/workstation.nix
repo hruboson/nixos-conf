@@ -34,6 +34,15 @@ in
 		platformTheme.name = "kde";
 		style.name = "breeze";
 	};
+	gtk = {
+		enable = true;
+		colorScheme = "dark";
+		gtk3.colorScheme = "dark";
+		gtk4.colorScheme = "dark";
+		theme = { name = "Adwaita-dark"; package = pkgs.gnome-themes-extra; };
+		gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+		gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+	};
 	home.activation.initKdeGlobals =
 		lib.hm.dag.entryAfter ["writeBoundary"] ''
 		if [ ! -f "$HOME/.config/kdeglobals" ]; then
@@ -67,6 +76,7 @@ in
 		file_manager = pkgs.doublecmd; # integrate with file manager
 	};
 
+	# Default apps associations
 	xdg.mimeApps = {
 		enable = true;
 		defaultApplications = {
@@ -81,49 +91,22 @@ in
 		};
 	};
 
+	# Custom desktop entries
+	xdg.desktopEntries.scrcpy = {
+		name = "scrcpy";
+		genericName = "Android Remote Control";
+		comment = "Display and control your Android device";
+		exec = "scrcpy --render-driver=opengl";
+		icon = "scrcpy";
+		terminal = false;
+		categories = [ "Utility" "RemoteAccess" ];
+	};
+
 	xdg.configFile."sway/config".text = ''
 		include ~/.config/sway/*.conf
 	'';
 
-	# HYPRLAND PLUGINS
-	# currently managed in systemwide config
-	/*wayland.windowManager.hyprland = {
-		enable = true; # allows home-manager to configure hyprland
-		package = inputs.hyprland.packages."${pkgs.system}".hyprland;
-		plugins = [
-			inputs.hyprland-plugins.packages."${pkgs.system}".hyprbars
-			inputs.hyprland-plugins.packages."${pkgs.system}".borders-plus-plus
-		];
-
-		/*settings = {
-			"plugin:borders-plus-plus" = {
-				add_borders = 1;
-				"col.border_1" = "rgb(ffffff)";
-				"col.border_2" = "rgb(2222ff)";
-
-				border_size_1 = 10;
-				border_size_2 = -1;
-
-				natural_rounding = "yes";
-			};
-			"plugin:hyprbars" = {
-				bar_height = 38;
-				bar_color = "rgb(141415)";
-				col.text = "rgb(ffffff)";
-		        bar_text_size = 12;
-				bar_text_font = "Nerd Font Mono Bold";
-				bar_button_padding = 12;
-				bar_padding = 10;
-				bar_precedence_over_border = true;
-				hyprbars-button = [
-					"\$color1, 20, , hyprctl dispatch killactive"
-					"\$color3, 20, , hyprctl dispatch fullscreen 2"
-					"\$color4, 20, _, hyprctl dispatch togglefloating"
-				];
-			};
-		};
-	};*/
-
+	# Custom cursor
 	home.pointerCursor = let 
 		getFrom = url: hash: name: {
 			gtk.enable = true;

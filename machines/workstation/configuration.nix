@@ -7,6 +7,7 @@
 		./packages.nix
 		./services.nix
 		./games.nix
+		./android.nix
 
 		./hypr.nix
 		#./mango.nix

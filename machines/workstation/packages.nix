@@ -18,6 +18,7 @@
 		doublecmd
 		filezilla
 		bottles
+		scrcpy # Mirror and control Android device
 
 		# office
 		libreoffice-fresh
