@@ -18,6 +18,7 @@ in
 
 		firefox # todo replace with waterfox later
 		kdePackages.filelight
+		papirus-icon-theme
 	]);
 
 	# source wallpapers from github repo to .config/wallpapers
@@ -39,9 +40,19 @@ in
 		colorScheme = "dark";
 		gtk3.colorScheme = "dark";
 		gtk4.colorScheme = "dark";
-		theme = { name = "Adwaita-dark"; package = pkgs.gnome-themes-extra; };
 		gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
 		gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+
+		theme = {
+			name = "Adwaita-dark";
+			package = pkgs.gnome-themes-extra;
+		};
+
+		# My favourite icon theme and also fixes some missing icons
+		iconTheme = {
+			name = "Papirus-Dark";
+			package = pkgs.papirus-icon-theme;
+		};
 	};
 	home.activation.initKdeGlobals =
 		lib.hm.dag.entryAfter ["writeBoundary"] ''

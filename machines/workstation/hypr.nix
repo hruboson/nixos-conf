@@ -15,6 +15,8 @@ in
 	environment.sessionVariables.HYPR_PLUGIN_DIR = hypr-plugin-dir;
 	environment.sessionVariables.NIXOS_OZONE_WL = "1"; # This variable fixes electron apps in wayland
 
+	programs.dconf.enable = true;
+
 	programs.hyprland = {
 		enable = true;
 		withUWSM = true;
