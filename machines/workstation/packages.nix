@@ -23,6 +23,7 @@
 
 		# office
 		libreoffice-fresh
+		obsidian
 
 		# img, video, audio
 		gimp3
