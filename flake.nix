@@ -3,6 +3,10 @@
 
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+		nur = {
+			url = "github:nix-community/NUR";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 		home-manager = {
 			url = "github:nix-community/home-manager/release-25.11";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -37,7 +41,7 @@
 		};
 	};
 
-	outputs = { self, nixpkgs, home-manager, plasma-manager, mangowc, nvim-conf, nix-minecraft, secrets, ... }@inputs:
+	outputs = { self, nixpkgs, nur, home-manager, plasma-manager, mangowc, nvim-conf, nix-minecraft, secrets, ... }@inputs:
 		let
 			username = "hruon";
 			machines = {
@@ -69,6 +73,8 @@
 					./common/common.nix
 					./common/packages.nix
 					./common/users.nix
+
+					nur.modules.nixos.default
 
 					# machine-related config
 					./machines/${name}/configuration.nix
