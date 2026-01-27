@@ -20,6 +20,7 @@
 		bottles
 		scrcpy # Mirror and control Android device
 		wayscriber # Live annotation tool, trigger by $mod s
+		mission-center
 
 		# office
 		libreoffice-fresh
