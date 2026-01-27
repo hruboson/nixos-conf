@@ -35,20 +35,20 @@ in
 		options = [ "noatime" "commit=60" "lazytime" ];
 	};
 
-		environment.systemPackages = lib.mkAfter( with pkgs; [ 
-			hdparm 
-		]);
+	environment.systemPackages = lib.mkAfter( with pkgs; [ 
+		hdparm 
+	]);
 
-		environment.etc."spindownScript.sh".text = spindownScript;
+	environment.etc."spindownScript.sh".text = spindownScript;
 
-		systemd.services.hdparm = {
-			description = "Service to spin down HDDs after a specified time in idle.";
-			wantedBy = [ "multi-user.target" "sleep.target" "post-resume.target" ];
-			after = [ "network.target" "suspend.target" "post-resume.target" ];
-			serviceConfig = {
-				Type = "oneshot";
-				User = "root";
-				ExecStart = "${pkgs.bash}/bin/bash /etc/spindownScript.sh";
-			};
+	systemd.services.hdparm = {
+		description = "Service to spin down HDDs after a specified time in idle.";
+		wantedBy = [ "multi-user.target" "sleep.target" "post-resume.target" ];
+		after = [ "network.target" "suspend.target" "post-resume.target" ];
+		serviceConfig = {
+			Type = "oneshot";
+			User = "root";
+			ExecStart = "${pkgs.bash}/bin/bash /etc/spindownScript.sh";
 		};
+	};
 }
