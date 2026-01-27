@@ -4,6 +4,8 @@
 	imports = [
 		../../common/common.nix
 		../../hardware/workstation-hardware.nix
+		./drives.nix
+
 		./packages.nix
 		./services.nix
 		./games.nix
