@@ -28,24 +28,26 @@ in
 	};
 
 	# enable dark mode for QT and GTK apps
-	dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
-	dconf.settings."org/gnome/desktop/interface".gtk-theme = "Adwaita-dark";
+	dconf.settings = {
+		"org/gnome/desktop/interface" = {
+			gtk-theme = "Breeze-Dark";
+			color-scheme = "prefer-dark";
+		};
+	};
 	qt = {
 		enable = true;
-		platformTheme.name = "kde";
+		platformTheme.name = "gtk";
 		style.name = "breeze";
+		style.package = pkgs.kdePackages.breeze.qt5;
 	};
 	gtk = {
 		enable = true;
-		colorScheme = "dark";
-		gtk3.colorScheme = "dark";
-		gtk4.colorScheme = "dark";
-		gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
-		gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+		gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
+		gtk4.extraConfig.gtk-application-prefer-dark-theme = true;
 
 		theme = {
-			name = "Adwaita-dark";
-			package = pkgs.gnome-themes-extra;
+			name = "Breeze-Dark";
+			package = pkgs.kdePackages.breeze-gtk;
 		};
 
 		# My favourite icon theme and also fixes some missing icons
