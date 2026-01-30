@@ -17,6 +17,8 @@
 		# utils
 		doublecmd
 		filezilla
+		p7zip
+		peazip
 		bottles
 		scrcpy # Mirror and control Android device
 		wayscriber # Live annotation tool, trigger by $mod s

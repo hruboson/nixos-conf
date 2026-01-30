@@ -93,6 +93,7 @@ in
 	xdg.mimeApps = {
 		enable = true;
 		defaultApplications = {
+			# Images
 			"image/jpeg" = "oculante.desktop";
 			"image/png" = "oculante.desktop";
 			"image/webp" = "oculante.desktop";
@@ -100,7 +101,22 @@ in
 			"image/bmp" = "oculante.desktop";
 			"image/tiff" = "oculante.desktop";
 			"image/svg+xml" = "oculante.desktop";
+
+			# Directories
 			"inode/directory" = "doublecmd.desktop";
+
+			# Archives → PeaZip
+			"application/zip" = "peazip.desktop";
+			"application/x-zip-compressed" = "peazip.desktop";
+			"application/x-rar" = "peazip.desktop";
+			"application/vnd.rar" = "peazip.desktop";
+			"application/x-7z-compressed" = "peazip.desktop";
+			"application/x-tar" = "peazip.desktop";
+			"application/gzip" = "peazip.desktop";
+			"application/x-gzip" = "peazip.desktop";
+			"application/x-bzip2" = "peazip.desktop";
+			"application/x-xz" = "peazip.desktop";
+			"application/zstd" = "peazip.desktop";
 		};
 	};
 
