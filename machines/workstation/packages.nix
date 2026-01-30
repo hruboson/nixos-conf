@@ -43,6 +43,7 @@
 
 		# communications
 		discord
+		element-desktop
 
 		# games
 		prismlauncher # minecraft foss launcher
