@@ -1,14 +1,12 @@
 { config, pkgs, lib, inputs, secrets, ... }:
 
 let
-	fqdn = "${config.networking.hostName}.${config.networking.domain}";
+	fqdn = "${config.networking.hostName}.local";
 	baseUrl = "http://${fqdn}:8008"; # local-only
 in
 {
 	environment.etc."matrix/registration-secret" = {
-		text = ''
-			registration_shared_secret: ${secrets.matrixRegistrationSecret}
-		'';
+		text = ''registration_shared_secret: ${secrets.matrixRegistrationSecret}'';
 		mode = "0400";
 		user = "matrix-synapse";
 		group = "matrix-synapse";
@@ -20,8 +18,9 @@ in
 		];
 
 		settings = {
-			server_name = config.networking.domain;
+			server_name = fqdn;
 			public_baseurl = baseUrl;
+			federation_enabled = false; # currently running on LAN only
 
 			database = {
 				name = "psycopg2";
@@ -35,14 +34,14 @@ in
 
 			listeners = [
 			{
-				port = 8008;
-				bind_addresses = [ "0.0.0.0" "::" ];
+				port = 8448;
+				bind_addresses = [ "0.0.0.0" ];
 				type = "http";
 				tls = false;
 				x_forwarded = false;
 				resources = [
 				{
-					names = [ "client" "federation" ];
+					names = [ "client" ];
 					compress = true;
 				}
 				];

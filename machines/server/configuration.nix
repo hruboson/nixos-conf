@@ -7,12 +7,12 @@
 		./drives.nix
 
 		#./qbittorrent.nix
-		#./matrix.nix
 		#./kavita.nix
 		#./suwayomi/suwayomi-server.nix
 
 		./deluge.nix
 		./glance.nix
+		./matrix.nix
 		./minecraft-server.nix
 		./komga.nix
 		./audiobookshelf.nix
@@ -51,11 +51,11 @@
 				2020 # Forgejo
 				3000 # Linkwarden
 				4004 # Plikd
-				8008 # Synapse Matrix
 				8010 # Audiobookshelf
 				8060 # Kavita
 				8096 # Jellyfin
 				8112 # Deluge
+				8448 # Synapse Matrix
 				43000 # Minecraft Vanilla
 				43001 # Minecraft Papermc
 			];
@@ -67,18 +67,30 @@
 	services.postgresql = {
 		enable = true;
 
-		ensureDatabases = [ "linkwarden" ];
-		ensureUsers = [
-		{
-			name = "linkwarden";
-			ensureDBOwnership = true;
-		}
-		];
+		initialScript = pkgs.writeText "postgres-init.sql" ''
+		CREATE USER "matrix-synapse";
+		CREATE USER "linkwarden";
 
+		-- Matrix Synapse MUST use C collation
+		CREATE DATABASE "matrix-synapse"
+		WITH OWNER = "matrix-synapse"
+		ENCODING = 'UTF8'
+		LC_COLLATE = 'C'
+		LC_CTYPE = 'C'
+		TEMPLATE = template0;
+
+		-- Linkwarden can use defaults
+		CREATE DATABASE linkwarden
+		WITH OWNER = linkwarden;
+		'';
+
+
+		# Allow local Unix socket connections and TCP from localhost
 		authentication = lib.mkOverride 10 ''
 			local   all             all                                     trust
-			host    linkwarden      linkwarden      127.0.0.1/32            trust
-			'';
+			host    all             all             127.0.0.1/32            trust
+			host    all             all             ::1/128                 trust
+		'';
 	};
 
 	services.avahi = {
