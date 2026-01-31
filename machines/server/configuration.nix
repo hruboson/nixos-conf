@@ -36,8 +36,6 @@
 		jellyfin-ffmpeg
 
 		ntfs3g
-
-		mc
 	]);
 
 	networking = {
