@@ -2,6 +2,7 @@
 
 {
 	services.tailscale.enable = true;
+	networking.nftables.enable = true;
 
 	# create a oneshot job to authenticate to Tailscale
 	systemd.services.tailscale-autoconnect = {
@@ -29,4 +30,10 @@
 			${tailscale}/bin/tailscale up -authkey ${secrets.tailscaleOneOffAuthKey}
 		'';
 	};
+
+	systemd.network.wait-online.enable = false; 
+	boot.initrd.systemd.network.wait-online.enable = false;
+	systemd.services.tailscale.serviceConfig.Environment = [
+		"TS_DEBUG_FIREWALL_MODE=nftables"
+	];
 }

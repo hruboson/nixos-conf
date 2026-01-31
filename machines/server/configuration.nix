@@ -16,6 +16,7 @@
 		./minecraft-server.nix
 		./komga.nix
 		./audiobookshelf.nix
+		./tailscale.nix
 	];
 
 	# BOOT
@@ -42,6 +43,10 @@
 		hostName = hostname;
 		domain = "${hostname}.local";
 		firewall = {
+			trustedInterfaces = [ "tailscale0" ];
+			allowedUDPPorts = [
+				config.services.tailscale.port
+			];
 			allowedTCPPorts = [ 
  				80 
 				443
