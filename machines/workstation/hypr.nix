@@ -62,6 +62,8 @@ in
 		hyprpaper
 		hypridle
 		hyprlock
+		hyprshade
+		hyprsunset
 		waybar
 		eww
 

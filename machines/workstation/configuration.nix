@@ -64,4 +64,6 @@
 
 	hardware.openrazer.enable = true;
 	hardware.openrazer.users = ["${username}"];
+
+	hardware.i2c.enable = true;
 }
