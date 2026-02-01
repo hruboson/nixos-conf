@@ -50,6 +50,7 @@
 		prismlauncher # minecraft foss launcher
 		osu-lazer-bin
 		heroic
+		pcsx2
 	]);
 }
 
