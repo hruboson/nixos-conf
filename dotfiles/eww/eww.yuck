@@ -1,5 +1,14 @@
+(include "modules/helper/helper.yuck")
 (include "modules/portals/config.yuck")
 (include "modules/portals/portals.yuck")
+
+(defwindow helper_window
+	:monitor 0
+	:geometry (geometry :x "13.5%" :y "0.5%" :height "96%" :width "70%" :anchor "top left")
+	:exclusive false
+	:layer "top"
+	(helper_widget)
+)
 
 (defwindow portals_window_dev
 	:monitor 0

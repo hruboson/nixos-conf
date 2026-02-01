@@ -1,0 +1,59 @@
+(defpoll helper_text
+  :interval "1000000h"
+  :initial ""
+  :initial ""
+	"
+	awk '
+	BEGIN { code=0 }
+
+	/^```/ {
+	  if (code == 0) {
+		print \"<span font_family=\\\"monospace\\\">\"
+		code=1
+	  } else {
+		print \"</span>\"
+		code=0
+	  }
+	  next
+	}
+
+	code==1 {
+	  gsub(/&/, \"&amp;\")
+	  gsub(/</, \"&lt;\")
+	  gsub(/>/, \"&gt;\")
+	  print
+	  next
+	}
+
+	/^# / { print \"<span size=\\\"xx-large\\\" weight=\\\"bold\\\">\" substr($0,3) \"</span>\\n\"; next }
+	/^## / { print \"<span size=\\\"x-large\\\" weight=\\\"bold\\\">\" substr($0,4) \"</span>\\n\"; next }
+	/^### / { print \"<span weight=\\\"bold\\\">\" substr($0,5) \"</span>\\n\"; next }
+	/^- / { print \"<span weight=\\\"bold\\\">•</span> \" substr($0,3); next }
+
+	{
+	  gsub(/&/, \"&amp;\")
+	  gsub(/</, \"&lt;\")
+	  gsub(/>/, \"&gt;\")
+	  gsub(/\\*\\*([^*]+)\\*\\*/, \"<b>\\\\1</b>\")
+	  gsub(/\\*([^*]+)\\*/, \"<i>\\\\1</i>\")
+	  print
+	}
+	' ~/.config/eww/modules/helper/README.md
+	"
+)
+
+(defwidget helper_widget []
+	(scroll
+		:vscroll true
+		(box
+			:orientation "v"
+			:space-evenly false
+			:class "helper-container"
+			(label 
+				:wrap true
+				:xalign 0
+				:markup helper_text
+			)
+		)
+	)
+)

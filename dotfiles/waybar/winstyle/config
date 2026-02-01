@@ -15,6 +15,7 @@
     ],
     "modules-center": [],
     "modules-right": [
+		"custom/helper",
         "cpu",
         "temperature",
         "memory",
@@ -47,6 +48,11 @@
         "on-click": "~/.config/hypr/scripts/toggle_portals.sh",
         "tooltip": false
     },
+	"custom/helper": {
+		"format": "󰘥",
+		"on-click": "~/.config/eww/scripts/toggle_helper.sh",
+		"tooltip": false
+	},
     "cpu": {
         "interval": 5,
         "format": "  {usage}%",

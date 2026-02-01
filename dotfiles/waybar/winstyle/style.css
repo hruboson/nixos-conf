@@ -109,6 +109,10 @@ tooltip label{
 	color: @content_main;
 }
 
+#custom-helper {
+	padding-right: 7px;
+}
+
 #cpu, #disk, #memory {
 	padding:3px;
 }
