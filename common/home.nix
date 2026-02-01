@@ -24,5 +24,6 @@
 		source = ../dotfiles;
 		recursive = true;
 	};
+	home.file.".config/USER_MANUAL.md".source = ../USER_MANUAL.md;
 	home.file.".config/nvim".source = nvim-conf;
 }

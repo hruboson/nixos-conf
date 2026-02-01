@@ -38,7 +38,7 @@
 	  gsub(/\\*([^*]+)\\*/, \"<i>\\\\1</i>\")
 	  print
 	}
-	' ~/.config/eww/modules/helper/README.md
+	' ~/.config/USER_MANUAL.md
 	"
 )
 
