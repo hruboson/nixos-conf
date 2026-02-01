@@ -2,7 +2,7 @@
 
 {
 
-	users.users.${username}.extraGroups = [ "media" ];
+	users.users.${username}.extraGroups = [ "media" ]; # add main user to media
 
 	systemd.tmpfiles.rules = lib.mkIf true ([
 		"d /srv/torrents 2775 deluge media -"
@@ -13,6 +13,7 @@
 		enable = true;
 		declarative = true;
 		authFile = "/run/deluge/auth";
+		group = "media"; # add deluge to media
 
 		web = {
 			enable = true;
