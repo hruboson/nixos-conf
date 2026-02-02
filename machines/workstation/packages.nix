@@ -43,6 +43,8 @@
 		gh
 		neovide
 
+		qmk qmk-udev-rules dos2unix keymap-drawer
+
 		# communications
 		discord
 		element-desktop

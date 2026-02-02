@@ -113,6 +113,11 @@ tooltip label{
 	padding-right: 7px;
 }
 
+#custom-rotate_monitor {
+	padding-left: 5px;
+	padding-right: 7px;
+}
+
 #cpu, #disk, #memory {
 	padding:3px;
 }

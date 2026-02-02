@@ -16,6 +16,7 @@
     "modules-center": [],
     "modules-right": [
 		"custom/helper",
+		"custom/rotate_monitor",
         "cpu",
         "temperature",
         "memory",
@@ -52,6 +53,11 @@
 		"format": "󰘥",
 		"on-click": "~/.config/eww/scripts/toggle_helper.sh",
 		"tooltip": false
+	},
+	"custom/rotate_monitor": {
+		"format": "󰑙",
+		"tooltip": "Rotate monitor",
+		"on-click": "~/.config/hypr/scripts/rotate_monitor.sh",
 	},
     "cpu": {
         "interval": 5,
