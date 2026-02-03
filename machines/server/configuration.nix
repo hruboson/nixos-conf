@@ -17,6 +17,7 @@
 		./komga.nix
 		./audiobookshelf.nix
 		./tailscale.nix
+		./tandoor.nix
 	];
 
 	# BOOT
@@ -54,6 +55,7 @@
 				2020 # Forgejo
 				3000 # Linkwarden
 				4004 # Plikd
+				7007 # Tandoor recipes
 				8010 # Audiobookshelf
 				8060 # Kavita
 				8096 # Jellyfin
