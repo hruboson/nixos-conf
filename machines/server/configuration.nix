@@ -108,6 +108,7 @@
 		enable = true;
 		openFirewall = true;
 		user = "${username}";
+		group = "media";
 	};
 
 	services.forgejo = {
