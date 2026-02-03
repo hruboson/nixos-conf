@@ -136,6 +136,13 @@
 							timeout = "10s";
 							allow-insecure = true;
 						}
+						{
+							title = "Tandoor";
+							url = "http://${config.networking.hostName}.local:7007";
+							icon = "di:tandoor-recipes";
+							timeout = "10s";
+							allow-insecure = true;
+						}
 						];
 					}
 					{
