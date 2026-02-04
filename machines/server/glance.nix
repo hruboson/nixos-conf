@@ -253,6 +253,10 @@
 						hour-format = "24h";
 					}
 					{
+						type = "html";
+						source = "<iframe src=\"https://api.wo-cloud.com/content/widget/?geoObjectKey=3800546&language=en&region=EU&timeFormat=HH:mm&windUnit=kmh&systemOfMeasurement=metric&temperatureUnit=celsius\" name=\"CW2\" scrolling=\"no\" width=\"290\" height=\"318\" frameborder=\"0\" style=\"border: none;border-radius: 8px;padding-top: 10px;padding-bottom: 10px;\"></iframe>";
+					}
+					{
 						type = "twitch-channels";
 						channels = [ 
 							"Wirtual"
