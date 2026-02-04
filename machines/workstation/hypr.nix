@@ -71,6 +71,7 @@ in
 		slurp					# Select region for grim
 		nwg-wrapper				# Custom widget displayer
 		vicinae					# Launcher
-		pwvucontrol				# volume and sound control
+		pwvucontrol				# volume and sound gui control
+		pulseaudio				# volume and sound control
 	]);
 }
