@@ -52,7 +52,7 @@
 (defwidget shortcut [image size command tooltip]
 	(button
 		:class "portal-shortcut"
-		:onclick command
+		:onclick "sh -c '${command} ./scripts/toggle_portals.sh'"
 		:tooltip tooltip
 		:width {size}
 		(image

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Get list of active windows that start with "portals_window"
-active_portals=$(eww active-windows | awk -F: '/portals_window/ {print $1}')
+active_portals=$(eww active-windows | awk -F: '/portals_window|portals_closer/ {print $1}')
 
 if [ -n "$active_portals" ]; then
     # if any portals_window is active, close them all
@@ -10,6 +10,9 @@ if [ -n "$active_portals" ]; then
         eww close "$win"
     done
 else
+	# open underlay for mouse events to close portals
+    eww open portals_closer
+
 	# open all defined windows here
 	eww open portals_window_dev
 	eww open portals_window_office

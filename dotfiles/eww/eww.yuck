@@ -10,11 +10,24 @@
 	(helper_widget)
 )
 
+(defwindow portals_closer
+	:monitor 0
+	:geometry (geometry :x "0%" :y "0%" :width "100%" :height "100%" :anchor "top left")
+	:exclusive false
+	:layer "bottom"
+	:namespace "eww-portals-closer"
+	(eventbox
+		:class "portals-closer"
+		:onclick "./scripts/toggle_portals.sh"
+		(box :hexpand true :vexpand true)
+	)
+ )
+
 (defwindow portals_window_dev
 	:monitor 0
 	:geometry (geometry :x "0.25%" :y "0.5%" :height "6%" :anchor "top left")
 	:exclusive false
-	:layer "bottom"
+	:layer "top"
 	(portals_widget :config portals_dev :row_width 5 :image_size 50)
 )
 
@@ -22,7 +35,7 @@
 	:monitor 0
 	:geometry (geometry :x "0.25%" :y "6.5%" :height "6%" :anchor "top left")
 	:exclusive false
-	:layer "bottom"
+	:layer "top"
 	(portals_widget :config portals_office :row_width 5 :image_size 50)
 )
 
@@ -30,7 +43,7 @@
 	:monitor 0
 	:geometry (geometry :x "0.25%" :y "12.5%" :height "6%" :anchor "top left")
 	:exclusive false
-	:layer "bottom"
+	:layer "top"
 	(portals_widget :config portals_img_video_audio :row_width 5 :image_size 50)
 )
 
@@ -38,7 +51,7 @@
 	:monitor 0
 	:geometry (geometry :x "0.25%" :y "18.5%" :height "6%" :anchor "top left")
 	:exclusive false
-	:layer "bottom"
+	:layer "top"
 	(portals_widget :config portals_utils :row_width 5 :image_size 50)
 )
 
@@ -46,7 +59,7 @@
 	:monitor 0
 	:geometry (geometry :x "0.25%" :y "24.5%" :height "6%" :anchor "top left")
 	:exclusive false
-	:layer "bottom"
+	:layer "top"
 	(portals_widget :config portals_browsers :row_width 2 :image_size 50)
 )
 
@@ -54,6 +67,6 @@
 	:monitor 0
 	:geometry (geometry :x "6%" :y "24.5%" :height "6%" :anchor "top left")
 	:exclusive false
-	:layer "bottom"
+	:layer "top"
 	(portals_widget :config portals_comms :row_width 2 :image_size 50)
 )
