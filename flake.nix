@@ -50,6 +50,11 @@
 					system = "x86_64-linux";
 					homeFile = ./home/workstation.nix;
 				};
+				notebook = {
+					hostname = "minix";
+					system = "x86_64-linux";
+					homeFile = ./home/workstation.nix;
+				};
 				server = {
 					hostname = "servernix";
 					system = "x86_64-linux";

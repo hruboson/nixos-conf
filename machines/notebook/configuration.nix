@@ -3,7 +3,7 @@
 {
 	imports = [
 		../../common/common.nix
-		../../hardware/workstation-hardware.nix
+		../../hardware/notebook-hardware.nix
 		./drives.nix
 
 		./packages.nix
@@ -30,14 +30,6 @@
 
 	networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 	networking.hostName = hostname;
-	networking.firewall = {
-		# bambulab networking
-		extraCommands = ''
-			iptables -I INPUT -m pkttype --pkt-type multicast -j ACCEPT
-			iptables -A INPUT -m pkttype --pkt-type multicast -j ACCEPT
-			iptables -I INPUT -p udp -m udp --match multiport --dports 1990,2021 -j ACCEPT
-			'';
-	};
 
 	hardware.bluetooth = {
 		enable = true;
@@ -64,6 +56,4 @@
 
 	hardware.openrazer.enable = true;
 	hardware.openrazer.users = ["${username}"];
-
-	hardware.i2c.enable = true;
 }
