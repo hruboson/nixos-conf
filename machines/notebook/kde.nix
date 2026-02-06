@@ -1,0 +1,44 @@
+{ config, pkgs, lib, ... }:
+
+{
+	# DESKTOP ENVIRONMENT
+	services.displayManager.sddm.enable = true;
+	services.desktopManager.plasma6.enable = true;
+	security.rtkit.enable = true;
+
+	services.libinput.enable = true; # enable touchpad
+	services.xserver = { # keyboard settings
+		enable = true;
+		xkb = {
+			layout = "cz,us";
+			variant = "winkeys";
+			options = "grp:shift_space_toggle";
+		};
+	};
+
+	services.displayManager.sddm.settings = {
+		X11 = {
+			KeyboardLayout = "cz,us";
+		};
+	};
+
+	## Excluded packages (should produce minimal KDE environment)
+	# TODO: figure out how to remove dolphin, kate, kwrite, x-term
+	environment.plasma6.excludePackages = with pkgs.kdePackages; [
+		dolphin 		# file manager
+		konsole			# terminal
+		elisa			# music player
+		# ocular		# document viewer (kept, this one is actually quite nice)
+		kdenlive		# video editor
+		k3b				# cd/dvd burner
+		# gwenview		# image viewer (kept)
+		kmail			# mail client
+		#korganizer		# calendar (kept)
+	];
+
+	## DE-related packages
+	environment.systemPackages = lib.mkAfter (with pkgs; [
+			kdePackages.kclock
+			kdePackages.sddm-kcm
+	]);
+}
