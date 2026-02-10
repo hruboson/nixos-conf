@@ -55,12 +55,13 @@
 				2020 # Forgejo
 				3000 # Linkwarden
 				4004 # Plikd
+				6167 # Tuwunel
 				7007 # Tandoor recipes
 				8010 # Audiobookshelf
 				8060 # Kavita
 				8096 # Jellyfin
 				8112 # Deluge
-				8448 # Synapse Matrix
+				#8448 # Synapse Matrix
 				43000 # Minecraft Vanilla
 				43001 # Minecraft Papermc
 			];

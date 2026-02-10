@@ -5,7 +5,7 @@ let
 	baseUrl = "http://${fqdn}:8008"; # local-only
 in
 {
-	environment.etc."matrix/registration-secret" = {
+	/*environment.etc."matrix/registration-secret" = {
 		text = ''registration_shared_secret: ${secrets.matrixRegistrationSecret}'';
 		mode = "0400";
 		user = "matrix-synapse";
@@ -50,5 +50,30 @@ in
 
 			enable_registration = false;
 		};
+	};*/
+	services.matrix-tuwunel = {
+		enable = true;
+
+		settings = {
+			global = {
+				server_name = fqdn;
+
+				# Listen only on LAN
+				address = [ "0.0.0.0" ];
+				port = [ 6167 ];  # default for tuwunel
+
+				# Disable federation completely
+				allow_federation = false;
+				allow_encryption = true;
+				allow_registration = true;
+				registration_token = "${secrets.matrixRegistrationSecret}";
+
+				trusted_servers = [];
+				max_request_size = 20000000; # 20 MB
+			};
+		};
+
+		# keep default state dir
+		stateDirectory = "matrix-tuwunel";
 	};
 }
