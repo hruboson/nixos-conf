@@ -69,7 +69,7 @@ in
 				registration_token = "${secrets.matrixRegistrationSecret}";
 
 				trusted_servers = [];
-				max_request_size = 20000000; # 20 MB
+				max_request_size = 100000000; # 100 MB
 			};
 		};
 
