@@ -48,11 +48,6 @@
 	services.openssh.enable = true;
 	programs.ssh.startAgent = true;
 
-	# FONTS
-	fonts.packages = with pkgs; [
-		pkgs.nerd-fonts.fira-code
-	];
-
 	# MISC
 	programs.nix-ld.enable = true;
 

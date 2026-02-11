@@ -66,4 +66,11 @@
 	hardware.openrazer.users = ["${username}"];
 
 	hardware.i2c.enable = true;
+
+	# FONTS
+	fonts.packages = with pkgs; [
+		nerd-fonts.fira-code
+		nerd-fonts.jetbrains-mono
+		vista-fonts
+	];
 }
