@@ -1,17 +1,26 @@
 { pkgs, lib, inputs, ... }:
 
 let
-  wallpapers = pkgs.fetchFromGitHub {
-    owner = "hruboson";
-    repo = "wallpapers";
-    rev = "076ef62d06dfe05a64d97f695d89c9d133ab20f5";
-    sha256 = "sha256-uT6SFrHbARkz7eRLg2KBJUNgMM+jrVltv+qBmBMA0uM=";
-  };
+	wallpapers = pkgs.fetchFromGitHub {
+		owner = "hruboson";
+		repo = "wallpapers";
+		rev = "076ef62d06dfe05a64d97f695d89c9d133ab20f5";
+		sha256 = "sha256-uT6SFrHbARkz7eRLg2KBJUNgMM+jrVltv+qBmBMA0uM=";
+	};
+
+	hypr-overview = pkgs.fetchFromGitHub {
+		owner = "Shanu-Kumawat";
+		repo = "quickshell-overview";
+		rev = "main";
+		sha256 = "sha256-tGYvmzYOnaEyC/65NzeMKAdWK8yAQnAO0g2ykIHM3U8=";
+	};
 in
 {
 	#programs.zsh.promptInit = ''
 	#	PROMPT="%F{blue}[ws]%f %~ %# "
 	#'';
+
+	xdg.configFile."quickshell/overview".source = hypr-overview;
 
 	home.packages = lib.mkAfter (with pkgs; [
 		home-manager
