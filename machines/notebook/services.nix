@@ -34,4 +34,6 @@
 	};
 
 	services.power-profiles-daemon.enable = true;
+
+	services.tailscale.enable = true; # run `sudo tailscale up` to set up account using browser auth
 }
