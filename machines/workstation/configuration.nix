@@ -10,6 +10,7 @@
 		./services.nix
 		./games.nix
 		#./android.nix
+		./virtualisation.nix
 
 		./hypr.nix
 		#./mango.nix
