@@ -32,6 +32,7 @@
 		# img, video, audio
 		gimp3
 		oculante
+		gthumb
 		quodlibet
 		spotify
 		bambu-studio # 3d printing software for Bambulab printer

@@ -10,6 +10,13 @@ with lib; let
 			inputs.Hyprspace.packages.${pkgs.system}.Hyprspace
 		];
 	};
+
+	hypr-overview = pkgs.fetchFromGitHub {
+		owner = "Shanu-Kumawat";
+		repo = "quickshell-overview";
+		rev = "main";
+		sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+	};
 in
 {
 	environment.sessionVariables.HYPR_PLUGIN_DIR = hypr-plugin-dir;
@@ -66,6 +73,8 @@ in
 		hyprsunset
 		waybar
 		eww
+		quickshell
+		qt6.qtwayland
 
 		grim					# Screenshot utility
 		slurp					# Select region for grim
@@ -73,5 +82,7 @@ in
 		vicinae					# Launcher
 		pwvucontrol				# volume and sound gui control
 		pulseaudio				# volume and sound control
+		inputs.snappy-switcher.packages.${pkgs.system}.default
 	]);
 }
+
