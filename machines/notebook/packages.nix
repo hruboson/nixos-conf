@@ -3,6 +3,9 @@
 {
 	nixpkgs.config.allowUnfree = true;
 
+	# should fix kde unpopulated xdg mime apps menu
+	environment.etc."/xdg/menus/applications.menu".text = builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
+
 	environment.systemPackages = lib.mkAfter (with pkgs; [
 		# system
 		wl-clipboard
