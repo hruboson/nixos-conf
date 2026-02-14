@@ -20,7 +20,7 @@
 		# utils
 		doublecmd
 		filezilla
-		kdePackages.dolphin
+		kdePackages.dolphin kdePackages.ffmpegthumbs
 		p7zip
 		peazip
 		bottles
