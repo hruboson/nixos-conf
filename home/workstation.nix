@@ -112,7 +112,7 @@ in
 			"image/svg+xml" = "oculante.desktop";
 
 			# Directories
-			"inode/directory" = "doublecmd.desktop";
+			"inode/directory" = "dolphin.desktop";
 
 			# Archives → PeaZip
 			"application/zip" = "peazip.desktop";

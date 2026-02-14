@@ -17,6 +17,7 @@
 		# utils
 		doublecmd
 		filezilla
+		kdePackages.dolphin
 		p7zip
 		peazip
 		bottles
