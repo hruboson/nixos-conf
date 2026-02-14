@@ -112,7 +112,7 @@ in
 			"image/svg+xml" = "oculante.desktop";
 
 			# Directories
-			"inode/directory" = "dolphin.desktop";
+			"inode/directory" = "org.kde.dolphin.desktop";
 
 			# Archives → PeaZip
 			"application/zip" = "peazip.desktop";
