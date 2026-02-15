@@ -42,6 +42,7 @@
 		bambu-studio # 3d printing software for Bambulab printer
 		vlc
 		deluge
+		obs-studio
 
 		# programming
 		libgcc
