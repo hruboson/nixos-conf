@@ -476,6 +476,19 @@ boot.loader.grub = {
 - then **rebuild** nix using the `nixos-rebuild switch` (will probably take a while), it will take the configuration file and apply the changes we made in it
 - apply password to the new user: `passwd username`
 
+### 2.1 Connecting to Eduroam
+- download eduroam activation python script for your university [here](https://cat.eduroam.org/#)
+- run the script using nix shell:
+
+```
+nix-shell -p "python3.withPackages (ps: with ps; [ dbus-python ])" --run python3 <your-eduroam.py>
+```
+
+- now you have certificate available in your device and should be able to connect
+- you might have to enable saving password for all users using `nmtui`:
+    - Run `sudo nmtui`
+    - Edit connection -> Eduroam -> Save password for all users
+
 ## 3.1 Setting up git and GitHub <a name="git"></a>
 If you are comfortable using the GitHub CLI tool (`gh`), you can add it to your configuration. The package is `pkgs.gh`.
 
