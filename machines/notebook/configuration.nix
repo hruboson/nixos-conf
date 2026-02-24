@@ -9,6 +9,7 @@
 		./packages.nix
 		./services.nix
 		./games.nix
+		./virtualisation.nix
 		#./android.nix
 
 		./hypr.nix
