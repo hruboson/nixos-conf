@@ -114,6 +114,9 @@ in
 			# Directories
 			"inode/directory" = "org.kde.dolphin.desktop";
 
+			# Documents
+			"application/pdf" = "firefox.desktop";
+
 			# Archives → PeaZip
 			"application/zip" = "peazip.desktop";
 			"application/x-zip-compressed" = "peazip.desktop";
