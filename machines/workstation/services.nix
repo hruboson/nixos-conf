@@ -4,6 +4,9 @@
 	# System service for device detection
 	services.udisks2.enable = true;
 
+	# Enable MTP (Android sharing files)
+	services.gvfs.enable = true;
+
 	# audio
 	# set default with `wpctl set-default <id>`, find the id by running `wpctl status`
 	#TODO find a way to set default audio output device declaratively

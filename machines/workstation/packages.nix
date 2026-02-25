@@ -16,6 +16,7 @@
 		udiskie  # Auto-mount daemon
 		playerctl # Audio control daemon
 		polychromatic # Razer devices color management
+		jmtpfs libmtp android-tools # Media Transfer Protocol (for Android devices)
 
 		# utils
 		doublecmd
