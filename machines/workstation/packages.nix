@@ -36,6 +36,7 @@
 
 		# img, video, audio
 		gimp3
+		drawing
 		oculante
 		gthumb
 		quodlibet
