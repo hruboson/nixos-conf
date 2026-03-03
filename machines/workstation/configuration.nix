@@ -68,6 +68,12 @@
 
 	hardware.i2c.enable = true;
 
+	hardware.graphics = {
+		enable = true;
+		enable32Bit = true;
+	};
+	services.xserver.videoDrivers = [ "amdgpu" ];
+
 	# FONTS
 	fonts.packages = with pkgs; [
 		nerd-fonts.fira-code

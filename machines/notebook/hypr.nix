@@ -6,8 +6,8 @@ with lib; let
 		name = "hyprland-plugins";
 		paths = [
 			hyprPluginPkgs.hyprbars
-			hyprPluginPkgs.hyprexpo
-			inputs.Hyprspace.packages.${pkgs.system}.Hyprspace
+			#hyprPluginPkgs.hyprexpo
+			#inputs.Hyprspace.packages.${pkgs.system}.Hyprspace
 		];
 	};
 
