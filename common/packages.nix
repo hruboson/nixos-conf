@@ -13,6 +13,9 @@
 		btop # pretty process info
 		xxd # sometimes neovim does not install this automatically --- needed for treesitter
 		mc # TUI file manager
+
+		tree-sitter
+		gcc
 	];
 
 	programs.zsh.enable = true;
