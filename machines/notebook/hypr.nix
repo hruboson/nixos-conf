@@ -72,6 +72,7 @@ in
 		hyprshade
 		hyprsunset
 		waybar
+		waybar-mpris
 		eww
 		quickshell
 		qt6.qtwayland

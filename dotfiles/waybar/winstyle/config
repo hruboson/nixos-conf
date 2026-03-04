@@ -13,7 +13,9 @@
         "hyprland/workspaces",
         "wlr/taskbar"
     ],
-    "modules-center": [],
+    "modules-center": [
+		"mpris"
+	],
     "modules-right": [
 		"custom/helper",
 		"custom/rotate_monitor",
@@ -59,6 +61,32 @@
 		"tooltip": "Rotate monitor",
 		"on-click": "~/.config/hypr/scripts/rotate_monitor.sh",
 	},
+    "mpris": {
+        "format": "{player_icon}   {title}",
+        "format-paused": "{status_icon}   {title}",
+        "tooltip-format": "{player} - {title} by {artist}",
+		"truncate": 30,
+		"ellipsis": true,
+		"player-icons": {
+			"default": "🎵",
+			"spotify": "",
+			"firefox": "",
+			"chromium": "",
+			"mpv": "",
+			"vlc": "󰕼"
+		},
+		"status-icons": {
+			"playing": "",
+			"paused": "",
+			"stopped": ""
+		},
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-click-middle": "playerctl previous",
+        "ignored-players": [""],  // ignore specific players
+        "interval": 1,  // update every second
+        "max-length": 50
+    },
     "cpu": {
         "interval": 5,
         "format": "  {usage}%",
