@@ -19,6 +19,10 @@ with lib; let
 	};
 in
 {
+	imports = [
+		inputs.silentSDDM.nixosModules.default
+	];
+
 	environment.sessionVariables.HYPR_PLUGIN_DIR = hypr-plugin-dir;
 	environment.sessionVariables.NIXOS_OZONE_WL = "1"; # This variable fixes electron apps in wayland
 
@@ -35,14 +39,60 @@ in
 	xdg.portal.enable = true;
 	xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
-	services.xserver.enable = true;
+	services.xserver = {
+		enable = true;
+
+		xrandrHeads = [
+		{
+			output = "DP-2";
+			primary = true;
+		}
+		{
+			output = "HDMI-A-1";
+		}
+		{
+			output = "HDMI-A-2";
+		}
+		];
+	};
+	programs.silentSDDM = {
+		enable = true;
+		theme = "default";
+		
+		backgrounds = {
+			wallpaper = pkgs.fetchurl {
+				name = "water.jpg";
+				url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/fruitiger_aero/drop.jpg";
+				hash = "sha256-82eyZ5MgykxnxKP1aoHEXjRXTLXTbb9HxIT1eC24dDY=";
+			};
+		};
+		
+		settings = {
+            "LoginScreen" = {
+            	background = "water.jpg";
+				blur = 5;
+            };
+            "LockScreen" = {
+            	background = "water.jpg";
+				blur = 5;
+            };
+			"General" = {
+				background-fill-mode = "fill";
+			};
+		};
+
+		profileIcons = {
+			hruon = pkgs.fetchurl {
+				name = "hruon_logo.jpg";
+				url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/inversion.png";
+				hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
+			};
+		};
+	};
 	services.displayManager.sddm = {
 		enable = true;
-		extraPackages = [ pkgs.sddm-astronaut ];
-		theme = "sddm-astronaut-theme";
 		autoLogin.relogin = false;
-		wayland.enable = true;
-		# All available settings can be found using the man commang: `man sddm.conf` or online: https://manpages.debian.org/trixie/sddm/sddm.conf.5.en.html
+		
 		settings = {
 			Autologin = {
 				Session = "start-hyprland";
@@ -59,7 +109,6 @@ in
 	# hypr utils
 	environment.systemPackages = lib.mkAfter(with pkgs; [
 		killall
-		sddm-astronaut
 
 		wev
 		wayland

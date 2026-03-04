@@ -4,8 +4,8 @@ let
 	wallpapers = pkgs.fetchFromGitHub {
 		owner = "hruboson";
 		repo = "wallpapers";
-		rev = "076ef62d06dfe05a64d97f695d89c9d133ab20f5";
-		sha256 = "sha256-uT6SFrHbARkz7eRLg2KBJUNgMM+jrVltv+qBmBMA0uM=";
+		rev = "78ce1f883ddba70a27f43baec9c7c34904becbc4";
+		sha256 = "sha256-hsiFBIisPcvqnm49i2PXq/DDGWkzKBJ8gfKrugEUWR0=";
 	};
 
 	hypr-overview = pkgs.fetchFromGitHub {
