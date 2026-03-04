@@ -83,6 +83,8 @@
         "on-click": "playerctl play-pause",
         "on-click-right": "playerctl next",
         "on-click-middle": "playerctl previous",
+		"on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+		"on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
         "ignored-players": [""],  // ignore specific players
         "interval": 1,  // update every second
         "max-length": 50
