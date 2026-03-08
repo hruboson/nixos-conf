@@ -14,8 +14,11 @@
 		xxd # sometimes neovim does not install this automatically --- needed for treesitter
 		mc # TUI file manager
 
+		# nvim-specific stuff
 		tree-sitter
 		gcc
+		nil # nix lsp
+		python313Packages.python-lsp-server # python lsp
 	];
 
 	programs.zsh.enable = true;
