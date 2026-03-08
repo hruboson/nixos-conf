@@ -1,7 +1,7 @@
 { config, pkgs, lib, inputs, ... }:
 
 with lib; let
-	hyprPluginPkgs = inputs.hyprland-plugins.packages.${pkgs.system};
+	hyprPluginPkgs = inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system};
 	hypr-plugin-dir = pkgs.symlinkJoin {
 		name = "hyprland-plugins";
 		paths = [
@@ -33,7 +33,7 @@ in
 		withUWSM = true;
 		xwayland.enable = true;
 		
-		package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+		package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
 	};
 
 	xdg.portal.enable = true;
@@ -132,6 +132,6 @@ in
 		vicinae					# Launcher
 		pwvucontrol				# volume and sound gui control
 		pulseaudio				# volume and sound control
-		inputs.snappy-switcher.packages.${pkgs.system}.default
+		inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default
 	]);
 }
