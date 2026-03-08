@@ -28,6 +28,9 @@ in
 		firefox # todo replace with waterfox later
 		kdePackages.filelight
 		papirus-icon-theme
+
+		hyprlock
+		libnotify
 	]);
 
 	# source wallpapers from github repo to .config/wallpapers
@@ -74,8 +77,32 @@ in
 		fi
 	'';
 
+	services.hypridle = {
+		enable = true;
+		settings = {
+			general = {
+				lock_cmd = "pidof hyprlock || hyprlock";
+
+				before_sleep_cmd = "loginctl lock-session";
+				after_sleep_cmd = "hyprctl dispatch dpms on";
+			};
+
+			listener = [
+			{
+				timeout = 600; # 10 minutes
+					on-timeout = "loginctl lock-session";
+			}
+			{
+				timeout = 900; # 15 minutes  
+					on-timeout = "systemctl suspend";
+			}
+			];
+		};
+	};
+
+
 	# PLASMA MANAGER
-	programs.plasma = {
+	/*programs.plasma = {
 		enable = true;
 		workspace = {
 			theme = "breeze-dark";
@@ -88,7 +115,7 @@ in
 				theme = "__aurorae__svg__WillowDarkShader";
 			};
 		};
-	};	
+	};*/
 
 	services.udiskie.enable = true;
 	services.udiskie.settings = {

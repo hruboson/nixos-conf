@@ -55,6 +55,8 @@ in
 		}
 		];
 	};
+
+	security.pam.services.hyprlock = {};
 	programs.silentSDDM = {
 		enable = true;
 		theme = "default";
@@ -116,8 +118,6 @@ in
 		wdisplays
 
 		hyprpaper
-		hypridle
-		hyprlock
 		hyprshade
 		hyprsunset
 		waybar
