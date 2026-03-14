@@ -42,15 +42,15 @@ in
 	# enable dark mode for QT and GTK apps
 	dconf.settings = {
 		"org/gnome/desktop/interface" = {
-			gtk-theme = "Breeze-Dark";
+			gtk-theme = "Adwaita-dark";
 			color-scheme = "prefer-dark";
 		};
 	};
 	qt = {
 		enable = true;
 		platformTheme.name = "gtk";
-		style.name = "breeze";
-		style.package = pkgs.kdePackages.breeze.qt5;
+		style.name = "adwaita-dark";
+		style.package = pkgs.adwaita-qt;
 	};
 	gtk = {
 		enable = true;
@@ -58,8 +58,8 @@ in
 		gtk4.extraConfig.gtk-application-prefer-dark-theme = true;
 
 		theme = {
-			name = "Breeze-Dark";
-			package = pkgs.kdePackages.breeze-gtk;
+			name = "Adwaita-dark";
+			package = pkgs.gnome-themes-extra;
 		};
 
 		# My favourite icon theme and also fixes some missing icons
@@ -68,14 +68,14 @@ in
 			package = pkgs.papirus-icon-theme;
 		};
 	};
-	home.activation.initKdeGlobals =
-		lib.hm.dag.entryAfter ["writeBoundary"] ''
-		if [ ! -f "$HOME/.config/kdeglobals" ]; then
-			install -Dm644 \
-			${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors \
-			"$HOME/.config/kdeglobals"
-		fi
-	'';
+	#home.activation.initKdeGlobals =
+	#	lib.hm.dag.entryAfter ["writeBoundary"] ''
+	#	if [ ! -f "$HOME/.config/kdeglobals" ]; then
+	#		install -Dm644 \
+	#		${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors \
+	#		"$HOME/.config/kdeglobals"
+	#	fi
+	#'';
 
 	services.hypridle = {
 		enable = true;
