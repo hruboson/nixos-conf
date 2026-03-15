@@ -35,6 +35,24 @@ in
 		options = [ "noatime" "commit=60" "lazytime" ];
 	};
 
+	fileSystems."/mnt/JAG" = {
+		device = "/dev/disk/by-uuid/7882f925-ce5a-40c8-9972-b7e09a8d275e";
+		fsType = "ext4";
+		options = [ "noatime" "commit=60" "lazytime" ];
+	};
+
+	fileSystems."/mnt/JAY" = {
+		device = "/dev/disk/by-uuid/46db1d4a-210a-43a1-81c6-a7c4484b8b51";
+		fsType = "ext4";
+		options = [ "noatime" "commit=60" "lazytime" ];
+	};
+
+	fileSystems."/mnt/BACARA" = {
+		device = "/dev/disk/by-uuid/33cd8b9d-142a-43d4-bff9-3291365b5b7e";
+		fsType = "ext4";
+		options = [ "noatime" "commit=60" "lazytime" ];
+	};
+
 	environment.systemPackages = lib.mkAfter( with pkgs; [ 
 		hdparm 
 	]);
