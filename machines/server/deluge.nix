@@ -5,7 +5,10 @@
 	users.users.${username}.extraGroups = [ "media" ]; # add main user to media
 
 	systemd.tmpfiles.rules = lib.mkIf true ([
+		# ensure all necessary directories and files are created
 		"d /srv/torrents 2775 deluge media -"
+		"d /run/deluge 0750 deluge media -"
+		"d /var/lib/deluge/.config/deluge 0750 deluge deluge -"
 		"f /run/deluge/auth 0600 deluge deluge - localclient:${secrets.delugePass}:10"
 	]);
 
