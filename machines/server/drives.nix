@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, secrets, ... }:
+{ config, pkgs, lib, inputs, username, secrets, ... }:
 
 let
 	# https://gist.github.com/mjungk/292287dbad0ba168838ef5b248dd9d36
@@ -13,6 +13,8 @@ let
 			fi
 		done
 	'';
+
+	resticEnvFile = "/run/restic/secrets/restic.env";
 in
 {
 	boot.supportedFilesystems = [ "ntfs" ];
@@ -67,6 +69,47 @@ in
 			Type = "oneshot";
 			User = "root";
 			ExecStart = "${pkgs.bash}/bin/bash /etc/spindownScript.sh";
+		};
+	};
+
+	#######################
+	# BACKUPS DEFINITIONS #
+	#######################
+
+	systemd.tmpfiles.rules = [
+		"d /run/restic/secrets 0750 ${username} users -"
+		"f ${resticEnvFile} 0640 ${username} users - RESTIC_PASSWORD=${secrets.resticRepoPass}"
+	];
+	services.restic.backups = {
+		cutupToBacara = {
+			paths = [ "/mnt/CUTUP" ];
+			repository = "/mnt/BACARA/restic";
+			initialize = true;       # auto-init repo if missing
+			timerConfig = {
+				OnCalendar = "monthly 02:00";  # monthly at 2:00 AM
+			};
+			exclude = [];
+			environmentFile = resticEnvFile;
+		};
+
+		jarkToJag = {
+			paths = [ "/mnt/JARK" ];
+			repository = "/mnt/JAG/restic";
+			initialize = true;
+			timerConfig = {
+				OnCalendar = "monthly 02:00";  # monthly at 2:00 AM
+			};
+			environmentFile = resticEnvFile;
+		};
+
+		huskToJay = {
+			paths = [ "/mnt/HUSK" ];
+			repository = "/mnt/JAY/restic";
+			initialize = true;
+			timerConfig = {
+				OnCalendar = "monthly 02:00";  # monthly at 2:00 AM
+			};
+			environmentFile = resticEnvFile;
 		};
 	};
 }
