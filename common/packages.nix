@@ -17,8 +17,9 @@
 		# nvim-specific stuff
 		tree-sitter
 		gcc
-		nil # nix lsp
-		python313Packages.python-lsp-server # python lsp
+		nil # nix ls
+		python313Packages.python-lsp-server # python ls
+		omnisharp-roslyn
 	];
 
 	programs.zsh.enable = true;
