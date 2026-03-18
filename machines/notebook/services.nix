@@ -38,8 +38,11 @@
 	services.tailscale.enable = true; # run `sudo tailscale up` to set up account using browser auth
 
 	services.logind = {
-		lidSwitch = "suspend";
-		lidSwitchExternalPower = "suspend";
-		lidSwitchDocked = "ignore";
+		settings.Login = {
+			HandleLidSwitchDocked = "ignore";
+			HandleLidSwitchExternalPower = "suspend";
+			HandleLidSwitch = "suspend";
+			HandlePowerKey = "suspend";
+		}; 
 	};
 }
