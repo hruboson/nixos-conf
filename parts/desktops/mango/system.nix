@@ -4,7 +4,7 @@
 			inputs.silentSDDM.nixosModules.default
 		];
 
-		environment.sessionVariables.NIXOS_OZONE_WL = "1";
+		#environment.sessionVariables.NIXOS_OZONE_WL = "1";
 		programs.dconf.enable = true;
 
 		xdg.portal.enable = true;
@@ -50,21 +50,5 @@
 		security.polkit.enable = true;
 		#security.pam.services.hyprlock = {};
 		services.dbus.enable = true;
-
-		environment.systemPackages = with pkgs; [
-			killall
-			wev
-			wayland
-			wlr-randr
-			wdisplays
-			waybar
-			eww
-			qt6.qtwayland
-			grim
-			slurp
-			pwvucontrol
-			pulseaudio
-			inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default
-		];
-	};
+		};
 }

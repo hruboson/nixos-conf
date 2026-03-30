@@ -15,12 +15,120 @@
 
 		config = {
 			programs.mango.enable = true;
+			security.polkit.enable = true;
+			services.dbus.enable = true;
+			hardware.graphics.enable = true;
+
+			environment.systemPackages = (with pkgs; [
+				killall
+
+				wev
+				wayland
+				wlr-randr
+				wdisplays
+
+				vicinae
+				quickshell
+				qt6.qtwayland
+
+				grim	# Screenshot utility
+				slurp # Select region for grim
+				pwvucontrol	# volume and sound gui control
+				pulseaudio # volume and sound control
+			]);
 
 			home-manager.users.${username} = {
 				imports = [ inputs.mango.hmModules.mango ];
 				wayland.windowManager.mango = {
 					enable = true;
 					settings = ''
+						###############
+						#	LAYOUTS	  #
+						###############
+
+						# Scroller Layout Setting
+						scroller_structs=20
+						scroller_default_proportion=0.8
+						scroller_focus_center=0
+						scroller_prefer_center=1
+						edge_scroller_pointer_focus=1
+						scroller_default_proportion_single=1.0
+						scroller_proportion_preset=0.5,0.8,1.0
+
+						# Master-Stack Layout Setting
+						new_is_master=1
+						smartgaps=0
+						default_mfact=0.55
+						default_nmaster=1
+
+						# Overview Setting
+						hotarea_size=10
+						enable_hotarea=1
+						ov_tab_mode=0
+						overviewgappi=5
+						overviewgappo=30
+
+						#################
+						#	KEYBOARD	#
+						#################
+
+						repeat_rate=25
+						repeat_delay=600
+						numlockon=1
+						xkb_rules_layout=cz
+						xkb_rules_options = grp:alt_shift_toggle
+						# xkb_rules_options=ctrl:nocaps
+						# xkb_rules_options=grp:alt_altgr_toggle,caps:hyper
+
+						# Trackpad 
+						disable_trackpad=0
+						tap_to_click=1
+						tap_and_drag=1
+						drag_lock=false
+						mouse_natural_scrolling=0
+						trackpad_natural_scrolling=0
+						disable_while_typing=1
+						left_handed=0
+						middle_button_emulation=0
+						swipe_min_threshold=1
+						accel_profile=2
+						accel_speed=0.0
+						# scroll_button=274
+						# scroll_method=1
+
+						#################
+						#	KEYBINDS	#
+						#################
+
+						bind=SUPER,r,reload_config
+						bind=SUPER,Return,spawn,kitty
+						bind=SUPER,space,spawn,vicinae toggle
+						bind=SUPER,v,spawn,vicinae vicinae://extensions/vicinae/clipboard/history
+
+						mousebind=SUPER,btn_left,moveresize,curmove
+						mousebind=SUPER,btn_right,moveresize,curresize
+						mousebind=SUPER+CTRL,btn_right,killclient
+
+						#################
+						#	APPEARANCE	#
+						#################
+
+						gappih=5
+						gappiv=5
+						gappoh=15
+						gappov=15
+						scratchpad_width_ratio=0.8
+						scratchpad_height_ratio=0.9
+						borderpx=0
+						rootcolor=0x201b14ff
+						bordercolor=0x444444ff
+						focuscolor=0x8BAA9Bff
+						maximizescreencolor=0xBABD2Cff
+						urgentcolor=0xad401fff
+						scratchpadcolor=0xc4939dff
+						globalcolor=0x8d64cfff
+						overlaycolor=0x95C381ff
+
 						# Effect
 						blur=0
 						blur_layer=1
@@ -41,7 +149,7 @@
 						shadows_position_y = 0
 						shadowscolor= 0x000000ff
 
-						border_radius=6
+						border_radius=4
 						no_radius_when_single=0
 						focused_opacity=1.0
 						unfocused_opacity=0.85
@@ -71,29 +179,16 @@
 						animation_curve_close=0.08,0.92,0,1
 						animation_curve_focus=0.46,1.0,0.29,1
 
-						# Scroller Layout Setting
-						scroller_structs=20
-						scroller_default_proportion=0.8
-						scroller_focus_center=0
-						scroller_prefer_center=1
-						edge_scroller_pointer_focus=1
-						scroller_default_proportion_single=1.0
-						scroller_proportion_preset=0.5,0.8,1.0
+						#################
+						#	MONITORS	#
+						#################
 
-						# Master-Stack Layout Setting
-						new_is_master=1
-						smartgaps=0
-						default_mfact=0.55
-						default_nmaster=1
+						${config.desktops.mango.monitors}
 
-						# Overview Setting
-						hotarea_size=10
-						enable_hotarea=1
-						ov_tab_mode=0
-						overviewgappi=5
-						overviewgappo=30
+						#############
+						#	MISC	#
+						#############
 
-						# Misc
 						xwayland_persistence=1
 						syncobj_enable=0
 						no_border_when_single=0
@@ -112,54 +207,10 @@
 						cursor_hide_timeout=0
 						drag_tile_to_tile=1
 						single_scratchpad = 1
-
-						# keyboard
-						repeat_rate=25
-						repeat_delay=600
-						numlockon=1
-						xkb_rules_layout=cz
-						# xkb_rules_options=ctrl:nocaps
-						# xkb_rules_options=grp:alt_altgr_toggle,caps:hyper
-
-						# Trackpad 
-						disable_trackpad=0
-						tap_to_click=1
-						tap_and_drag=1
-						drag_lock=1
-						mouse_natural_scrolling=0
-						trackpad_natural_scrolling=0
-						disable_while_typing=1
-						left_handed=0
-						middle_button_emulation=0
-						swipe_min_threshold=1
-						accel_profile=2
-						accel_speed=0.0
-						# scroll_button=274
-						# scroll_method=1
-
-						# Appearance
-						gappih=5
-						gappiv=5
-						gappoh=15
-						gappov=15
-						scratchpad_width_ratio=0.8
-						scratchpad_height_ratio=0.9
-						borderpx=4
-						rootcolor=0x201b14ff
-						bordercolor=0x444444ff
-						focuscolor=0x8BAA9Bff
-						maximizescreencolor=0xBABD2Cff
-						urgentcolor=0xad401fff
-						scratchpadcolor=0xc4939dff
-						globalcolor=0x8d64cfff
-						overlaycolor=0x95C381ff
-
-						${config.desktops.mango.monitors}
-
-						bind=SUPER,r,reload_config
-						bind=Alt,Return,spawn,kitty
-
-						exec-once=~/.config/mango/autostart.sh
+						
+						# Execute autostart.sh defined in autostart_sh
+						#exec-once=~/.config/mango/autostart.sh
+						exec-once=vicinae server
 					'';
 					autostart_sh = ''
 					'';
@@ -167,4 +218,4 @@
 			};
 		};
 	};
-					   }
+}
