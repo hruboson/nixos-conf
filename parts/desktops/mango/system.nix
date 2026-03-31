@@ -6,6 +6,10 @@
 
 		#environment.sessionVariables.NIXOS_OZONE_WL = "1";
 		programs.dconf.enable = true;
+		security.polkit.enable = true;
+		services.dbus.enable = true;
+		hardware.graphics.enable = true;
+		#security.pam.services.hyprlock = {};
 
 		xdg.portal.enable = true;
 		xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
@@ -46,9 +50,5 @@
 				};
 			};
 		};
-
-		security.polkit.enable = true;
-		#security.pam.services.hyprlock = {};
-		services.dbus.enable = true;
-		};
+	};
 }

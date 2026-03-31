@@ -15,9 +15,6 @@
 
 		config = {
 			programs.mango.enable = true;
-			security.polkit.enable = true;
-			services.dbus.enable = true;
-			hardware.graphics.enable = true;
 
 			environment.systemPackages = (with pkgs; [
 				killall
@@ -47,13 +44,13 @@
 						###############
 
 						# Scroller Layout Setting
-						scroller_structs=20
-						scroller_default_proportion=0.8
-						scroller_focus_center=0
+						scroller_structs=10
+						scroller_default_proportion=0.40
+						scroller_focus_center=1
 						scroller_prefer_center=1
 						edge_scroller_pointer_focus=1
+						scroller_ignore_proportion_single=0
 						scroller_default_proportion_single=1.0
-						scroller_proportion_preset=0.5,0.8,1.0
 
 						# Master-Stack Layout Setting
 						new_is_master=1
@@ -67,6 +64,43 @@
 						ov_tab_mode=0
 						overviewgappi=5
 						overviewgappo=30
+
+						#############
+						#	TAGS	#
+						#############
+
+						#... maybe move this as an option, similar to monitors
+
+						# DESKTOP
+						tagrule=id:1,monitor_name:DP-2,layout_name:deck
+						tagrule=id:2,monitor_name:DP-2,layout_name:deck
+						tagrule=id:3,monitor_name:DP-2,layout_name:deck
+						tagrule=id:4,monitor_name:DP-2,layout_name:deck
+						tagrule=id:5,monitor_name:DP-2,layout_name:deck
+						tagrule=id:6,monitor_name:DP-2,layout_name:deck
+						tagrule=id:7,monitor_name:DP-2,layout_name:deck
+						tagrule=id:8,monitor_name:DP-2,layout_name:deck
+						tagrule=id:9,monitor_name:DP-2,layout_name:deck
+
+						tagrule=id:1,monitor_name:HDMI-A-1,layout_name:deck
+						tagrule=id:2,monitor_name:HDMI-A-1,layout_name:deck
+						tagrule=id:3,monitor_name:HDMI-A-1,layout_name:deck
+						tagrule=id:4,monitor_name:HDMI-A-1,layout_name:deck
+						tagrule=id:5,monitor_name:HDMI-A-1,layout_name:deck
+						tagrule=id:6,monitor_name:HDMI-A-1,layout_name:deck
+						tagrule=id:7,monitor_name:HDMI-A-1,layout_name:deck
+						tagrule=id:8,monitor_name:HDMI-A-1,layout_name:deck
+						tagrule=id:9,monitor_name:HDMI-A-1,layout_name:deck
+
+						tagrule=id:1,monitor_name:HDMI-A-2,layout_name:vertical_scroller
+						tagrule=id:2,monitor_name:HDMI-A-2,layout_name:vertical_scroller
+						tagrule=id:3,monitor_name:HDMI-A-2,layout_name:vertical_scroller
+						tagrule=id:4,monitor_name:HDMI-A-2,layout_name:vertical_scroller
+						tagrule=id:5,monitor_name:HDMI-A-2,layout_name:vertical_scroller
+						tagrule=id:6,monitor_name:HDMI-A-2,layout_name:vertical_scroller
+						tagrule=id:7,monitor_name:HDMI-A-2,layout_name:vertical_scroller
+						tagrule=id:8,monitor_name:HDMI-A-2,layout_name:vertical_scroller
+						tagrule=id:9,monitor_name:HDMI-A-2,layout_name:vertical_scroller
 
 						#################
 						#	KEYBOARD	#
@@ -100,14 +134,54 @@
 						#	KEYBINDS	#
 						#################
 
+						mousebind=SUPER,btn_left,moveresize,curmove
+						mousebind=SUPER,btn_right,moveresize,curresize
+						mousebind=SUPER+CTRL,btn_right,killclient
+
 						bind=SUPER,r,reload_config
 						bind=SUPER,Return,spawn,kitty
 						bind=SUPER,space,spawn,vicinae toggle
 						bind=SUPER,v,spawn,vicinae vicinae://extensions/vicinae/clipboard/history
 
-						mousebind=SUPER,btn_left,moveresize,curmove
-						mousebind=SUPER,btn_right,moveresize,curresize
-						mousebind=SUPER+CTRL,btn_right,killclient
+						# vertical_scroller
+						bind=SUPER,Up,focusdir,up
+						bind=SUPER,Down,focusdir,down
+						bind=SUPER,equal,set_proportion,+0.1
+						bind=SUPER,minus,set_proportion,-0.1
+						axisbind=SUPER,UP,focusdir,up
+						axisbind=SUPER,DOWN,focusdir,down
+
+						# windows
+						bind=SUPER,Right,focusstack,next
+						bind=SUPER,Left,focusstack,prev
+						bind=SUPER+SHIFT,Up,exchange_client,up
+						bind=SUPER+SHIFT,Down,exchange_client,down
+						bind=SUPER+SHIFT,Left,exchange_client,left
+						bind=SUPER+SHIFT,Right,exchange_client,right
+
+						# monitor nav
+						bind=SUPER+CTRL,Left,focusmon,left
+						bind=SUPER+CTRL,Right,focusmon,right
+
+						# tag nav
+						bind=SUPER,1,view,1,0
+						bind=SUPER,2,view,2,0
+						bind=SUPER,3,view,3,0
+						bind=SUPER,4,view,4,0
+						bind=SUPER,5,view,5,0
+						bind=SUPER,6,view,6,0
+						bind=SUPER,7,view,7,0
+						bind=SUPER,8,view,8,0
+						bind=SUPER,9,view,9,0
+						bind=SUPER+SHIFT,1,toggleview,1
+						bind=SUPER+SHIFT,2,toggleview,2
+						bind=SUPER+SHIFT,3,toggleview,3
+						bind=SUPER+SHIFT,4,toggleview,4
+						bind=SUPER+SHIFT,5,toggleview,5
+						bind=SUPER+SHIFT,6,toggleview,6
+						bind=SUPER+SHIFT,7,toggleview,7
+						bind=SUPER+SHIFT,8,toggleview,8
+						bind=SUPER+SHIFT,9,toggleview,9
 
 						#################
 						#	APPEARANCE	#
@@ -115,8 +189,8 @@
 
 						gappih=5
 						gappiv=5
-						gappoh=15
-						gappov=15
+						gappoh=5
+						gappov=5
 						scratchpad_width_ratio=0.8
 						scratchpad_height_ratio=0.9
 						borderpx=0
@@ -152,18 +226,18 @@
 						border_radius=4
 						no_radius_when_single=0
 						focused_opacity=1.0
-						unfocused_opacity=0.85
+						unfocused_opacity=0.92
 
 						# Animation Configuration
 						animations=1
 						layer_animations=1
-						animation_type_open=zoom
-						animation_type_close=slide 
-						layer_animation_type_open=slide
-						layer_animation_type_close=slide 
+						animation_type_open=fade
+						animation_type_close=fade
+						layer_animation_type_open=fade
+						layer_animation_type_close=fade 
 						animation_fade_in=1
 						animation_fade_out=1
-						tag_animation_direction=1
+						tag_animation_direction=0
 						zoom_initial_ratio=0.3
 						zoom_end_ratio=0.7
 						fadein_begin_opacity=0.5
@@ -211,6 +285,13 @@
 						# Execute autostart.sh defined in autostart_sh
 						#exec-once=~/.config/mango/autostart.sh
 						exec-once=vicinae server
+
+						#############
+						#	APPS	#
+						#############
+
+						# vicinae animation
+						layerrule=animation_type_open:fade,animation_type_close:fade,layer_name:vicinae
 					'';
 					autostart_sh = ''
 					'';

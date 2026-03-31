@@ -7,7 +7,7 @@
 				home-manager.useGlobalPkgs = true;
 				home-manager.useUserPackages = true;
 				home-manager.users.${settings.username} = { 
-					imports = [ self.homeModules.commonHome ];
+					imports = [ self.homeModules.workstationHome ];
 				};
 				home-manager.extraSpecialArgs = { inherit inputs; };
 			}

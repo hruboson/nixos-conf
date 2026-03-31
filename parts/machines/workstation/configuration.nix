@@ -15,16 +15,26 @@
 			nixpkgs.config.allowUnfree = true;
 
 		environment.systemPackages = (with pkgs; [
-				firefox
-				neovim
-				kitty
+			firefox
+			neovim
+			discord
+			sublime3 # just before i migrate my neovim config to home-manager
 		]);
+
+		# move to services module later
+		services.avahi = { # enables .local address resolution
+			enable = true;
+			nssmdns4 = true;
+			openFirewall = true;
+			ipv4 = true;
+			ipv6 = true;
+		};
 
 		desktops.mango.monitors = ''
 			monitorrule=name:DP-2,width:2560,height:1440,refresh:144,x:2560,y:2639,scale:1
 			monitorrule=name:HDMI-A-1,width:1920,height:1080,refresh:60,x:2560,y:1559,scale:1
-			monitorrule=name:HDMI-A-2,width:2560,height:1440,refresh:60,x:1120,y:1519,scale:1,transform:3
-			'';
+			monitorrule=name:HDMI-A-2,width:2560,height:1440,refresh:60,x:1120,y:1519,scale:1,rr:1
+		'';
 
 		## SOUND
 		services.pulseaudio.enable = false;
