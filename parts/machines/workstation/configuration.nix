@@ -15,6 +15,8 @@
 			nixpkgs.config.allowUnfree = true;
 
 		environment.systemPackages = (with pkgs; [
+			gh # todo move this to something like common/packages.nix, I also tried setting this using home-manager but the git-credential-helper had problem finding the proper binary
+			
 			firefox
 			neovim
 			discord
