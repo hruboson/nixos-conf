@@ -14,6 +14,17 @@
 				share = true;
 			};
 
+		    autocd = true;
+
+		    setOptions = [
+		    	"NO_BEEP"           # Don't beep on errors
+		    	"NO_HUP"            # Don't kill background jobs on logout
+		    	"NO_CHECK_JOBS"     # Don't warn about background jobs
+		    	"NO_NOMATCH"        # Don't report no matches
+		    	"NO_RM_STAR_SILENT" # Ask before rm *
+		    	"INTERACTIVE_COMMENTS"  # Allow comments in interactive shell
+		    ];
+
 			initContent = lib.mkOrder 550 ''
 				# Kitty shell integration (fallback in case HM doesn't cover edge cases)
 				if test -n "$KITTY_INSTALLATION_DIR"; then
@@ -26,6 +37,8 @@
 				if command -v kitty &>/dev/null; then
 					alias ssh="kitty +kitten ssh"
 				fi
+
+				PS1="[%n@%m %1~] "
 			'';
 
 			shellAliases = {

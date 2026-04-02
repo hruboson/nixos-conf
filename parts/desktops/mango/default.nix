@@ -2,7 +2,9 @@
 	flake.nixosModules.mango = { config, lib, pkgs, username, ... }: {
 		imports = [ 
 			inputs.mango.nixosModules.mango 
-			self.nixosModules.mangoSystem 
+			inputs.silentSDDM.nixosModules.default
+
+			#self.nixosModules.bar
 		];
 
 		options.desktops.mango = {
@@ -15,6 +17,52 @@
 
 		config = {
 			programs.mango.enable = true;
+			#environment.sessionVariables.NIXOS_OZONE_WL = "1";
+			programs.dconf.enable = true;
+			security.polkit.enable = true;
+			services.dbus.enable = true;
+			hardware.graphics.enable = true;
+			#security.pam.services.hyprlock = {};
+
+			xdg.portal.enable = true;
+			xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+			services.xserver.enable = true;
+
+			programs.silentSDDM = {
+				enable = true;
+				theme = "default";
+				backgrounds = {
+					wallpaper = pkgs.fetchurl {
+						name = "water.jpg";
+						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/fruitiger_aero/drop.jpg";
+						hash = "sha256-82eyZ5MgykxnxKP1aoHEXjRXTLXTbb9HxIT1eC24dDY=";
+					};
+				};
+				settings = {
+					"LoginScreen" = { background = "water.jpg"; blur = 5; };
+					"LockScreen"  = { background = "water.jpg"; blur = 5; };
+					"General"     = { background-fill-mode = "fill"; };
+				};
+				profileIcons = {
+					${username} = pkgs.fetchurl {
+						name = "hruon_logo.jpg";
+						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/inversion.png";
+						hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
+					};
+				};
+			};
+
+			services.displayManager.sddm = {
+				enable = true;
+				settings = {
+					Autologin = {
+						Session = "mango";  # matches the .desktop session name mango installs
+						User = username;
+						Relogin = false;
+					};
+				};
+			};
 
 			environment.systemPackages = (with pkgs; [
 				killall
@@ -53,7 +101,7 @@
 						scroller_default_proportion_single=1.0
 
 						# Master-Stack Layout Setting
-						new_is_master=1
+						new_is_master=0
 						smartgaps=0
 						default_mfact=0.55
 						default_nmaster=1
@@ -158,6 +206,8 @@
 						bind=SUPER+SHIFT,Down,exchange_client,down
 						bind=SUPER+SHIFT,Left,exchange_client,left
 						bind=SUPER+SHIFT,Right,exchange_client,right
+
+						bind=SUPER+SHIFT,q,killclient
 
 						# monitor nav
 						bind=SUPER+CTRL,Left,focusmon,left
