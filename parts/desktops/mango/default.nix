@@ -27,8 +27,9 @@
 			xdg.portal.enable = true;
 			xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
+			services.displayManager.sddm.enable = true;
 			programs.silentSDDM = {
-				enable = false;
+				enable = true;
 				theme = "default";
 				backgrounds = {
 					wallpaper = pkgs.fetchurl {
@@ -47,16 +48,6 @@
 						name = "hruon_logo.jpg";
 						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/inversion.png";
 						hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
-					};
-				};
-			};
-
-			services.greetd = {
-				enable = true;
-				settings = {
-					default_session = {
-						command = "mango";
-						user = username;
 					};
 				};
 			};
