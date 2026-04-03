@@ -4,6 +4,8 @@
 	# the last part is the name you can reference in imports
 	flake.nixosModules.qemuConfiguration = { pkgs, lib, hostname, username, ... }: {
 		# the inside of these brackets is standard nixos configuration
+
+		# import using the self.<type>.<module>
 		imports = [
 			self.nixosModules.qemuHardware
 			self.nixosModules.qemuSystem
@@ -13,15 +15,8 @@
 			self.nixosModules.kitty
 		];
 
-		home-manager.extraSpecialArgs = { inherit username; };
-		home-manager.users.${username} = {
-			imports = [
-				self.homeModules.commonHome
-			];
-		};
-
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes
-			nixpkgs.config.allowUnfree = true;
+		nixpkgs.config.allowUnfree = true;
 
 		environment.systemPackages = (with pkgs; [
 			gh # todo move this to something like common/packages.nix, I also tried setting this using home-manager but the git-credential-helper had problem finding the proper binary
