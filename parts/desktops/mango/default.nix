@@ -116,6 +116,7 @@
 
 						#... maybe move this as an option, similar to monitors
 
+						tagrule=id:1,monitor_name:Virtual-1,layout_name:deck
 						# DESKTOP
 						tagrule=id:1,monitor_name:DP-2,layout_name:deck
 						tagrule=id:2,monitor_name:DP-2,layout_name:deck

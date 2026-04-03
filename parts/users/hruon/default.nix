@@ -1,11 +1,9 @@
-{ self, inputs, settings, ... }: {
-	flake.nixosModules.users = { pkgs, lib, config, ... }: {
-		programs.zsh.enable = true;
+{ self, inputs, ... }: {
+	flake.nixosModules.users = { pkgs, lib, config, username, ... }: {
 		users.groups.media = {}; # group for external drives that need both services and user access
-		users.users.${settings.username} = {
+		users.users.${username} = {
 			isNormalUser = true;
 			extraGroups = [ "wheel" "networkmanager" "video" "audio" "media" "adbusers" ];
-			shell = pkgs.zsh;
 		};
 	};
 }

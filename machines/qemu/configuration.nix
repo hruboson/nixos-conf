@@ -8,8 +8,17 @@
 			self.nixosModules.qemuHardware
 			self.nixosModules.qemuSystem
 			self.nixosModules.users
+
 			self.nixosModules.mango
+			self.nixosModules.kitty
 		];
+
+		home-manager.extraSpecialArgs = { inherit username; };
+		home-manager.users.${username} = {
+			imports = [
+				self.homeModules.commonHome
+			];
+		};
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes
 			nixpkgs.config.allowUnfree = true;
@@ -33,9 +42,7 @@
 		};
 
 		desktops.mango.monitors = ''
-			monitorrule=name:DP-2,width:2560,height:1440,refresh:144,x:2560,y:2639,scale:1
-			monitorrule=name:HDMI-A-1,width:1920,height:1080,refresh:60,x:2560,y:1559,scale:1
-			monitorrule=name:HDMI-A-2,width:2560,height:1440,refresh:60,x:1120,y:1519,scale:1,rr:1
+			monitorrule=name:Virtual-1,width:1280,height:768,refresh:60,x:0,y:0,scale:1
 		'';
 
 		## SOUND
@@ -63,7 +70,6 @@
 			LC_TELEPHONE = "cs_CZ.UTF-8";
 			LC_TIME = "cs_CZ.UTF-8";
 		};
-
 
 		# NETWORK
 		#networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.

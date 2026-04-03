@@ -31,8 +31,8 @@
 		hardware.graphics = { enable = true; enable32Bit = true; };
 
 		services.xserver.videoDrivers = [ "virtio" ];
-		environment.sessionVariables.WLE_NO_HARDWARE_CURSORS = "1";
 		environment.sessionVariables.WLR_RENDERER_ALLOW_SOFTWARE = "1";
+		environment.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
 		fonts.packages = with pkgs; [
 			nerd-fonts.fira-code
 			nerd-fonts.jetbrains-mono
