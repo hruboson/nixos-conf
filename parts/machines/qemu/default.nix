@@ -1,0 +1,22 @@
+{ self, inputs, settings, ... }: {
+	flake.nixosConfigurations.qemu = inputs.nixpkgs.lib.nixosSystem {
+		modules = [
+			self.nixosModules.qemuConfiguration
+
+			inputs.home-manager.nixosModules.home-manager {
+				home-manager.useGlobalPkgs = true;
+				home-manager.useUserPackages = true;
+				home-manager.users.${settings.username} = { 
+					imports = [ self.homeModules.qemuHome ];
+				};
+				home-manager.extraSpecialArgs = { inherit inputs; };
+			}
+		];
+
+		specialArgs = {
+			inherit inputs self;
+			inherit (settings) username;
+			hostname = "worknix";
+		};
+	};
+}

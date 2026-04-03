@@ -27,10 +27,8 @@
 			xdg.portal.enable = true;
 			xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
-			services.xserver.enable = true;
-
 			programs.silentSDDM = {
-				enable = true;
+				enable = false;
 				theme = "default";
 				backgrounds = {
 					wallpaper = pkgs.fetchurl {
@@ -53,13 +51,12 @@
 				};
 			};
 
-			services.displayManager.sddm = {
+			services.greetd = {
 				enable = true;
 				settings = {
-					Autologin = {
-						Session = "mango";  # matches the .desktop session name mango installs
-						User = username;
-						Relogin = false;
+					default_session = {
+						command = "mango";
+						user = username;
 					};
 				};
 			};
