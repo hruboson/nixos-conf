@@ -24,6 +24,7 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		snappy-switcher.url = "github:OpalAayan/snappy-switcher";
+		awww.url = "git+https://codeberg.org/LGFae/awww";
 
 		# ADDITIONAL DOTFILES
 

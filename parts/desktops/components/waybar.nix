@@ -40,7 +40,7 @@
 				};
 				
 				wayland.windowManager.mango.autostart_sh = ''
-					waybar
+					waybar &
 				'';
 			};
 		};

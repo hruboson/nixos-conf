@@ -1,5 +1,11 @@
 { self, inputs, ... }: {
-	flake.nixosModules.mango = { config, lib, pkgs, username, ... }: {
+	flake.nixosModules.mango = { config, lib, pkgs, username, ... }: let
+		wallpaper = pkgs.fetchurl {
+			name = "kita.png";
+			url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/gruvbox/kita.png";
+			hash = "sha256-Q4xal1LPSc+UBSgodufcOJ0JyKQj61WT+4osYwdNntA=";
+		};
+	in {
 		imports = [
 			inputs.mango.nixosModules.mango
 			inputs.silentSDDM.nixosModules.default
@@ -69,6 +75,7 @@
 				pwvucontrol
 				pulseaudio
 				playerctl
+				inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
 			]);
 
 			desktops.waybar = {
@@ -515,7 +522,11 @@
 					};
 
 					autostart_sh = "
-						vicinae server
+						vicinae server &
+
+						awww-daemon &
+
+						awww img ${wallpaper}
 					";
 				};
 			};
