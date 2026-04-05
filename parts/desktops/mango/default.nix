@@ -4,7 +4,7 @@
 			inputs.mango.nixosModules.mango
 			inputs.silentSDDM.nixosModules.default
 
-			#self.nixosModules.bar
+			self.nixosModules.waybar
 		];
 
 		options.desktops.mango = {
@@ -63,6 +63,81 @@
 				pwvucontrol
 				pulseaudio
 			]);
+
+			desktops.waybar = {
+				enable = true;
+				style = ''
+					* {
+						font-family: "JetBrains Mono";
+						font-size: 13px;
+					}
+					window#waybar {
+						background: rgba(32, 27, 20, 0.85);
+						color: #ffffff;
+					}
+					#workspaces button.focused {
+						color: #8BAA9B;
+					}
+				'';
+				config = {
+					layer = "top";
+					position = "bottom";
+					height = 20;
+					modules-left = [ "ext/workspaces" "dwl/window" ];
+					modules-right = [ "clock" "battery" "pulseaudio" ];
+
+					"ext/workspaces" = {
+						format = "{icon}";
+						ignore-hidden = true;
+						on-click = "activate";
+						on-click-right = "deactivate";
+						sort-by-id = true;
+					};
+
+					"dwl/window" = {
+						format = "[{layout}] {title}";
+					};
+					
+					clock = {
+						format = "      {:%R\n %d.%m.%Y}";
+						tooltip-format = "<tt><small>{calendar}</small></tt>";
+						calendar = {
+							mode = "year";
+							mode-mon-col = 3;
+							weeks-pos = "right";
+							on-scroll = 1;
+							on-click-right = "mode";
+							format = {
+								months = "<span color='#ffead3'><b>{}</b></span>";
+								days = "<span color='#ecc6d9'><b>{}</b></span>";
+								weeks = "<span color='#99ffdd'><b>W{}</b></span>";
+								weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+								today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+							};
+						};
+						actions = {
+							on-click-right = "mode";
+							on-click-forward = "tz_up";
+							on-click-backward = "tz_down";
+							on-scroll-up = "shift_up";
+							on-scroll-down = "shift_down";
+						};
+					};
+					
+					battery = {
+						format = "{capacity}% {icon}";
+						states = {
+							warning = 30;
+							critical = 15;
+						};
+					};
+					
+					pulseaudio = {
+						format = "{volume}% {icon}";
+						"on-click" = "pavucontrol";
+					};
+				};
+			};
 
 			home-manager.users.${username} = {
 				imports = [ inputs.mango.hmModules.mango ];
