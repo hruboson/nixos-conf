@@ -1,7 +1,11 @@
 { self, inputs, ... }: {
 	flake.nixosModules.kitty = { pkgs, lib, username, ... }:
 	let
-		home = { pkgs, lib, ... }: {
+		home = { pkgs, lib, config, ... }: {
+
+			home.file = {
+				"${config.xdg.configHome}/oh-my-zsh/themes/mh-custom.zsh-theme".source = ./mh-custom.zsh-theme;
+			};
 			programs.zsh = {
 				enable = true;
 				autosuggestion.enable = true;
@@ -16,16 +20,16 @@
 					share = true;
 				};
 
-			    autocd = true;
+				autocd = true;
 
-			    setOptions = [
-			    	"NO_BEEP"           # Don't beep on errors
-			    	"NO_HUP"            # Don't kill background jobs on logout
-			    	"NO_CHECK_JOBS"     # Don't warn about background jobs
-			    	"NO_NOMATCH"        # Don't report no matches
-			    	"NO_RM_STAR_SILENT" # Ask before rm *
-			    	"INTERACTIVE_COMMENTS"  # Allow comments in interactive shell
-			    ];
+				setOptions = [
+					"NO_BEEP"           # Don't beep on errors
+					"NO_HUP"            # Don't kill background jobs on logout
+					"NO_CHECK_JOBS"     # Don't warn about background jobs
+					"NO_NOMATCH"        # Don't report no matches
+					"NO_RM_STAR_SILENT" # Ask before rm *
+					"INTERACTIVE_COMMENTS"  # Allow comments in interactive shell
+				];
 
 				initContent = lib.mkOrder 550 ''
 					# Kitty shell integration (fallback in case HM doesn't cover edge cases)
@@ -39,14 +43,26 @@
 					if command -v kitty &>/dev/null; then
 						alias ssh="kitty +kitten ssh"
 					fi
-
-					PS1="[%n@%m %1~] "
 				'';
 
 				shellAliases = {
 					# Kitty image/diff kitten aliases
 					icat = "kitty +kitten icat";
 					kdiff = "kitty +kitten diff";
+				};
+
+				zplug = {
+					enable = true;
+					plugins = [
+						{ name = "zsh-users/zsh-autosuggestions"; }
+					];
+				};
+
+				oh-my-zsh = {
+					enable = true;
+					plugins = [ "git" "history-substring-search" ];
+					theme = "mh-custom";
+					custom = "${config.xdg.configHome}/oh-my-zsh";
 				};
 			};
 
