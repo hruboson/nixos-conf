@@ -26,10 +26,12 @@
 		snappy-switcher.url = "github:OpalAayan/snappy-switcher";
 
 		# ADDITIONAL DOTFILES
-		nvim-conf = {
-			url = "github:hruboson/nvim-conf";
-			flake = false;
-		};
+
+		# currently not used, nvim managed through nixvim
+		#nvim-conf = {
+		#	url = "github:hruboson/nvim-conf";
+		#	flake = false;
+		#};
     };
     outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} {
 		imports = [
