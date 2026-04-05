@@ -10,6 +10,9 @@
 			url = "github:nix-community/home-manager/release-25.11";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		nixvim = {
+			url = "github:nix-community/nixvim/nixos-25.11";
+		};
 
 		# DESKTOPS
 		mango = {
@@ -21,6 +24,12 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		snappy-switcher.url = "github:OpalAayan/snappy-switcher";
+
+		# ADDITIONAL DOTFILES
+		nvim-conf = {
+			url = "github:hruboson/nvim-conf";
+			flake = false;
+		};
     };
     outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} {
 		imports = [
