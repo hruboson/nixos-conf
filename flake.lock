@@ -302,22 +302,6 @@
         "type": "github"
       }
     },
-    "nvim-conf": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1773827255,
-        "narHash": "sha256-i6zkunbn46sTZ7RQrtC92KzjpWPnHbqPCiDbDPNB1BM=",
-        "owner": "hruboson",
-        "repo": "nvim-conf",
-        "rev": "e5046c9ef6f9f2d7741306f7182f6f7d518b2d7d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hruboson",
-        "repo": "nvim-conf",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -326,7 +310,6 @@
         "mango": "mango",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
-        "nvim-conf": "nvim-conf",
         "silentSDDM": "silentSDDM",
         "snappy-switcher": "snappy-switcher"
       }
