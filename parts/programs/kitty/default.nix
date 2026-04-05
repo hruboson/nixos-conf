@@ -4,7 +4,10 @@
 		home = { pkgs, lib, config, ... }: {
 
 			home.file = {
+				# zsh theme
 				"${config.xdg.configHome}/oh-my-zsh/themes/mh-custom.zsh-theme".source = ./mh-custom.zsh-theme;
+				# macchina config
+				"${config.xdg.configHome}/macchina".source = ./macchina;
 			};
 			programs.zsh = {
 				enable = true;
@@ -40,8 +43,8 @@
 						unfunction kitty-integration
 					fi
 
-					if command -v kitty &>/dev/null; then
-						alias ssh="kitty +kitten ssh"
+					if [[ -o interactive ]]; then
+						macchina
 					fi
 				'';
 
@@ -49,13 +52,10 @@
 					# Kitty image/diff kitten aliases
 					icat = "kitty +kitten icat";
 					kdiff = "kitty +kitten diff";
-				};
 
-				zplug = {
-					enable = true;
-					plugins = [
-						{ name = "zsh-users/zsh-autosuggestions"; }
-					];
+					lg = "lazygit";
+					nosleep = "systemd-inhibit --what=handle-lid-switch sleep 90m";
+					cls = "clear";
 				};
 
 				oh-my-zsh = {
@@ -95,5 +95,8 @@
 		programs.zsh.enable = true;
 		users.users.${username}.shell = pkgs.zsh;
 		home-manager.users.${username} = home;
+		environment.systemPackages = (with pkgs; [
+			macchina
+		]);
 	};
 }
