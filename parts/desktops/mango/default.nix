@@ -49,6 +49,12 @@
 				};
 			};
 
+			fonts.packages = with pkgs; [
+				nerd-fonts.fira-code
+				nerd-fonts.jetbrains-mono
+				vista-fonts
+			];
+
 			environment.systemPackages = (with pkgs; [
 				killall
 				wev
@@ -62,29 +68,129 @@
 				slurp
 				pwvucontrol
 				pulseaudio
+				playerctl
 			]);
 
 			desktops.waybar = {
 				enable = true;
 				style = ''
 					* {
-						font-family: "JetBrains Mono";
+						font-family: "FiraCode Nerd Font Mono";
+						font-weight: bold;
 						font-size: 13px;
+						background-color: transparent;
 					}
-					window#waybar {
-						background: rgba(32, 27, 20, 0.85);
-						color: #ffffff;
+					#clock, #pulseaudio, #mpris {
+						color: white;
 					}
-					#workspaces button.focused {
-						color: #8BAA9B;
+
+					#clock {
+						padding-right: 10px;
+					}
+
+					#workspaces {
+					  border-radius: 4px;
+					  border-width: 2px;
+					  border-style: solid;
+					  border-color: #c9b890;
+					  margin-left: 4px;
+					  padding-left: 10px;
+					  padding-right: 6px;
+					  background: rgba(40, 40, 40, 0.76);
+					}
+
+					#workspaces button {
+					  border: none;
+					  background: none;
+					  box-shadow: inherit;
+					  text-shadow: inherit;
+					  color: #ddca9e;
+					  padding: 1px;
+					  padding-left: 1px;
+					  padding-right: 1px;
+					  margin-right: 2px;
+					  margin-left: 2px;
+					}
+
+					#workspaces button.hidden {
+					  color: #9e906f;
+					  background-color: transparent;
+					}
+
+					#workspaces button.visible {
+					  color: #ddca9e;
+					}
+
+					#workspaces button:hover {
+					  color: #d79921;
+					}
+
+					#workspaces button.active {
+					  background-color: #ddca9e;
+					  color: #282828;
+					  margin-top: 5px;
+					  margin-bottom: 5px;
+					  padding-top: 1px;
+					  padding-bottom: 0px;
+					  border-radius: 3px;
+					}
+
+					#workspaces button.urgent {
+					  background-color: #ef5e5e;
+					  color: #282828;
+					  margin-top: 5px;
+					  margin-bottom: 5px;
+					  padding-top: 1px;
+					  padding-bottom: 0px;
+					  border-radius: 3px;
+					}
+
+					#tags {
+					  background-color: transparent;
+					}
+
+					#tags button {
+					  background-color: #fff;
+					  color: #a585cd;
+					}
+
+					#tags button:not(.occupied):not(.focused) {
+					  font-size: 0;
+					  min-width: 0;
+					  min-height: 0;
+					  margin: -17px;
+					  padding: 0;
+					  color: transparent;
+					  background-color: transparent;
+					}
+
+					#tags button.occupied {
+					  background-color: #fff;
+					  color: #cdc885;
+					}
+
+					#tags button.focused {
+					  background-color: rgb(186, 142, 213);
+					  color: #fff;
+					}
+
+					#tags button.urgent {
+					  background: rgb(171, 101, 101);
+					  color: #fff;
+					}
+
+					#window {
+					  background-color: rgb(237, 196, 147);
+					  color: rgb(63, 37, 5);
 					}
 				'';
 				config = {
 					layer = "top";
 					position = "bottom";
-					height = 20;
-					modules-left = [ "ext/workspaces" "dwl/window" ];
-					modules-right = [ "clock" "battery" "pulseaudio" ];
+					height = 15;
+					modules-left = [ "ext/workspaces" ];
+					modules-center = [ "mpris" ];
+					modules-right = [ "battery" "pulseaudio" "clock" ];
 
 					"ext/workspaces" = {
 						format = "{icon}";
@@ -94,12 +200,42 @@
 						sort-by-id = true;
 					};
 
-					"dwl/window" = {
+					/*"dwl/window" = {
 						format = "[{layout}] {title}";
+					};*/
+
+					mpris = {
+						format = "{player_icon}   {title}";
+						format-paused = "{status_icon}   {title}";
+						tooltip-format = "{player} - {title} by {artist}";
+						truncate = 30;
+						ellipsis = true;
+						player-icons = {
+							default = "🎵";
+							spotify = "";
+							firefox = "";
+							chromium = "";
+							mpv = "";
+							vlc = "󰕼";
+						};
+						status-icons = {
+							playing = "";
+							paused = "";
+							stopped = "";
+						};
+
+						on-click = "playerctl play-pause";
+						on-click-right = "playerctl next";
+						on-click-middle = "playerctl previous";
+						on-scroll-up = "pactl set-sink-volume @DEFAULT_SINK@ +5%";
+						on-scroll-down = "pactl set-sink-volume @DEFAULT_SINK@ -5%";
+						ignored-players = [ "" ];  # ignore specific players
+						interval = 1;  # update every second
+						max-length = 50;
 					};
-					
+
 					clock = {
-						format = "      {:%R\n %d.%m.%Y}";
+						format = "{:%R %d.%m.%Y}";
 						tooltip-format = "<tt><small>{calendar}</small></tt>";
 						calendar = {
 							mode = "year";

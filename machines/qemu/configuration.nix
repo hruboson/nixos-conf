@@ -25,7 +25,6 @@
 			firefox
 			neovim
 			discord
-			sublime3 # just before i migrate my neovim config to home-manager
 		]);
 
 		# move to services module later
