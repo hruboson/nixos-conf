@@ -18,6 +18,7 @@
 			self.nixosModules.appPackDesktop
 
 			self.nixosModules.servicesPackHomeserver
+			self.nixosModules.servicesBluetooth
 		];
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes
