@@ -256,35 +256,35 @@
 				vim.treesitter.language.register("javascript", "jisonlex")
 
 				-- ── COKELINE ─────────────────────────────────────────────
-				local get_hex = require('cokeline.hlgroups').get_hl_attr
+				local get_hex = require("cokeline.hlgroups").get_hl_attr
 				local yellow = vim.g.terminal_color_3
-				require('cokeline').setup({
+				require("cokeline").setup({
 						default_hl = {
 						fg = function(buffer)
 						return buffer.is_focused
-						and get_hex('Normal', 'fg')
-						or  get_hex('Comment', 'fg')
+						and get_hex("Normal", "fg")
+						or  get_hex("Comment", "fg")
 						end,
-						bg = function() return get_hex('ColorColumn', 'bg') end,
+						bg = function() return get_hex("ColorColumn", "bg") end,
 						},
 						sidebar = {
-						filetype = { 'NvimTree', 'neo-tree' },
+						filetype = { "NvimTree", "neo-tree" },
 						components = {{
 						text = function(buf) return buf.filetype end,
 						fg = yellow,
-						bg = function() return get_hex('NvimTreeNormal', 'bg') end,
+						bg = function() return get_hex("NvimTreeNormal", "bg") end,
 						bold = true,
 						}},
 						},
 						})
 
 
-			-- close current buffer
-				vim.keymap.set('n', '<leader>q', function()
-						local target_buffer = require('cokeline.buffers').get_current()
-						if not target_buffer then print('Current buffer not found'); return end
+				-- close current buffer
+				vim.keymap.set("n", "<leader>q", function()
+						local target_buffer = require("cokeline.buffers").get_current()
+						if not target_buffer then print("Current buffer not found"); return end
 						target_buffer:delete()
-						end, { desc = 'Close buffer' })
+						end, { desc = "Close buffer" })
 				'';
 		};
 	};
