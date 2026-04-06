@@ -7,7 +7,7 @@
 		environment.systemPackages = with pkgs; [
 			gh
 			libgcc
-			#neovide
+			neovide
 		];
 
 		home-manager.users.${username} = {

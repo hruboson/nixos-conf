@@ -1,0 +1,19 @@
+scheme: "Vague"
+author: "hruboson"
+base00: "#141415" # Black (background)
+base01: "#1c1c24" # Shadow
+base02: "#252530" # Graphite
+base03: "#606079" # Muted
+base04: "#878787" # Gray
+base05: "#cdcdcd" # White (default foreground)
+base06: "#e8e8e8" # lighter foreground (derived)
+base07: "#ffffff" # brightest (derived)
+
+base08: "#d8647e" # Red
+base09: "#e0a363" # Gold (orange-ish)
+base0A: "#f3be7c" # Yellow
+base0B: "#7fa563" # Green
+base0C: "#b4d4cf" # Aqua
+base0D: "#6e94b2" # Blue
+base0E: "#bb9dbd" # Magenta
+base0F: "#c48282" # Peach

@@ -1,10 +1,18 @@
 { self, inputs, ... }: {
 	flake.nixosModules.appPackDesktop = { config, lib, pkgs, username, ... }: {
 		nixpkgs.config.allowUnfree = true;
-		environment.systemPackages = with pkgs; [
+		environment.systemPackages = with pkgs; let
+			application-menu = pkgs.runCommandLocal "xdg-application-menu" { } ''
+				mkdir -p $out/etc/xdg/menus/
+				ln -s ${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu \
+				$out/etc/xdg/menus/applications.menu
+			'';
+		in [
 			# files
 			kdePackages.filelight
 			kdePackages.dolphin kdePackages.ffmpegthumbs kdePackages.qtimageformats
+			kdePackages.xdg-desktop-portal-kde kdePackages.kservice # needed for xdg mime associations
+			application-menu
 			peazip
 
 			# img
@@ -25,6 +33,10 @@
 
 		# should fix kde unpopulated xdg mime apps menu
 		environment.etc."/xdg/menus/applications.menu".text = builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
+		xdg.mime.enable = true;
+		xdg.menus.enable = true;
+		xdg.portal.enable = true;
+		xdg.portal.xdgOpenUsePortal = true;
 
 		home-manager.users.${username} = {
 			# File types -> app associations

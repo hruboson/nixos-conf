@@ -15,27 +15,13 @@
 			self.nixosModules.kitty
 			self.nixosModules.appPackDev
 			self.nixosModules.appPackSysutils
+			self.nixosModules.appPackDesktop
+
+			self.nixosModules.servicesPackHomeserver
 		];
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes
 		nixpkgs.config.allowUnfree = true;
-
-		environment.systemPackages = (with pkgs; [
-			gh # todo move this to something like common/packages.nix, I also tried setting this using home-manager but the git-credential-helper had problem finding the proper binary
-			
-			firefox
-			neovim
-			discord
-		]);
-
-		# move to services module later
-		services.avahi = { # enables .local address resolution
-			enable = true;
-			nssmdns4 = true;
-			openFirewall = true;
-			ipv4 = true;
-			ipv6 = true;
-		};
 
 		desktops.mango.monitors = ''
 			monitorrule=name:Virtual-1,width:1920,height:1080,refresh:60,x:0,y:0,scale:1
