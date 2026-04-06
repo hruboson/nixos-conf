@@ -82,12 +82,26 @@
 			desktops.waybar = {
 				enable = true;
 				style = ''
+					@define-color bg_hover rgba(200, 200, 200, 0.3);
+					@define-color bg_back rgba(0, 0, 0, 0.3);
+					@define-color content_main white;
+
 					* {
 						font-family: "FiraCode Nerd Font Mono";
 						font-weight: bold;
 						font-size: 13px;
 						background-color: transparent;
+						min-height: 0;
 					}
+
+					window#waybar {
+						background-color: @bg_back;
+						padding-top: 1px;
+						padding-bottom: 1px;
+						margin-top: 0px;
+						margin-bottom: 0px;
+					}
+
 					#clock, #pulseaudio, #mpris {
 						color: white;
 					}
@@ -101,7 +115,7 @@
 					}
 
 					#workspaces button {
-
+						color: white;
 					}
 
 					#workspaces button.hidden {
@@ -109,57 +123,114 @@
 					}
 
 					#workspaces button.visible {
-					  color: #ddca9e;
+						color: #ddca9e;
 					}
 
 					#workspaces button:hover {
-					  color: #d79921;
+						color: #d79921;
 					}
 
 					#workspaces button.active {
-					  background-color: #ddca9e;
+						color: black;
+						background-color: #ddca9e;
 					}
 
 					#workspaces button.urgent {
-					  background-color: #ef5e5e;
+						background-color: #ef5e5e;
 					}
 
 					#tags {
-					  background-color: transparent;
+						background-color: transparent;
 					}
 
 					#tags button {
-					  background-color: #fff;
+						background-color: #fff;
 					}
 
 					#tags button:not(.occupied):not(.focused) {
-					  color: transparent;
-					  background-color: transparent;
+						color: transparent;
+						background-color: transparent;
 					}
 
 					#tags button.occupied {
-					  background-color: #fff;
+						background-color: #fff;
 					}
 
 					#tags button.focused {
-					  background-color: rgb(186, 142, 213);
+						background-color: rgb(186, 142, 213);
 					}
 
 					#tags button.urgent {
-					  background: rgb(171, 101, 101);
+						background: rgb(171, 101, 101);
 					}
 
 					#window {
-					  background-color: rgb(237, 196, 147);
+						background-color: rgb(237, 196, 147);
+					}
+
+					#custom-os_button {
+						font-family: "JetBrainsMono Nerd Font";
+						font-size: 18px;
+						padding-left: 12px;
+						padding-right: 20px;
+						transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+					}
+
+					#custom-os_button:hover, #custom-portals_button:hover {
+						background:  @bg_hover;
+						color: @content_main;
+					}
+					
+					#pulseaudio {
+						font-family: "JetBrainsMono Nerd Font";
+						padding-left: 3px;
+						padding-right: 3px;
+						transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+					}
+
+					#pulseaudio:hover {
+						background: @bg_hover;
+					}
+
+					#cpu, #disk, #memory {
+						padding:3px;
+					}
+					#tray{
+						margin-left: 5px;
+						margin-right: 5px;
+					}
+					#tray > .passive {
+						border-bottom: none;
+					}
+					#tray > .active {
+						border-bottom: 3px solid white;
+					}
+					#tray > .needs-attention {
+						border-bottom: 3px solid @warning_color;
+					}
+					#tray > widget {
+						transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+					}
+					#tray > widget:hover {
+						background: @bg_hover;
 					}
 				'';
 				config = {
 					layer = "top";
 					position = "bottom";
 					height = 15;
-					modules-left = [ "ext/workspaces" ];
+					modules-left = [ "custom/os_button" "ext/workspaces" "wlr/taskbar" ];
 					modules-center = [ "mpris" ];
-					modules-right = [ "battery" "pulseaudio" "clock" ];
+					modules-right = [ 
+						"cpu"
+						"temperature"
+						"disk"
+						"tray"
+						"pulseaudio"
+						"network"
+						"battery"
+						"clock"
+					];
 
 					"ext/workspaces" = {
 						format = "{icon}";
@@ -167,6 +238,16 @@
 						on-click = "activate";
 						on-click-right = "deactivate";
 						sort-by-id = true;
+					};
+
+					"wlr/taskbar" = {
+						format = "{icon}";
+						icon-size = 18;
+						spacing = 3;
+						on-click-middle = "close";
+						tooltip-format = "{title}";
+						ignore-list = [];
+						on-click = "activate";
 					};
 
 					/*"dwl/window" = {
@@ -228,6 +309,42 @@
 							on-scroll-down = "shift_down";
 						};
 					};
+
+					cpu = {
+						interval = 5;
+						format = " {usage}% ";
+						max-length = 10;
+					};
+
+					temperature = {
+						hwmon-path-abs = "/sys/devices/platform/coretemp.0/hwmon";
+						input-filename = "temp2_input";
+						critical-threshold = 75;
+						tooltip = false;
+						format-critical = "({temperatureC}°C)";
+						format = "({temperatureC}°C)";
+					};
+
+					disk = {
+						interval = 30;
+						format = "󰋊 {percentage_used}% ";
+						path = "/";
+						tooltip = true;
+						unit = "GB";
+						tooltip-format = "Available {free} of {total}";
+					};
+
+					tray = {
+						icon-size = 18;
+						spacing = 3;
+					};
+
+					network = {
+						format-wifi = " {icon} ";
+						format-ethernet = "  ";
+						format-disconnected = "󰌙";
+						format-icons = [ "󰤯 " "󰤟 " "󰤢 " "󰤢 " "󰤨 " ];
+					};
 					
 					battery = {
 						format = "{capacity}% {icon}";
@@ -238,8 +355,25 @@
 					};
 					
 					pulseaudio = {
-						format = "{volume}% {icon}";
+						max-volume = 150;
+						scroll-step = 5;
+						format = "{icon}";
+						tooltip-format = "{volume}%";
+						format-muted = " ";
+						format-icons = {
+							default = [
+								" "
+								" "
+								" "
+							];
+						};
 						"on-click" = "pavucontrol";
+					};
+
+					"custom/os_button" = {
+						format = "";
+						on-click = "vicinae toggle";
+						tooltip = false;
 					};
 				};
 			};
@@ -511,6 +645,8 @@
 						awww-daemon &
 
 						awww img ${wallpaper}
+
+						kitty &
 					";
 				};
 			};
