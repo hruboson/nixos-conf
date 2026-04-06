@@ -11,6 +11,7 @@
 			inputs.silentSDDM.nixosModules.default
 
 			self.nixosModules.waybar
+			self.nixosModules.darkmode
 		];
 
 		options.desktops.mango = {
@@ -96,32 +97,15 @@
 					}
 
 					#workspaces {
-					  border-radius: 4px;
-					  border-width: 2px;
-					  border-style: solid;
-					  border-color: #c9b890;
-					  margin-left: 4px;
-					  padding-left: 10px;
-					  padding-right: 6px;
-					  background: rgba(40, 40, 40, 0.76);
+
 					}
 
 					#workspaces button {
-					  border: none;
-					  background: none;
-					  box-shadow: inherit;
-					  text-shadow: inherit;
-					  color: #ddca9e;
-					  padding: 1px;
-					  padding-left: 1px;
-					  padding-right: 1px;
-					  margin-right: 2px;
-					  margin-left: 2px;
+
 					}
 
 					#workspaces button.hidden {
-					  color: #9e906f;
-					  background-color: transparent;
+
 					}
 
 					#workspaces button.visible {
@@ -134,22 +118,10 @@
 
 					#workspaces button.active {
 					  background-color: #ddca9e;
-					  color: #282828;
-					  margin-top: 5px;
-					  margin-bottom: 5px;
-					  padding-top: 1px;
-					  padding-bottom: 0px;
-					  border-radius: 3px;
 					}
 
 					#workspaces button.urgent {
 					  background-color: #ef5e5e;
-					  color: #282828;
-					  margin-top: 5px;
-					  margin-bottom: 5px;
-					  padding-top: 1px;
-					  padding-bottom: 0px;
-					  border-radius: 3px;
 					}
 
 					#tags {
@@ -158,37 +130,27 @@
 
 					#tags button {
 					  background-color: #fff;
-					  color: #a585cd;
 					}
 
 					#tags button:not(.occupied):not(.focused) {
-					  font-size: 0;
-					  min-width: 0;
-					  min-height: 0;
-					  margin: -17px;
-					  padding: 0;
 					  color: transparent;
 					  background-color: transparent;
 					}
 
 					#tags button.occupied {
 					  background-color: #fff;
-					  color: #cdc885;
 					}
 
 					#tags button.focused {
 					  background-color: rgb(186, 142, 213);
-					  color: #fff;
 					}
 
 					#tags button.urgent {
 					  background: rgb(171, 101, 101);
-					  color: #fff;
 					}
 
 					#window {
 					  background-color: rgb(237, 196, 147);
-					  color: rgb(63, 37, 5);
 					}
 				'';
 				config = {
@@ -284,6 +246,28 @@
 
 			home-manager.users.${username} = {
 				imports = [ inputs.mango.hmModules.mango ];
+
+				home.pointerCursor = let 
+					getFrom = url: hash: name: {
+						gtk.enable = true;
+						x11.enable = true;
+						name = name;
+						size = 48;
+						package = 
+							pkgs.runCommand "moveUp" {} ''
+							mkdir -p $out/share/icons
+							ln -s ${pkgs.fetchzip {
+								url = url;
+								hash = hash;
+							}} $out/share/icons/${name}
+						'';
+					};
+				in
+					getFrom 
+					"https://github.com/polirritmico/Breeze-Dark-Cursor/releases/download/v1.0/Breeze_Dark_v1.0.tar.gz"
+					"sha256-FgqS3rHJ4o5x4ONSaDZlQu1sFhefhWPk8vaBvURKZzY=" # get this hash by running nix store prefetch-file https://github/cursortheme/theme.tar.gz ... if this hash is wrong you wont be able to rebuild the system
+					"Breeze-Dark";
+
 				wayland.windowManager.mango = {
 					enable = true;
 

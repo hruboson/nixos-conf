@@ -13,7 +13,8 @@
 
 			self.nixosModules.mango
 			self.nixosModules.kitty
-			self.nixosModules.nvim
+			self.nixosModules.appPackDev
+			self.nixosModules.appPackSysutils
 		];
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes
