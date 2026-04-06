@@ -74,6 +74,7 @@
 				grim
 				slurp
 				pwvucontrol
+				pavucontrol
 				pulseaudio
 				playerctl
 				inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
@@ -502,8 +503,10 @@
 							"SUPER,Return,spawn,kitty"
 							"SUPER,space,spawn,vicinae toggle"
 							"SUPER,v,spawn,vicinae vicinae://extensions/vicinae/clipboard/history"
+							"NONE,Print,spawn,grim -g \"$(slurp)\" - | wl-copy"
 
 							"ALT,Tab,toggleoverview,0"
+							"SUPER,s,switch_layout"
 
 							# vertical_scroller
 							"SUPER,Up,focusdir,up"
@@ -519,6 +522,8 @@
 							"SUPER+SHIFT,Left,exchange_client,left"
 							"SUPER+SHIFT,Right,exchange_client,right"
 							"SUPER+SHIFT,q,killclient"
+							"SUPER,f,togglefullscreen"
+							"SUPER+SHIFT,f,togglefloating"
 
 							# monitor nav
 							"SUPER+CTRL,Left,focusmon,left"
