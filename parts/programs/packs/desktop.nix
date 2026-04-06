@@ -15,9 +15,12 @@
 			application-menu
 			peazip
 
-			# img
+			# img, video, audio
 			oculante
 			gthumb
+			vlc
+			spotify
+			quodlibet
 			
 			# emulator
 			bottles
@@ -26,8 +29,10 @@
 			discord
 			element-desktop
 			
-			# other
+			# browser
 			firefox
+
+			# office
 			libreoffice-fresh
 		];
 

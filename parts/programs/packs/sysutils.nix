@@ -4,6 +4,7 @@
 			btop
 			dysk
 			mc
+			mission-center
 
 			ntfs3g
 			gvfs
