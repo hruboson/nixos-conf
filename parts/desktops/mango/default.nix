@@ -66,6 +66,7 @@
 				killall
 				wev
 				wayland
+				wayland-utils
 				wlr-randr
 				wdisplays
 				vicinae

@@ -15,6 +15,7 @@
 
 			self.nixosModules.servicesPackHomeserver
 			self.nixosModules.servicesBluetooth
+			self.nixosModules.servicesDisks
 		];
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes
@@ -56,9 +57,6 @@
 		# NETWORK
 		#networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 		networking.firewall.enable = true;
-
-		# USB DRIVES
-		services.udisks2.enable = true; # enable backend, then in home manager configure udiskie (frontend)
 
 		# Enable the OpenSSH daemon and ssh-agent with keys
 		services.openssh.enable = true;
