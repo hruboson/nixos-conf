@@ -79,6 +79,39 @@
 				pulseaudio
 				playerctl
 				inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
+
+				# rotation toggle script
+				(pkgs.writeShellScriptBin "hdmi2-rotate-toggle" ''
+				MONITOR="HDMI-A-2"
+				LOG_FILE="/tmp/mango-monitor-switch.log"
+				echo "$(date): Starting monitor switch" >> "$LOG_FILE"
+
+				CURRENT=$(wlr-randr | awk -v m="$MONITOR" '
+				$1==m {found=1; next}
+				found && /Transform/ {print $2; exit}
+				')
+				echo "$(date): Current transform: $CURRENT" >> "$LOG_FILE"
+
+				#wlr-randr --output "$MONITOR" --off # if there is a problem when switching uncomment this line
+				#sleep 0.5
+
+				if [ "$CURRENT" = "90" ] || [ "$CURRENT" = "270" ]; then
+					echo "$(date): Switching to landscape" >> "$LOG_FILE"
+					wlr-randr --output "$MONITOR" \
+					--on \
+					--mode 2560x1440 \
+					--pos 0,2639 \
+					--transform normal
+				else
+					echo "$(date): Switching to portrait" >> "$LOG_FILE"
+					wlr-randr --output "$MONITOR" \
+					--on \
+					--mode 2560x1440 \
+					--pos 1120,1519 \
+					--transform 90
+				fi
+				echo "$(date): Done" >> "$LOG_FILE"
+				'')
 			]);
 
 			desktops.waybar = {
@@ -224,6 +257,7 @@
 					modules-left = [ "custom/os_button" "ext/workspaces" "wlr/taskbar" ];
 					modules-center = [ "mpris" ];
 					modules-right = [ 
+						"custom/hdmi2_rotate"
 						"cpu"
 						"temperature"
 						"disk"
@@ -284,6 +318,13 @@
 						ignored-players = [ "" ];  # ignore specific players
 						interval = 1;  # update every second
 						max-length = 50;
+					};
+
+					"custom/hdmi2_rotate" = {
+						format = "󰢅";
+						tooltip = true;
+						tooltip-format = "Toggle HDMI-A-2 rotation";
+						on-click = "hdmi2-rotate-toggle";
 					};
 
 					clock = {
