@@ -1,36 +1,23 @@
-# self refers to the output of our flake so we can use any modules we defined even in different directories
 { self, inputs, ... }: {
-	# this is basically the flake-parts boilerplate
-	# the last part is the name you can reference in imports
 	flake.nixosModules.workstationConfiguration = { pkgs, lib, hostname, username, ... }: {
-		# the inside of these brackets is standard nixos configuration
 		imports = [
 			self.nixosModules.workstationHardware
 			self.nixosModules.workstationSystem
 			self.nixosModules.users
+
 			self.nixosModules.mango
+			self.nixosModules.kitty
+			self.nixosModules.appPackDev
+			self.nixosModules.appPackSysutils
+			self.nixosModules.appPackDesktop
+			self.nixosModules.appPackGames
+
+			self.nixosModules.servicesPackHomeserver
+			self.nixosModules.servicesBluetooth
 		];
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes
-			nixpkgs.config.allowUnfree = true;
-
-		environment.systemPackages = (with pkgs; [
-			gh # todo move this to something like common/packages.nix, I also tried setting this using home-manager but the git-credential-helper had problem finding the proper binary
-			
-			firefox
-			neovim
-			discord
-			sublime3 # just before i migrate my neovim config to home-manager
-		]);
-
-		# move to services module later
-		services.avahi = { # enables .local address resolution
-			enable = true;
-			nssmdns4 = true;
-			openFirewall = true;
-			ipv4 = true;
-			ipv6 = true;
-		};
+		nixpkgs.config.allowUnfree = true;
 
 		desktops.mango.monitors = ''
 			monitorrule=name:DP-2,width:2560,height:1440,refresh:144,x:2560,y:2639,scale:1
