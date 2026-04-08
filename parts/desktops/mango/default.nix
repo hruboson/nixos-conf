@@ -358,9 +358,9 @@
 					pulseaudio = {
 						max-volume = 150;
 						scroll-step = 5;
-						format = "{icon}";
+						format = "{icon} {volume}%";
 						tooltip-format = "{volume}%";
-						format-muted = " ";
+						format-muted = " ";
 						format-icons = {
 							default = [
 								" "
@@ -368,7 +368,7 @@
 								" "
 							];
 						};
-						"on-click" = "pavucontrol";
+						on-click = "pavucontrol";
 					};
 
 					"custom/os_button" = {
