@@ -409,6 +409,12 @@
 					extraConfig = lib.strings.trim config.desktops.mango.monitors;
 
 					settings = {
+						env = [
+							"QT_IM_MODULES,wayland;fcitx"
+							"XMODIFIERS,@im=fcitx"
+							"XDG_CURRENT_DESKTOP,mango"
+						];
+
 						/*
 						 * LAYOUTS
 						 */

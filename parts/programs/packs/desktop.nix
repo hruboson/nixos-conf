@@ -11,7 +11,6 @@
 			# files
 			kdePackages.filelight
 			kdePackages.dolphin kdePackages.ffmpegthumbs kdePackages.qtimageformats
-			kdePackages.xdg-desktop-portal-kde kdePackages.kservice # needed for xdg mime associations
 			application-menu
 			peazip
 
@@ -41,7 +40,6 @@
 		xdg.mime.enable = true;
 		xdg.menus.enable = true;
 		xdg.portal.enable = true;
-		xdg.portal.xdgOpenUsePortal = true;
 
 		home-manager.users.${username} = {
 			# File types -> app associations
@@ -60,6 +58,13 @@
 
 					# Directories
 					"inode/directory" = "org.kde.dolphin.desktop";
+
+					# Links
+					"text/html"                = "firefox.desktop";
+					"x-scheme-handler/http"   = "firefox.desktop";
+					"x-scheme-handler/https"  = "firefox.desktop";
+					"x-scheme-handler/about"  = "firefox.desktop";
+					"x-scheme-handler/unknown" = "firefox.desktop";
 
 					# Documents
 					"application/pdf" = "firefox.desktop";
