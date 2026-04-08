@@ -421,9 +421,9 @@
 
 						# Scroller Layout
 						scroller_structs = 10;
-						scroller_default_proportion = 0.40;
-						scroller_focus_center = 1;
-						scroller_prefer_center = 1;
+						scroller_default_proportion = 0.5;
+						scroller_focus_center = 0;
+						scroller_prefer_center = 0;
 						edge_scroller_pointer_focus = 1;
 						scroller_ignore_proportion_single = 0;
 						scroller_default_proportion_single = 1.0;
