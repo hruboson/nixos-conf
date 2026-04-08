@@ -370,6 +370,7 @@
 							];
 						};
 						on-click = "pavucontrol";
+						on-click-right = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
 					};
 
 					"custom/os_button" = {
