@@ -596,7 +596,7 @@
 						border_radius = 4;
 						no_radius_when_single = 0;
 						focused_opacity = 1.0;
-						unfocused_opacity = 0.92;
+						unfocused_opacity = 1.0;
 
 						# Animations
 						animations = 1;
