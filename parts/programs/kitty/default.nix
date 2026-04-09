@@ -46,6 +46,10 @@
 					if [[ -o interactive ]]; then
 						macchina
 					fi
+
+					nix-shell() {
+						command nix-shell --run zsh "$@"
+					}
 				'';
 
 				shellAliases = {
@@ -56,6 +60,9 @@
 					lg = "lazygit";
 					nosleep = "systemd-inhibit --what=handle-lid-switch sleep 90m";
 					cls = "clear";
+
+					ns = "nix-shell";
+					shell = "nix-shell";
 				};
 
 				oh-my-zsh = {
