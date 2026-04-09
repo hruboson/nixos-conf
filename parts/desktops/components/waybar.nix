@@ -35,7 +35,7 @@
 					enable = true;
 					style = config.desktops.waybar.style;
 					settings = {
-						mangoBar = config.desktops.waybar.config;
+						mangoBar = config.desktops.waybar.config; # TODO make this get name from config so its modules (e.g. different config for mango, hyprland, sway, ...)
 					};
 				};
 				

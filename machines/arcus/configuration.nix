@@ -26,6 +26,7 @@
 			monitorrule=name:HDMI-A-1,width:1920,height:1080,refresh:60,x:2560,y:1559,scale:1
 			monitorrule=name:HDMI-A-2,width:2560,height:1440,refresh:60,x:1120,y:1519,scale:1,rr:1
 		'';
+		desktops.waybar.showRotateScript = true;
 
 		## SOUND
 		services.pulseaudio.enable = false;

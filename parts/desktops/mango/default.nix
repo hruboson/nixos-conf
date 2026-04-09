@@ -20,6 +20,13 @@
 				description = "Mango monitor configuration";
 			};
 		};
+		options.desktops.waybar = {
+			showRotateScript = lib.mkOption {
+				type = lib.types.bool;
+				description = "Whether to enable and show the monitor rotation script";
+				default = false;
+			};
+		};
 
 		config = {
 			programs.mango.enable = true;
@@ -62,7 +69,7 @@
 				vista-fonts
 			];
 
-			environment.systemPackages = (with pkgs; [
+			environment.systemPackages = with pkgs; [
 				killall
 				wev
 				wayland
@@ -80,6 +87,8 @@
 				playerctl
 				inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
 
+			]
+			++ lib.optionals config.desktops.waybar.showRotateScript [
 				# rotation toggle script
 				(pkgs.writeShellScriptBin "hdmi2-rotate-toggle" ''
 				MONITOR="HDMI-A-2"
@@ -112,7 +121,7 @@
 				fi
 				echo "$(date): Done" >> "$LOG_FILE"
 				'')
-			]);
+			];
 
 			desktops.waybar = {
 				enable = true;
@@ -256,17 +265,18 @@
 					height = 15;
 					modules-left = [ "custom/os_button" "ext/workspaces" "wlr/taskbar" ];
 					modules-center = [ "mpris" ];
-					modules-right = [ 
-						"custom/hdmi2_rotate"
+					modules-right =
+						(lib.optional config.desktops.waybar.showRotateScript "custom/hdmi2_rotate")
+						++ [
 						"cpu"
-						"temperature"
-						"disk"
-						"tray"
-						"pulseaudio"
-						"network"
-						"battery"
-						"clock"
-					];
+							"temperature"
+							"disk"
+							"tray"
+							"pulseaudio"
+							"network"
+							"battery"
+							"clock"
+						];
 
 					"ext/workspaces" = {
 						format = "{icon}";
