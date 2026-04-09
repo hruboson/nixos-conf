@@ -390,11 +390,28 @@
 					};
 					
 					battery = {
-						format = "{capacity}% {icon}";
 						states = {
+							good = 95;
 							warning = 30;
-							critical = 15;
+							critical = 20;
 						};
+						format = "{icon} {capacity}%";
+						format-charging = " {capacity}%";
+						format-plugged = " {capacity}%";
+						format-alt = "{time} {icon}";
+						format-icons = [
+							"󰂎"
+							"󰁺"
+							"󰁻"
+							"󰁼"
+							"󰁽"
+							"󰁾"
+							"󰁿"
+							"󰂀"
+							"󰂁"
+							"󰂂"
+							"󰁹"
+						];
 					};
 					
 					pulseaudio = {
@@ -402,7 +419,7 @@
 						scroll-step = 5;
 						format = "{icon} {volume}%";
 						tooltip-format = "{volume}%";
-						format-muted = " ";
+						format-muted = " MUTE";
 						format-icons = {
 							default = [
 								" "
