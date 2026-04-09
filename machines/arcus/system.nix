@@ -1,6 +1,6 @@
 # self refers to the output of our flake so we can use any modules we defined even in different directories
 { self, inputs, ... }: {
-	flake.nixosModules.workstationSystem = { pkgs, lib, hostname, username, ... }: {
+	flake.nixosModules.arcusSystem = { pkgs, lib, hostname, username, ... }: {
 		boot.loader.efi.canTouchEfiVariables = true;
 		boot.loader.grub = {
 			enable = true;

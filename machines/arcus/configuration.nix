@@ -1,8 +1,8 @@
 { self, inputs, ... }: {
-	flake.nixosModules.workstationConfiguration = { pkgs, lib, hostname, username, ... }: {
+	flake.nixosModules.arcusConfiguration = { pkgs, lib, hostname, username, ... }: {
 		imports = [
-			self.nixosModules.workstationHardware
-			self.nixosModules.workstationSystem
+			self.nixosModules.arcusHardware
+			self.nixosModules.arcusSystem
 			self.nixosModules.users
 
 			self.nixosModules.mango

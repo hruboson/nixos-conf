@@ -1,6 +1,6 @@
 { self, inputs, ... }: {
     # this is basically the flake-parts boilerplate
-    flake.nixosModules.workstationHardware = { config, lib, pkgs, modulesPath, ... }: {
+    flake.nixosModules.arcusHardware = { config, lib, pkgs, modulesPath, ... }: {
         imports =
             [ (modulesPath + "/installer/scan/not-detected.nix") ];
         boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
