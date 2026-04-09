@@ -10,6 +10,8 @@
 			neovide
 		];
 
+		virtualisation.docker.enable = true;
+
 		home-manager.users.${username} = {
 			# File types -> app associations
 			# mimetype.io/all-types
