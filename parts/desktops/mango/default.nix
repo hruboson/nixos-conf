@@ -406,7 +406,8 @@
 					bluetooth = {
 						format-on = "󰂯";
 						format-off = "󰂲";
-						format-disabled = "";
+						#format-disabled = "";
+						format-disabled = "󰂲"; 
 						format-connected = "󰂱 {num_connections}";
 						tooltip-format-connected = "{device_enumerate}";
 						tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
