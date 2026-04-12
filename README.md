@@ -1,3 +1,9 @@
+> [!WARNING]  
+> I'm currently in the process of restructuring this entire configuration using [`flake-parts`](https://flake.parts/). 
+> This configuration will most likely not be updated and will eventually move to the `deprecated` branch.
+> If you want to take a look at the new config go to the [`parts` branch](https://github.com/hruboson/nixos-conf/tree/parts). As of 12.04.2026 there is a config for my workstation (arcus) and laptop (fractus).
+> When I feel more confident in my knowledge I will also write a small tutorial on the [`flake-parts`](https://flake.parts/) structure.
+
 # NixOS configuration
 
 This is my personal configuration for NixOS. I will most likely split this to multiple repositories or branches for my server/workstation/other. I've also tried writing up a small tutorial for my first installation of NixOS. 
