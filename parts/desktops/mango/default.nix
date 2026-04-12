@@ -129,135 +129,113 @@
 					@define-color bg_hover rgba(200, 200, 200, 0.3);
 					@define-color bg_back rgba(0, 0, 0, 0.3);
 					@define-color content_main white;
+					@define-color separator rgba(255, 255, 255, 0.15);
 
-					* {
-						font-family: "FiraCode Nerd Font Mono";
-						font-weight: bold;
-						font-size: 13px;
-						background-color: transparent;
-						min-height: 0;
-					}
+				  * {
+					font-family: "JetBrainsMono Nerd Font";
+					font-weight: bold;
+					font-size: 13px;
+					background-color: transparent;
+					min-height: 0;
+				  }
 
-					window#waybar {
-						background-color: @bg_back;
-						padding-top: 1px;
-						padding-bottom: 1px;
-						margin-top: 0px;
-						margin-bottom: 0px;
-					}
+				  window#waybar {
+					background-color: @bg_back;
+					padding: 2px 4px;
+				  }
 
-					#clock, #pulseaudio, #mpris {
-						color: white;
-					}
+				  /* ── left ── */
+				  #custom-os_button {
+					font-size: 18px;
+					padding: 0 14px 0 8px;
+					transition: background 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+				  }
 
-					#clock {
-						padding-right: 10px;
-					}
+				  #custom-os_button:hover {
+					background: @bg_hover;
+				  }
 
-					#workspaces {
+				  #workspaces button {
+					color: white;
+				  }
 
-					}
+				  #workspaces button.visible  { color: #ddca9e; }
+				  #workspaces button:hover    { color: #d79921; background: transparent; }
+				  #workspaces button.active   { color: black; background-color: #ddca9e; }
+				  #workspaces button.urgent   { background-color: #ef5e5e; }
 
-					#workspaces button {
-						color: white;
-					}
+				  #tags { background-color: transparent; }
+				  #tags button { background-color: #fff; }
+				  #tags button:not(.occupied):not(.focused) { color: transparent; background-color: transparent; }
+				  #tags button.occupied  { background-color: #fff; }
+				  #tags button.focused   { background-color: rgb(186, 142, 213); }
+				  #tags button.urgent    { background: rgb(171, 101, 101); }
 
-					#workspaces button.hidden {
+				  /* ── right: shared module style ── */
+				  #cpu,
+				  #temperature,
+				  #disk,
+				  #network,
+				  #battery,
+				  #bluetooth,
+				  #pulseaudio,
+				  #mpris,
+				  #clock,
+				  #tray,
+				  #custom-hdmi2_rotate {
+					padding-top: 0px;
+					padding-left: 6px;
+					padding-right: 6px;
+					color: white;
+				  }
+				  #custom-hdmi2_rotate {
+					padding-right: 12px;
+				  }
 
-					}
+				  /* ── right: hover for interactive modules ── */
+				  #bluetooth:hover,
+				  #pulseaudio:hover,
+				  #network:hover,
+				  #custom-hdmi2_rotate:hover,
+				  #custom-os_button:hover {
+					background: @bg_hover;
+					transition: background 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+				  }
 
-					#workspaces button.visible {
-						color: #ddca9e;
-					}
+				  /* ── group separators (left border on first of each logical group) ── */
+				  #cpu {
+					border-left: 1px solid @separator;
+					margin-left: 4px;
+					padding-left: 8px;
+				  }
 
-					#workspaces button:hover {
-						color: #d79921;
-					}
+				  #tray {
+					border-left: 1px solid @separator;
+					margin-left: 4px;
+					padding-left: 8px;
+				  }
 
-					#workspaces button.active {
-						color: black;
-						background-color: #ddca9e;
-					}
+				  #clock {
+					border-left: 1px solid @separator;
+					margin-left: 4px;
+					padding-left: 10px;
+					padding-right: 10px;
+				  }
 
-					#workspaces button.urgent {
-						background-color: #ef5e5e;
-					}
+				  /* ── tray icon states ── */
+				  #tray > .passive       { border-bottom: none; }
+				  #tray > .active        { border-bottom: 3px solid white; }
+				  #tray > .needs-attention { border-bottom: 3px solid orange; }
+				  #tray > widget {
+					transition: background 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+				  }
+				  #tray > widget:hover   { background: @bg_hover; }
 
-					#tags {
-						background-color: transparent;
-					}
-
-					#tags button {
-						background-color: #fff;
-					}
-
-					#tags button:not(.occupied):not(.focused) {
-						color: transparent;
-						background-color: transparent;
-					}
-
-					#tags button.occupied {
-						background-color: #fff;
-					}
-
-					#tags button.focused {
-						background-color: rgb(186, 142, 213);
-					}
-
-					#tags button.urgent {
-						background: rgb(171, 101, 101);
-					}
-
-					#window {
-						background-color: rgb(237, 196, 147);
-					}
-
-					#custom-os_button {
-						font-family: "JetBrainsMono Nerd Font";
-						font-size: 18px;
-						padding-left: 12px;
-						padding-right: 20px;
-						transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-					}
-
-					#custom-os_button:hover, #custom-portals_button:hover {
-						background:  @bg_hover;
-						color: @content_main;
-					}
-					
-					#pulseaudio {
-						font-family: "JetBrainsMono Nerd Font";
-						padding-left: 3px;
-						padding-right: 3px;
-						transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-					}
-
-					#pulseaudio:hover {
-						background: @bg_hover;
-					}
-
-					#cpu, #disk, #memory {
-						padding:3px;
-					}
-					#tray{
-						margin-left: 5px;
-						margin-right: 5px;
-					}
-					#tray > .passive {
-						border-bottom: none;
-					}
-					#tray > .active {
-						border-bottom: 3px solid white;
-					}
-					#tray > .needs-attention {
-						border-bottom: 3px solid @warning_color;
-					}
-					#tray > widget {
-						transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-					}
-					#tray > widget:hover {
-						background: @bg_hover;
-					}
+				  /* ── mpris (center) ── */
+				  #mpris {
+					color: white;
+					padding: 0 10px;
+				  }
 				'';
 				config = {
 					layer = "top";
@@ -272,6 +250,7 @@
 							"temperature"
 							"disk"
 							"tray"
+							"bluetooth"
 							"pulseaudio"
 							"network"
 							"battery"
@@ -422,6 +401,16 @@
 							"󰂂"
 							"󰁹"
 						];
+					};
+
+					bluetooth = {
+						format-on = "󰂯";
+						format-off = "󰂲";
+						format-disabled = "";
+						format-connected = "󰂱 {num_connections}";
+						tooltip-format-connected = "{device_enumerate}";
+						tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+						on-click = "blueman-manager";
 					};
 					
 					pulseaudio = {

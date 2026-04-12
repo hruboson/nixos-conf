@@ -13,6 +13,8 @@
 			self.nixosModules.appPackGames
 			self.nixosModules.appPackRazer
 
+			self.nixosModules.samsungBuds
+
 			self.nixosModules.servicesPackHomeserver
 			self.nixosModules.servicesBluetooth
 			self.nixosModules.servicesDisks
