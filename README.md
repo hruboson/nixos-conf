@@ -441,6 +441,12 @@ sudo systemctl enable --now libvirtd
 
 One thing to be aware when dualbooting with Windows is the size of your EFI partition that was created when Windows was installed. In my case the EFI partition was 100 MB in size. When I first installed NixOS alongside Windows using the existing EFI partition, I could not rebuild due to the `OSError: [Errno 28] No space left on device /boot`. This was fixed by reinstalling NixOS (clearing the partition where it was installed) and creating a new EFI boot partition through the NixOS installer.
 
+**If you are using BitLocker and SecureBoot follow these steps first!!!**. On most modern Windows 11 machines these options are turned on automatically when you buy your device. With these on you will have a hard time installing NixOS alongside your Windows. Fortunately there is an easy fix:
+1. Turn off BitLocker in Windows settings - Go to Control Panel -> System and Security -> BitLocker Drive Encryption -> Turn off Bitlocker. This will run for about 30 to 60 minutes (or more on older hardware) depending on the speed and size of your drive. DO NOT TURN OFF YOUR PC WHEN DECRYPTION IS ONGOING!
+2. Turn off SecureBoot in BIOS. To enter BIOS you usually turn down your PC, hold F2 or DELETE (or other keys depending on your machine/motherboard) and press the power button to start the PC while holding the key down. In there navigate to something like Security -> Secure boot (will be different on every machine) and turn it off.
+
+Now you should be ready to get started installing NixOS.
+
 I followed [this video tutorial](https://youtu.be/B3OIcws9ygY?si=wq74FCAxk-dNQNMx), but the steps are similar to dualbooting any other Linux system:
 
 1. Create a USB flash drive with the NixOS installer flashed on it. First download the NixOS graphical installer on the [official website](https://nixos.org/download/#nixos-iso). Then flash it onto a USB flash drive using either [Rufus](https://rufus.ie/en/) or [Etcher](https://etcher.balena.io/)
