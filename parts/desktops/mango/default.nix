@@ -480,11 +480,18 @@
 						overviewgappi = 5;
 						overviewgappo = 30;
 
+						#!TODO move this to options
 						tagrule = [
 							# Virtual
 							"id:1,monitor_name:Virtual-1,layout_name:deck"
 							"id:2,monitor_name:Virtual-1,layout_name:scroller"
 							"id:3,monitor_name:Virtual-1,layout_name:grid"
+							#eDP-1
+							"id:1,monitor_name:eDP-1,layout_name:scroller"
+							"id:2,monitor_name:eDP-1,layout_name:scroller"
+							"id:3,monitor_name:eDP-1,layout_name:scroller"
+							"id:4,monitor_name:eDP-1,layout_name:deck"
+							"id:5,monitor_name:eDP-1,layout_name:deck"
 							# DP-2
 							"id:1,monitor_name:DP-2,layout_name:deck"
 							"id:2,monitor_name:DP-2,layout_name:deck"
@@ -529,7 +536,7 @@
 						tap_and_drag = 1;
 						drag_lock = false;
 						mouse_natural_scrolling = 0;
-						trackpad_natural_scrolling = 0;
+						trackpad_natural_scrolling = 1;
 						disable_while_typing = 1;
 						left_handed = 0;
 						middle_button_emulation = 0;
@@ -541,6 +548,20 @@
 							"SUPER,btn_left,moveresize,curmove"
 							"SUPER,btn_right,moveresize,curresize"
 							"SUPER+CTRL,btn_right,killclient"
+						];
+						
+						gesturebind = [
+							# 3-finger: Window focus
+							"none,left,3,focusdir,left"
+							"none,right,3,focusdir,right"
+							"none,up,3,focusdir,up"
+							"none,down,3,focusdir,down"
+
+							# 4-finger: Workspace navigation
+							"none,left,4,viewtoleft_have_client"
+							"none,right,4,viewtoright_have_client"
+							"none,up,4,toggleoverview"
+							"none,down,4,toggleoverview"
 						];
 
 						bind = [
