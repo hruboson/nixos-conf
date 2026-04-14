@@ -74,6 +74,7 @@
 				wev
 				wayland
 				wayland-utils
+				wl-clipboard
 				wlr-randr
 				wdisplays
 				vicinae
@@ -569,7 +570,7 @@
 							"SUPER,Return,spawn,kitty"
 							"SUPER,space,spawn,vicinae toggle"
 							"SUPER,v,spawn,vicinae vicinae://extensions/vicinae/clipboard/history"
-							"NONE,Print,spawn,grim -g \"$(slurp)\" - | wl-copy"
+							"NONE,Print,spawn_shell,grim -g \"$(slurp -b '#2E2A1E55')\" - | wl-copy"
 
 							"ALT,Tab,toggleoverview,0"
 							"SUPER,s,switch_layout"
