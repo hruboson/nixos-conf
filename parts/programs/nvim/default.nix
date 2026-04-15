@@ -134,7 +134,6 @@
 								'';						};
 					};
 				};
-
 				web-devicons = {
 					enable = true;
 					autoLoad = true;
@@ -143,14 +142,33 @@
 					};
 				};
 
+				mini-completion.enable = true;
 				nvim-ufo.enable = true; # better folds
-					nvim-autopairs.enable = true;
+				nvim-autopairs.enable = true;
 
 				# HANDY
+				telescope = {
+					enable = true;
+					extensions = {
+						undo.enable = true;
+					};
+					settings = {
+						defaults = {
+							file_ignore_patterns = [
+								"lib/.*"
+								"lib\\.*"
+								"node_modules/.*"
+								"node_modules\\.*"
+								".git/.*"
+								".git\\.*"
+							];
+						};
+					};
+				};
 				lazygit.enable = true;
+				visual-multi.enable = true;
 
 				# PRETTY
-				dashboard.enable = true;
 				statuscol = {
 					enable = true;
 					settings = {
@@ -175,11 +193,115 @@
 						];
 					};
 				};
+				dashboard.enable = true;
+				scrollview.enable = true;
+				illuminate.enable = true;
+				treesitter-context.enable = true;
 
 				# MISC
 
 				# IDE (AUTOCOMPLETE, LSP, ...)
+				lsp = {
+					enable = true;
+
+					keymaps = {
+						lspBuf = {
+							gd = "definition";
+							gD = "declaration";
+							gi = "implementation";
+							gr = "references";
+							K = "hover";
+							"<leader>rn" = "rename";
+							"<leader>ca" = "code_action";
+							"<leader>f" = "format";
+						};
+						diagnostic = {
+							"[d" = "goto_prev";
+							"]d" = "goto_next";
+							"<leader>e" = "open_float";
+						};
+					};
+
+					servers = {
+						# Nix
+						nil_ls = {
+							enable = true;
+							filetypes = [ "nix" "flake" ];
+							autostart = true;
+							settings = {
+								autoArchive = true;
+								formatting = {
+									command = [ "alejandra" ]; # or "nixfmt"
+								};
+							};
+						};
+
+						# JS/TS
+						ts_ls = {
+							enable = true;
+							filetypes = [ "javascript" "typescript" "javascriptreact" "typescriptreact" ];
+							autostart = true;
+						};
+
+						# Go
+						gopls = {
+							enable = true;
+							filetypes = [ "go" "gomod" "gowork" "gotmpl" ];
+							autostart = true;
+							settings = {
+								gopls = {
+									analyses = {
+										unusedparams = true;
+										shadow = true;
+									};
+									staticcheck = true;
+								};
+							};
+						};
+
+						# Python
+						pylsp = {
+							enable = true;
+							filetypes = [ "python" "py" ];
+							autostart = true;
+							settings = {
+								pylsp = {
+									plugins = {
+										pyflakes.enabled = true;
+										pycodestyle.enabled = true;
+										autopep8.enabled = false;
+										yapf.enabled = false;
+										rope_completion.enabled = true;
+									};
+								};
+							};
+						};
+
+						# C# (OmniSharp)
+						omnisharp = {
+							enable = true;
+							filetypes = [ "cs" ];
+							autostart = true;
+							package = pkgs.omnisharp-roslyn;
+							settings = {
+								organizeImportsOnFormat = false;
+								enableEditorConfigSupport = true;
+								enableMsBuildLoadProjectsOnDemand = false;
+								enableRoslynAnalyzers = true;
+							};
+						};
+					};
+				};
+
+				lsp-lines.enable = true;
+				lsp-format.enable = true;
+				#lspsaga.enable = true;
 			};
+
+			extraPlugins = with pkgs.vimPlugins; [
+				nvim-cokeline
+				plenary-nvim   # cokeline dependency
+			];
 
 			keymaps = [
 			# INSERT
@@ -225,6 +347,13 @@
 			{ mode = "n"; key = "<leader>tp"; action = "<cmd>Telescope neoclip plus<CR>"; options.desc = "Clipboard"; }
 			{ mode = "n"; key = "<leader>lg"; action = "<cmd>LazyGit<cr>"; options.desc = "LazyGit"; }
 
+			# NORMAL - ufo
+			{ mode = "n"; key = "fo"; action = "zc"; options.desc = "Close fold at cursor"; }
+			{ mode = "n"; key = "fu"; action = "zo"; options.desc = "Open fold at cursor"; }
+			{ mode = "n"; key = "ff"; action = "za"; options.desc = "Toggle fold at cursor"; }
+			{ mode = "n"; key = "fU"; action = "<cmd>lua require('ufo').openAllFolds()<CR>"; options.desc = "Open all folds (UFO)"; }
+			{ mode = "n"; key = "fF"; action = "<cmd>lua require('ufo').closeAllFolds()<CR>"; options.desc = "Close all folds (UFO)"; }
+
 			# VISUAL - indentation
 			{ mode = "v"; key = "<TAB>"; action = ">gv"; options.desc = "Indent selection"; }
 			{ mode = "v"; key = "U";     action = "<C-r>"; options.desc = "Redo"; }
@@ -241,11 +370,6 @@
 
 			# TERMINAL
 			{ mode = "t"; key = "<C-Esc>"; action = "<C-\\><C-n>"; options.desc = "Exit terminal mode"; }
-			];
-
-			extraPlugins = with pkgs.vimPlugins; [
-				nvim-cokeline
-				plenary-nvim   # cokeline dependency
 			];
 
 			extraConfigLua = ''
@@ -285,6 +409,48 @@
 						if not target_buffer then print("Current buffer not found"); return end
 						target_buffer:delete()
 						end, { desc = "Close buffer" })
+
+				-- LSP Diagnostics
+				vim.diagnostic.config({
+					virtual_text = {
+						format = function(diagnostic)
+							local msg = diagnostic.message
+							local severity_map = {
+								[vim.diagnostic.severity.ERROR] = "Error",
+								[vim.diagnostic.severity.WARN]  = "Warning",
+								[vim.diagnostic.severity.INFO]  = "Info",
+								[vim.diagnostic.severity.HINT]  = "Hint",
+							}
+							
+							local severity_label = severity_map[diagnostic.severity] or "Other"
+							
+							-- Show full message if short
+							if #msg < 50 then
+								return string.format("%s: %s", severity_label, msg)
+							end
+							
+							-- Otherwise just show severity
+							return severity_label
+						end,
+					},
+					signs = true,
+					underline = true,
+					update_in_insert = false,
+					severity_sort = true,
+				})
+				
+				-- Optional: Configure LSP hover to be more readable
+				vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+					vim.lsp.handlers.hover, {
+						border = "rounded"
+					}
+				)
+				
+				vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+					vim.lsp.handlers.signature_help, {
+						border = "rounded"
+					}
+				)
 				'';
 		};
 	};
