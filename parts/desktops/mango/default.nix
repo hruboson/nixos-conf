@@ -12,6 +12,7 @@
 
 			self.nixosModules.waybar
 			self.nixosModules.darkmode
+			self.nixosModules.brightnessWidget
 		];
 
 		options.desktops.mango = {
@@ -29,6 +30,10 @@
 		};
 
 		config = {
+			desktops.components.brightnessWidget = {
+				enable = true;
+				showInWaybar = true;
+			};
 			programs.mango.enable = true;
 			programs.dconf.enable = true;
 			security.polkit.enable = true;
@@ -183,13 +188,15 @@
 				  #mpris,
 				  #clock,
 				  #tray,
-				  #custom-hdmi2_rotate {
+				  #custom-hdmi2_rotate,
+				  #custom-brightness {
 					padding-top: 0px;
 					padding-left: 6px;
 					padding-right: 6px;
 					color: white;
 				  }
-				  #custom-hdmi2_rotate {
+				  #custom-hdmi2_rotate, 
+				  #custom-brightness {
 					padding-right: 12px;
 				  }
 
@@ -247,7 +254,8 @@
 					modules-right =
 						(lib.optional config.desktops.waybar.showRotateScript "custom/hdmi2_rotate")
 						++ [
-						"cpu"
+							"custom/brightness"
+							"cpu"
 							"temperature"
 							"disk"
 							"tray"
@@ -650,8 +658,8 @@
 						blur_params_saturation = 1.2;
 
 						# Shadows
-						shadows = 1;
-						layer_shadows = 1;
+						shadows = 0;
+						layer_shadows = 0;
 						shadow_only_floating = 1;
 						shadows_size = 12;
 						shadows_blur = 15;
