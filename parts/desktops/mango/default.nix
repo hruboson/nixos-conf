@@ -12,8 +12,10 @@
 
 			self.nixosModules.waybar
 			self.nixosModules.darkmode
-			self.nixosModules.brightnessWidget
 			self.nixosModules.wlogout
+			self.nixosModules.screenlock
+
+			self.nixosModules.brightnessWidget
 		];
 
 		options.desktops.mango = {
