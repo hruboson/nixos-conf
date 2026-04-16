@@ -199,6 +199,7 @@
 				treesitter-context.enable = true;
 
 				# MISC
+				neocord.enable = true;
 
 				# IDE (AUTOCOMPLETE, LSP, ...)
 				lsp = {
