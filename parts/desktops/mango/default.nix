@@ -13,6 +13,7 @@
 			self.nixosModules.waybar
 			self.nixosModules.darkmode
 			self.nixosModules.brightnessWidget
+			self.nixosModules.wlogout
 		];
 
 		options.desktops.mango = {
