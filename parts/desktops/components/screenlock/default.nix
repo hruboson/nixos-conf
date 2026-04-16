@@ -68,15 +68,15 @@
 					settings = {
 						general = {
 						    before_sleep_cmd = "loginctl lock-session";
-							after_sleep_cmd = "loginctl unlock-session";
+							after_sleep_cmd = "";
 							ignore_dbus_inhibit = false;
-							lock_cmd = "hyprlock";
+							lock_cmd = "${pkgs.hyprlock}/bin/hyprlock";
 						};
 
 						listener = [
 						{
 							timeout = 600;
-							on-timeout = "hyprlock";
+							on-timeout = "${pkgs.hyprlock}/bin/hyprlock";
 						}
 						{
 							timeout = 900;
