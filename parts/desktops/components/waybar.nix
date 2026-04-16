@@ -37,11 +37,22 @@
 					settings = {
 						mangoBar = config.desktops.waybar.config; # TODO make this get name from config so its modules (e.g. different config for mango, hyprland, sway, ...)
 					};
+					systemd = {
+						enable = true;
+						target = "mango-session.target";
+					};
 				};
-				
-				wayland.windowManager.mango.autostart_sh = ''
-					waybar &
-				'';
+				systemd.user.services.waybar = {
+					Service = {
+						Environment = "PATH=${config.home-manager.users.${username}.home.profileDirectory}/bin"; # fixes missing icons
+					};
+					serviceConfig = {
+						Restart = "always";
+						RestartSec = 2;
+						StandardOutput = "journal";
+						StandardError = "journal";
+					};
+				};
 			};
 		};
 	};
