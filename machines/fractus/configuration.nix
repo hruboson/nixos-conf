@@ -30,6 +30,14 @@
 		## TOUCHPAD
 		services.libinput.enable = true;
 
+		# BUTTONS
+		services.logind.settings.Login = {
+			HandlePowerKey = "suspend";
+			HandlePowerKeyLongPress = "poweroff";
+			HandleLidSwitch = "suspend";
+			HandleLidSwitchExternalPower= "suspend";
+		};
+
 		# LOCALES
 		console = {
 			font = "Lat2-Terminus16";
