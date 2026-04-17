@@ -48,7 +48,8 @@
 					fi
 
 					nix-shell() {
-						command nix-shell --run zsh "$@"
+						export NIX_SHELL_LEVEL=$(( ''${NIX_SHELL_LEVEL:-0} + 1 ))
+						command nix-shell "$@" --run "exec zsh"
 					}
 				'';
 

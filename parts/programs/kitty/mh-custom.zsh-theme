@@ -8,11 +8,24 @@ else
     NCOLOR="white"    # Normal user = white
 fi
 
+# Detect nix shell
+if [[ -n "$IN_NIX_SHELL" ]]; then
+	level=${NIX_SHELL_LEVEL:-1}
+
+	if [[ $level -gt 1 ]]; then
+		NIX_PROMPT="[%F{blue}nix:$level%f] "
+	else
+		NIX_PROMPT="[%F{blue}nix%f] "
+	fi
+else
+	NIX_PROMPT=""
+fi
+
 PATH_COLOR="yellow"
 
 # Main prompt: [user:full/path/here] $ or #
 # %~ would show relative path, %/ shows full absolute path
-PROMPT='[%{$fg[$NCOLOR]%}%B%n@%m%b%{$reset_color%}:%{$fg[$PATH_COLOR]%}%~%{$reset_color%}]%(!.#.$) '
+PROMPT='${NIX_PROMPT}[%{$fg[$NCOLOR]%}%B%n@%m%b%{$reset_color%}:%{$fg[$PATH_COLOR]%}%~%{$reset_color%}]%(!.#.$) '
 
 # Right prompt with git info
 RPROMPT='$(git_prompt_info)[%{$fg[cyan]%}%*%{$reset_color%}]'
