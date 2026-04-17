@@ -34,6 +34,7 @@
 			# office
 			libreoffice-fresh
 		];
+		programs.ladybird.enable = true;
 
 		# should fix kde unpopulated xdg mime apps menu
 		environment.etc."/xdg/menus/applications.menu".text = builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";

@@ -8,6 +8,7 @@
 			gh
 			libgcc
 			neovide
+			filezilla
 		];
 
 		virtualisation.docker.enable = true;
@@ -19,6 +20,7 @@
 				enable = true;
 				defaultApplications = {
 					"text/plain" = 	"neovide.desktop";
+					"application/x-zerosize" = "neovide.desktop";
 				};
 			};
 		};
