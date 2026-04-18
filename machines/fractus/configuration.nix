@@ -10,6 +10,7 @@
 			self.nixosModules.appPackDev
 			self.nixosModules.appPackSysutils
 			self.nixosModules.appPackDesktop
+			self.nixosModules.appPackEducation
 			self.nixosModules.appPackRazer
 
 			self.nixosModules.servicesPackHomeserver

@@ -11,6 +11,7 @@
 			self.nixosModules.appPackSysutils
 			self.nixosModules.appPackDesktop
 			self.nixosModules.appPackGames
+			self.nixosModules.appPackEducation
 			self.nixosModules.appPackRazer
 
 			self.nixosModules.samsungBuds
