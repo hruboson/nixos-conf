@@ -272,8 +272,11 @@
 					"ext/workspaces" = {
 						format = "{icon}";
 						ignore-hidden = true;
+						#active-only = true;
 						on-click = "activate";
 						on-click-right = "deactivate";
+						on-scroll-up = "mmsg -d viewtoleft_have_client";
+						on-scroll-down = "mmsg -d viewtoright_have_client";
 						sort-by-id = true;
 					};
 
