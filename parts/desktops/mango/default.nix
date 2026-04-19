@@ -1,5 +1,6 @@
 { self, inputs, ... }: {
 	flake.nixosModules.mango = { config, lib, pkgs, username, ... }: let
+		nixosConfig = config;
 		wallpaper = pkgs.fetchurl {
 			name = "kita.png";
 			url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/gruvbox/kita.png";
@@ -454,13 +455,28 @@
 				};
 			};
 
-			home-manager.users.${username} = {
+			home-manager.users.${username} = { config, ... }: {
 				imports = [ inputs.mango.hmModules.mango ];
+
+				programs.vicinae = {
+					enable = true;
+					extensions = [
+						(config.lib.vicinae.mkExtension {
+							name = "awww-switcher";
+							src = pkgs.fetchFromGitHub {
+								owner = "vicinaehq";
+								repo = "extensions";
+								rev = "d12bcb134d45dedad1a28a18e1cd8807353338d0";
+								sha256 = "sha256-Fa5JvMFVwBzbnOjEV2Cer8ak0zF/CDwdHT7+wslL30w=";
+							} + "/extensions/awww-switcher";
+						})
+					];
+				};
 
 				wayland.windowManager.mango = {
 					enable = true;
 
-					extraConfig = lib.strings.trim config.desktops.mango.monitors;
+					extraConfig = lib.strings.trim nixosConfig.desktops.mango.monitors;
 
 					settings = {
 						env = [
@@ -584,6 +600,8 @@
 							"SUPER,Return,spawn,kitty"
 							"SUPER,space,spawn,vicinae toggle"
 							"SUPER,v,spawn,vicinae vicinae://extensions/vicinae/clipboard/history"
+							"SUPER,w,spawn,vicinae vicinae://extensions/sovereign/awww-switcher/wpgrid"
+							"SUPER+SHIFT,w,spawn,vicinae vicinae://extensions/sovereign/awww-switcher/wprandom"
 							"NONE,Print,spawn_shell,grim -g \"$(slurp -b '#2E2A1E55')\" - | wl-copy"
 
 							"ALT,Tab,toggleoverview,0"
@@ -598,10 +616,11 @@
 							# windows
 							"SUPER,Right,focusstack,next"
 							"SUPER,Left,focusstack,prev"
-							"SUPER+SHIFT,Up,exchange_client,up"
-							"SUPER+SHIFT,Down,exchange_client,down"
+							"SUPER,Up,exchange_client,up"
+							"SUPER,Down,exchange_client,down"
 							"SUPER+SHIFT,Left,exchange_client,left"
 							"SUPER+SHIFT,Right,exchange_client,right"
+
 							"SUPER+SHIFT,q,killclient"
 							"SUPER,f,togglefullscreen"
 							"SUPER+SHIFT,f,togglefloating"
@@ -609,7 +628,14 @@
 							# monitor nav
 							"SUPER+CTRL,Left,focusmon,left"
 							"SUPER+CTRL,Right,focusmon,right"
+							"SUPER+CTRL,Up,focusmon,up"
+							"SUPER+CTRL,Down,focusmon,down"
 
+							"SUPER+CTRL+SHIFT,Left,tagmon,left"
+							"SUPER+CTRL+SHIFT,Right,tagmon,right"
+							"SUPER+CTRL+SHIFT,Up,tagmon,up"
+							"SUPER+CTRL+SHIFT,Down,tagmon,down"
+							
 							# tag nav
 							"SUPER,1,view,1,0"
 							"SUPER,2,view,2,0"
@@ -711,8 +737,8 @@
 						focus_on_activate = 1;
 						sloppyfocus = 1;
 						warpcursor = 1;
-						focus_cross_monitor = 0;
-						focus_cross_tag = 0;
+						focus_cross_monitor = 1;
+						focus_cross_tag = 1;
 						circle_layout = "tile,scroller";
 						enable_floating_snap = 1;
 						snap_distance = 50;
@@ -729,8 +755,6 @@
 						vicinae server &
 
 						awww-daemon &
-
-						awww img ${wallpaper}
 
 						kitty &
 					";
