@@ -8,6 +8,7 @@
 			self.nixosModules.mango
 			self.nixosModules.kitty
 			self.nixosModules.appPackDev
+			self.nixosModules.appPackNetworking
 			self.nixosModules.appPackSysutils
 			self.nixosModules.appPackDesktop
 			self.nixosModules.appPackEducation
