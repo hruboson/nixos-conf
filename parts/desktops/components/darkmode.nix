@@ -9,12 +9,12 @@
 					color-scheme = "prefer-dark";
 				};
 			};
-			qt = {
+			/*qt = {
 				enable = true;
 				platformTheme.name = "gtk";
 				style.name = "adwaita-dark";
 				style.package = pkgs.adwaita-qt;
-			};
+			};*/
 			gtk = {
 				enable = true;
 				gtk3.extraConfig.gtk-application-prefer-dark-theme = true;

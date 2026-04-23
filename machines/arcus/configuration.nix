@@ -6,6 +6,7 @@
 			self.nixosModules.users
 
 			self.nixosModules.mango
+			self.nixosModules.kde
 			self.nixosModules.kitty
 			self.nixosModules.appPackDev
 			self.nixosModules.appPackNetworking

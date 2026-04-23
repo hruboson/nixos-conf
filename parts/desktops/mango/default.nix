@@ -47,7 +47,10 @@
 			xdg.portal.enable = true;
 			xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
-			services.displayManager.sddm.enable = true;
+			services.displayManager.sddm = {
+				enable = true;
+				wayland.enable = true;
+			};
 			programs.silentSDDM = {
 				enable = true;
 				theme = "default";
@@ -482,7 +485,6 @@
 						env = [
 							"QT_IM_MODULES,wayland;fcitx"
 							"XMODIFIERS,@im=fcitx"
-							"XDG_CURRENT_DESKTOP,mango"
 						];
 
 						/*
@@ -752,6 +754,7 @@
 					};
 
 					autostart_sh = "
+					    export XDG_CURRENT_DESKTOP=mango
 						vicinae server &
 
 						awww-daemon &
