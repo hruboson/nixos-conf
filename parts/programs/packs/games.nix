@@ -5,6 +5,7 @@
 			osu-lazer-bin # click the circles
 			heroic # epic games + steam + gog in one app
 			pcsx2 # PS2 emulator
+			lutris # Windows games emulator
 			bottles # can run windows games if you have the .exe file
 		];
 
