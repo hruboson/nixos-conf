@@ -385,6 +385,7 @@
 					tray = {
 						icon-size = 18;
 						spacing = 3;
+						show-passive-items = false;
 					};
 
 					network = {

@@ -39,8 +39,12 @@
 					};
 				};
 				
+				# blocks on waybar until it crashes, at that point restart waybar
 				wayland.windowManager.mango.autostart_sh = ''
-					waybar > ~/.cache/waybar.log 2>&1 &
+					while true; do
+						waybar > ~/.cache/waybar.log 2>&1
+						sleep 2
+					done &
 				'';
 			};
 		};
