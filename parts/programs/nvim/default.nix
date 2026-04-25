@@ -292,10 +292,7 @@
 				};
 
 				lsp-lines.enable = true;
-				lsp-format = {
-					enable = true;
-					lspServersToEnable = [ "gopls" "omnisharp" "pyright" ];
-				};
+				#lsp-format.enable = true; !this is autoformatting on save, not for me
 				#lspsaga.enable = true;
 			};
 
