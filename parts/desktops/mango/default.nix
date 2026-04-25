@@ -664,6 +664,16 @@
 							"SUPER+SHIFT,7,tag,7,0"
 							"SUPER+SHIFT,8,tag,8,0"
 							"SUPER+SHIFT,9,tag,9,0"
+
+							# media keys
+							"NONE,XF86AudioPlay,spawn,playerctl play-pause"
+							"NONE,XF86AudioPause,spawn,playerctl play-pause"
+							"NONE,XF86AudioNext,spawn,playerctl next"
+							"NONE,XF86AudioPrev,spawn,playerctl previous"
+
+							"NONE,XF86AudioMute,spawn,pactl set-sink-mute @DEFAULT_SINK@ toggle"
+							"NONE,XF86AudioRaiseVolume,spawn,pactl set-sink-volume @DEFAULT_SINK@ +5%"
+							"NONE,XF86AudioLowerVolume,spawn,pactl set-sink-volume @DEFAULT_SINK@ -5%"
 						];
 
 						axisbind = [
