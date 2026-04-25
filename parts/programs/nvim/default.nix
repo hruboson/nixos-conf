@@ -231,9 +231,6 @@
 							autostart = true;
 							settings = {
 								autoArchive = true;
-								formatting = {
-									command = [ "alejandra" ]; # or "nixfmt"
-								};
 							};
 						};
 
@@ -241,6 +238,7 @@
 						ts_ls = {
 							enable = true;
 							filetypes = [ "javascript" "typescript" "javascriptreact" "typescriptreact" ];
+							rootMarkers = [ ".git" ".gitignore" ".gitattributes" ] ;
 							autostart = true;
 						};
 
@@ -248,6 +246,7 @@
 						gopls = {
 							enable = true;
 							filetypes = [ "go" "gomod" "gowork" "gotmpl" ];
+							rootMarkers = [ ".git" ".gitignore" ".gitattributes" "go.mod" ] ;
 							autostart = true;
 							settings = {
 								gopls = {
@@ -261,35 +260,33 @@
 						};
 
 						# Python
-						pylsp = {
+						pyright = {
 							enable = true;
 							filetypes = [ "python" "py" ];
+							rootMarkers = [ ".git" ".gitignore" ".gitattributes" "main.py" "shell.nix" ] ;
 							autostart = true;
-							settings = {
-								pylsp = {
-									plugins = {
-										pyflakes.enabled = true;
-										pycodestyle.enabled = true;
-										autopep8.enabled = false;
-										yapf.enabled = false;
-										rope_completion.enabled = true;
-									};
-								};
-							};
+							package = pkgs.pyright;
 						};
 
 						# C# (OmniSharp)
 						omnisharp = {
 							enable = true;
-							filetypes = [ "cs" ];
+							filetypes = [ "cs" "cshtml" ];
 							autostart = true;
 							package = pkgs.omnisharp-roslyn;
-							settings = {
+							cmd = [
+								"${pkgs.omnisharp-roslyn}/bin/OmniSharp"
+								"-lsp"
+								"--hostPID"
+								"0"
+							];
+							rootMarkers = [ ".git" ".sln" ".csproj" ];
+							/*settings = {
 								organizeImportsOnFormat = false;
 								enableEditorConfigSupport = true;
 								enableMsBuildLoadProjectsOnDemand = false;
 								enableRoslynAnalyzers = true;
-							};
+							};*/
 						};
 					};
 				};
