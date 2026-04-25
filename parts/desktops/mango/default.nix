@@ -474,6 +474,14 @@
 					];
 				};
 
+				home.pointerCursor = {
+					name = "Bibata-Modern-Ice";
+					size = 24;
+					package = pkgs.bibata-cursors;
+					gtk.enable = true;
+					x11.enable = true;
+				};
+
 				wayland.windowManager.mango = {
 					enable = true;
 
