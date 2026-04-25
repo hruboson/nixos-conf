@@ -64,6 +64,7 @@
 
 					ns = "nix-shell";
 					shell = "nix-shell";
+					e = "exit";
 				};
 
 				oh-my-zsh = {
