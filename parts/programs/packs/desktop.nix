@@ -1,6 +1,7 @@
 { self, inputs, ... }: {
 	flake.nixosModules.appPackDesktop = { config, lib, pkgs, username, ... }: {
 		nixpkgs.config.allowUnfree = true;
+
 		environment.systemPackages = with pkgs; let
 			application-menu = pkgs.runCommandLocal "xdg-application-menu" { } ''
 				mkdir -p $out/etc/xdg/menus/
@@ -25,7 +26,7 @@
 			bottles
 
 			# communications
-			discord
+			#discord -> now managed through HM
 			element-desktop
 			
 			# browser
@@ -43,6 +44,9 @@
 		xdg.portal.enable = true;
 
 		home-manager.users.${username} = {
+			nixpkgs.config.allowUnfree = true;
+			programs.discord.enable = true;
+
 			# File types -> app associations
 			# mimetype.io/all-types
 			xdg.mimeApps = {
