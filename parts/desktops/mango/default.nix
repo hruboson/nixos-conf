@@ -444,7 +444,7 @@
 								" "
 							];
 						};
-						on-click = "pavucontrol";
+						on-click = "pwvucontrol";
 						on-click-right = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
 					};
 
@@ -768,6 +768,13 @@
 						single_scratchpad = 1;
 
 						layerrule = "animation_type_open:fade,animation_type_close:fade,layer_name:vicinae";
+						windowrule = [
+							# pwvucontrol - system modal
+							"isfloating:1,animation_type_open:slide,width:1000,height:500,offsetx:100,offsety:100,appid:pwvucontrol"
+
+							# blueman - system modal
+							"isfloating:1,animation_type_open:slide,width:640,height:324,offsetx:100,offsety:100,appid:\\.blueman-manager-wrapped"
+						];
 					};
 
 					autostart_sh = "
