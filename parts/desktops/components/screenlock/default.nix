@@ -23,7 +23,7 @@
 
 						label = [
 							{ # CLOCK
-								text = ''cmd[update:1000] echo "$(date +"%H:%M")"'';
+								text = ''cmd[update:1000] ${pkgs.coreutils}/bin/date +"%H:%M"'';
 								color = "rgba(220, 220, 220, 1.0)";
 								font_size = 96;
 								font_family = "JetBrainsMono Nerd Font";
@@ -33,7 +33,7 @@
 							}
 
 							{ # DATE
-								text = ''cmd[update:1000] echo "$(date +"%A, %d %B")"'';
+								text = ''cmd[update:1000] ${pkgs.coreutils}/bin/date +"%A, %d %B"'';
 								color = "rgba(200, 200, 200, 0.8)";
 								font_size = 22;
 								font_family = "JetBrainsMono Nerd Font";
