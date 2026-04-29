@@ -674,6 +674,10 @@
 							"NONE,XF86AudioMute,spawn,pactl set-sink-mute @DEFAULT_SINK@ toggle"
 							"NONE,XF86AudioRaiseVolume,spawn,pactl set-sink-volume @DEFAULT_SINK@ +5%"
 							"NONE,XF86AudioLowerVolume,spawn,pactl set-sink-volume @DEFAULT_SINK@ -5%"
+
+							# hw-specific keys
+							"NONE,XF86MonBrightnessDown,spawn,brightnessctl set 10%-"
+							"NONE,XF86MonBrightnessUp,spawn,brightnessctl set 10%+"
 						];
 
 						axisbind = [
