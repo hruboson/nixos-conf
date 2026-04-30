@@ -3,7 +3,7 @@
 		users.groups.media = {}; # group for external drives that need both services and user access
 		users.users.${username} = {
 			isNormalUser = true;
-			extraGroups = [ "wheel" "networkmanager" "video" "audio" "media" "adbusers" ];
+			extraGroups = [ "wheel" "networkmanager" "video" "audio" "media" "adbusers" "dialout" ];
 		};
 
 		home-manager.users.${username} = {
