@@ -43,7 +43,7 @@
 						unfunction kitty-integration
 					fi
 
-					if [[ -o interactive ]]; then
+					if [[ -o interactive && -z "$IN_NIX_SHELL" && ''${NIX_SHELL_LEVEL:-0} -eq 0 ]]; then
 						macchina
 					fi
 
