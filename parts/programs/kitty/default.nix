@@ -61,6 +61,7 @@
 					lg = "lazygit";
 					nosleep = "systemd-inhibit --what=handle-lid-switch sleep 90m";
 					cls = "clear";
+					c = "clear";
 
 					ns = "nix-shell";
 					shell = "nix-shell";
