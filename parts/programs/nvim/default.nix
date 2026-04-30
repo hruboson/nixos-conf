@@ -223,6 +223,7 @@
 						};
 					};
 
+					# by specifying package you automatically install it system-wide
 					servers = {
 						# Nix
 						nil_ls = {
@@ -246,7 +247,7 @@
 						gopls = {
 							enable = true;
 							filetypes = [ "go" "gomod" "gowork" "gotmpl" ];
-							rootMarkers = [ ".git" ".gitignore" ".gitattributes" "go.mod" ] ;
+							rootMarkers = [ ".git" ".gitignore" ".gitattributes" "go.mod" ];
 							autostart = true;
 							settings = {
 								gopls = {
@@ -263,9 +264,26 @@
 						pyright = {
 							enable = true;
 							filetypes = [ "python" "py" ];
-							rootMarkers = [ ".git" ".gitignore" ".gitattributes" "main.py" "shell.nix" ] ;
+							rootMarkers = [ ".git" ".gitignore" ".gitattributes" "main.py" "shell.nix" ];
 							autostart = true;
 							package = pkgs.pyright;
+						};
+
+						clangd = {
+							enable = true;
+							filetypes = [ "c" "cpp" "h" "hpp" ];
+							rootMarkers = [ ".git" ".gitignore" "CMakeLists.txt" "compile_commands.json" ];
+							autostart = true;
+							package = pkgs.clang-tools;
+							cmd = [
+								"clangd"
+								"--background-index"
+								"--clang-tidy"
+								"--header-insertion=iwyu"
+								"--completion-style=detailed"
+								"--function-arg-placeholders"
+								"--fallback-style=llvm"
+							];
 						};
 
 						# C# (OmniSharp)
