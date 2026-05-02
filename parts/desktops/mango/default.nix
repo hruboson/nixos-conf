@@ -86,16 +86,17 @@
 				wl-clipboard
 				wlr-randr
 				wdisplays
-				vicinae
-				quickshell
+				vicinae # launcher
+				quickshell # widget utility
 				qt6.qtwayland
-				grim
-				slurp
+				grim # sreenshot utility
+				slurp # select area for grim
 				pwvucontrol
 				pavucontrol
 				pulseaudio
 				playerctl
-				inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
+				wayscriber # screen annotation tool
+				inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww # wallpaper manager
 
 			]
 			++ lib.optionals config.desktops.waybar.showRotateScript [
@@ -612,6 +613,8 @@
 							"SUPER,w,spawn,vicinae vicinae://extensions/sovereign/awww-switcher/wpgrid"
 							"SUPER+SHIFT,w,spawn,vicinae vicinae://extensions/sovereign/awww-switcher/wprandom"
 							"NONE,Print,spawn_shell,grim -g \"$(slurp -b '#2E2A1E55')\" - | wl-copy"
+							"SUPER,p,spawn_shell,wayscriber --active"
+							"SUPER+SHIFT,p,spawn_shell,wayscriber --freeze"
 
 							"ALT,Tab,toggleoverview,0"
 							"SUPER,s,switch_layout"
