@@ -33,6 +33,12 @@
 		#	url = "github:hruboson/nvim-conf";
 		#	flake = false;
 		#};
+
+		# PERSONAL PROJECTS
+		tropikey = {
+			url = "github:hruboson/tropikey";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
     };
     outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} {
 		imports = [

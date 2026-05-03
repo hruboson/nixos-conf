@@ -193,6 +193,23 @@
         "type": "github"
       }
     },
+    "libtropic": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776761462,
+        "narHash": "sha256-Ap+wa05RgDO0UMofBBmhDQ30dLKUmYDlpJ1FvqTgEhU=",
+        "owner": "tropicsquare",
+        "repo": "libtropic",
+        "rev": "51044cdc2e0aabff42305130b344c5db3136f158",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tropicsquare",
+        "repo": "libtropic",
+        "rev": "51044cdc2e0aabff42305130b344c5db3136f158",
+        "type": "github"
+      }
+    },
     "mango": {
       "inputs": {
         "flake-parts": "flake-parts_2",
@@ -364,7 +381,8 @@
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
         "silentSDDM": "silentSDDM",
-        "snappy-switcher": "snappy-switcher"
+        "snappy-switcher": "snappy-switcher",
+        "tropikey": "tropikey"
       }
     },
     "rust-overlay": {
@@ -490,6 +508,27 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tropikey": {
+      "inputs": {
+        "libtropic": "libtropic",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1777811858,
+        "narHash": "sha256-wz/0OlBwxd4rsbBAVMdxfIm55aMMaRxXDXOslW7ZA9Y=",
+        "owner": "hruboson",
+        "repo": "tropikey",
+        "rev": "c103404135439eb8eb25e8f391a3b46089960635",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hruboson",
+        "repo": "tropikey",
         "type": "github"
       }
     }

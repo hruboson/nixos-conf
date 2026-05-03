@@ -20,6 +20,7 @@
 			self.nixosModules.servicesPackHomeserver
 			self.nixosModules.servicesBluetooth
 			self.nixosModules.servicesDisks
+			self.nixosModules.servicesTropikey
 		];
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes
