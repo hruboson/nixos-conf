@@ -8,6 +8,7 @@
 			self.nixosModules.mango
 			self.nixosModules.kitty
 			self.nixosModules.appPackDev
+			self.nixosModules.appPack3D
 			self.nixosModules.appPackNetworking
 			self.nixosModules.appPackSysutils
 			self.nixosModules.appPackDesktop
@@ -20,7 +21,7 @@
 			self.nixosModules.servicesPackHomeserver
 			self.nixosModules.servicesBluetooth
 			self.nixosModules.servicesDisks
-			self.nixosModules.servicesTropikey
+			#self.nixosModules.servicesTropikey
 		];
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes

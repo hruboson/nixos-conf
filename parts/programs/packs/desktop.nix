@@ -14,6 +14,7 @@
 			kdePackages.dolphin kdePackages.ffmpegthumbs kdePackages.qtimageformats
 			application-menu
 			peazip
+			android-file-transfer
 
 			# img, video, audio
 			oculante
