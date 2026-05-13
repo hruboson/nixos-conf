@@ -28,9 +28,9 @@
 		nixpkgs.config.allowUnfree = true;
 
 		desktops.mango.monitors = ''
-			monitorrule=name:DP-2,width:2560,height:1440,refresh:144,x:2560,y:2639,scale:1
-			monitorrule=name:HDMI-A-1,width:1920,height:1080,refresh:60,x:2560,y:1559,scale:1
-			monitorrule=name:HDMI-A-2,width:2560,height:1440,refresh:60,x:1120,y:1519,scale:1,rr:1
+			monitorrule=name:DP-2,width:2560,height:1440,refresh:144,x:1440,y:1080,scale:1
+			monitorrule=name:HDMI-A-1,width:1920,height:1080,refresh:60,x:1440,y:0,scale:1
+			monitorrule=name:HDMI-A-2,width:2560,height:1440,refresh:60,x:0,y:0,scale:1,rr:1
 		'';
 		desktops.waybar.showRotateScript = true;
 
