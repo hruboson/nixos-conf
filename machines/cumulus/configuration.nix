@@ -5,6 +5,7 @@
 			self.nixosModules.cumulusSystem
 			self.nixosModules.users
 
+			self.nixosModules.kitty
 			self.nixosModules.appPackNetworking
 			self.nixosModules.appPackDev
 			self.nixosModules.servicesPackHomeserver
