@@ -34,6 +34,16 @@
 		#	flake = false;
 		#};
 
+		# SERVER
+
+		# secret management through local-only repo (until I learn sops-nix)
+		secrets = {
+			url = "git+file:///home/hruon/nixos-conf/secrets"; # must be an absolute path
+		};
+		nix-minecraft = {
+			url = "github:Infinidoge/nix-minecraft";
+		};
+
 		# PERSONAL PROJECTS
 		tropikey = {
 			url = "github:hruboson/tropikey";
