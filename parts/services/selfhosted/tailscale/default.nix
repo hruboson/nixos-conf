@@ -28,7 +28,7 @@
 					exit 0
 				fi
 				# otherwise authenticate with tailscale
-				${tailscale}/bin/tailscale up -authkey ${secrets.tailscaleOneOffAuthKey}
+				${tailscale}/bin/tailscale up -authkey ${inputs.secrets.tailscaleOneOffAuthKey}
 			'';
 		};
 

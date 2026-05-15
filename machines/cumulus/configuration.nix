@@ -6,6 +6,7 @@
 			self.nixosModules.users
 
 			self.nixosModules.appPackNetworking
+			self.nixosModules.appPackDev
 			self.nixosModules.servicesPackHomeserver
 
 			self.nixosModules.selfhostedAudiobookshelf
@@ -28,6 +29,17 @@
 		environment.systemPackages = with pkgs; [
 			ntfs3g
 		];
+
+		programs.wayvnc.enable = true;
+		security.polkit.enable = true;
+
+		services.avahi = {
+			enable = true;
+			nssmdns4 = true;
+			publish.enable = true;
+			publish.domain = true;
+			publish.addresses = true;
+		};
 
 		#TODO find a way to put this into modules
 		services.postgresql = {

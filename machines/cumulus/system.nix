@@ -1,6 +1,6 @@
 # self refers to the output of our flake so we can use any modules we defined even in different directories
 { self, inputs, ... }: {
-	flake.nixosModules.arcusSystem = { config, pkgs, lib, hostname, username, ... }: 
+	flake.nixosModules.cumulusSystem = { config, pkgs, lib, hostname, username, ... }: 
 	let
 	# https://gist.github.com/mjungk/292287dbad0ba168838ef5b248dd9d36
 	# Time after idle until spindown (5 seconds * SPINDOWN_TIME).
@@ -18,19 +18,15 @@
 	resticEnvFile = "/run/restic/secrets/restic.env";
 	in {
 		boot.loader.efi.canTouchEfiVariables = true;
-		boot.loader.grub = {
-			enable = true;
-			devices = [ "nodev" ];
-			efiSupport = true;
-			useOSProber = true;
-			default = "saved";
-		};
+		boot.loader.grub.enable = true;
+		boot.loader.grub.device = "/dev/sda";
+		boot.loader.grub.useOSProber = false; # Only nixos running on this server (no other system)
 
 		boot.supportedFilesystems = [ "ntfs" ];
 
 		networking = {
-			hostName = hostname;
-			domain = "${hostname}.local";
+			hostName = "servernix";
+			domain = "servernix.local";
 			firewall = {
 				trustedInterfaces = [ "tailscale0" ];
 				allowedUDPPorts = [
