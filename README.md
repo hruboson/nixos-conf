@@ -1,8 +1,12 @@
+
 > [!WARNING]  
-> I'm currently in the process of restructuring this entire configuration using [`flake-parts`](https://flake.parts/). 
+> **UPDATE:** Parts is mature enough so I have replaced it as main.
+> The Manual is still not updated though. Many of the things written in there are still probably valid for most of the general configurations.
+> I will write a tutorial/manual for the parts structure soon™. Stay tuned ദ്ദി( • ᴗ - )✧ <br />
+> ~~I'm currently in the process of restructuring this entire configuration using [`flake-parts`](https://flake.parts/). 
 > This configuration will most likely not be updated and will eventually move to the `deprecated` branch.
 > If you want to take a look at the new config go to the [`parts` branch](https://github.com/hruboson/nixos-conf/tree/parts). As of 12.04.2026 there is a config for my workstation (arcus) and laptop (fractus).
-> When I feel more confident in my knowledge I will also write a small tutorial on the [`flake-parts`](https://flake.parts/) structure.
+> When I feel more confident in my knowledge I will also write a small tutorial on the [`flake-parts`](https://flake.parts/) structure.~~
 
 # NixOS configuration
 
@@ -11,6 +15,9 @@ This is my personal configuration for NixOS. I will most likely split this to mu
 See the [Manual](#Manual) section if this is your first time installing NixOS. The purpose of this manual is for me to remember what I did with my config and for others to be able to use my configuration or copy the parts they want while still understanding what they are doing.
 
 # Using this configuration
+
+> [!WARNING]
+> **OUTDATED:** This section is not yet updated for the parts structure.
 
 If you want to use this configuration, you have to do few steps first (currently only applies for #server and #raspberrypi flakes, #workstation should be fine without secrets):
 
@@ -67,7 +74,7 @@ In general my main sources of information include (in no particular order):
 - [Vimojer's youtube videos](https://www.youtube.com/@vimjoyer/videos)
     - He's honestly the G.O.A.T of NixOS when it comes to anything. I've watched almost every single one of his videos which are not only informative but also entertaining as well.
 
-*And a word for the AI users out here - please be careful when using tools like ChatGPT or Deepseek. They will often tell you to execute commands that will make your PC automatically non-declarative (usually running `nix-env`). Please be careful with these commands as they might provide temporary fix at the cost of being non-declarative changes. A good rule of thumb for beginners is that if your change does not require the `nixos-rebuild` then it is most likely not declarative (and whats the point of that, am I right ;). Otherwise I think you will probably have a hard time breaking something - NixOS is quite robust by design with its `generations` you can roll back to. I also found the LLMs to be hallucinating and making stuff up A LOT when it comes to configuration.*
+*And a word for the AI users out here - please be careful when using tools like ChatGPT or Deepseek. They will often tell you to execute commands that will make your PC automatically non-declarative (usually running `nix-env`). Please be careful with these commands as they might provide temporary fix at the cost of being non-declarative changes. A good rule of thumb for beginners is that if your change does not require the `nixos-rebuild` then it is most likely not declarative (and whats the point of that, am I right ( - ᴗ •́ ). Otherwise I think you will probably have a hard time breaking something - NixOS is quite robust by design with its `generations` you can roll back to. I also found the LLMs to be hallucinating and making stuff up A LOT when it comes to configuration.*
 
 # Manual
 
