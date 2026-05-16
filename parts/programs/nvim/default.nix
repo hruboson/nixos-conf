@@ -48,6 +48,8 @@
 
 				# ufo folds
 				foldcolumn = "1";
+				foldmethod = "expr";
+				foldexpr = "nvim_treesitter#foldexpr()";
 				foldlevel = 20;
 				foldlevelstart = 20;
 				foldenable = true;
@@ -66,6 +68,7 @@
 						indent.enable = false;
 						auto_install = false;
 					};
+					package = pkgs.vimPlugins.nvim-treesitter;
 				};
 				nvim-tree = {
 					enable = true;
@@ -143,7 +146,21 @@
 				};
 
 				mini-completion.enable = true;
-				nvim-ufo.enable = true; # better folds
+				nvim-ufo = { # better folds
+					enable = true;
+					#callSetup = true;
+
+					settings = {
+						provider_selector = ''
+						  function(_, filetype, _)
+							if filetype == "markdown" then
+							  return { "treesitter" }
+							end
+							return { "treesitter", "indent" }
+						  end
+						'';
+					};
+				};
 				nvim-autopairs.enable = true;
 
 				# HANDY
