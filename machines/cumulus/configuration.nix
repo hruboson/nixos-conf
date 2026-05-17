@@ -19,6 +19,7 @@
 			self.nixosModules.selfhostedLinkwarden
 			self.nixosModules.selfhostedMatrix
 			self.nixosModules.selfhostedMinecraftServer
+			self.nixosModules.selfhostedNextcloud
 			self.nixosModules.selfhostedPlikd
 			self.nixosModules.selfhostedTailscale
 			self.nixosModules.selfhostedTandoor
@@ -45,26 +46,42 @@
 		#TODO find a way to put this into modules
 		services.postgresql = {
 			enable = true;
-
+			
+			ensureUsers = [
+				{
+					name = "matrix-synapse";
+					ensureDBOwnership = false;
+				}
+				{
+					name = "linkwarden";
+					ensureDBOwnership = false;
+				}
+				{
+					name = "nextcloud";
+					ensureDBOwnership = false;
+				}
+			];
+			
+			ensureDatabases = [
+				"linkwarden"
+				"nextcloud"
+			];
+			
 			initialScript = pkgs.writeText "postgres-init.sql" ''
-			CREATE USER "matrix-synapse";
-			CREATE USER "linkwarden";
+				-- Matrix Synapse MUST use C collation
+				CREATE DATABASE "matrix-synapse"
+				WITH OWNER = "matrix-synapse"
+				ENCODING = 'UTF8'
+				LC_COLLATE = 'C'
+				LC_CTYPE = 'C'
+				TEMPLATE = template0;
 
-			-- Matrix Synapse MUST use C collation
-			CREATE DATABASE "matrix-synapse"
-			WITH OWNER = "matrix-synapse"
-			ENCODING = 'UTF8'
-			LC_COLLATE = 'C'
-			LC_CTYPE = 'C'
-			TEMPLATE = template0;
-
-			-- Linkwarden can use defaults
-			CREATE DATABASE linkwarden
-			WITH OWNER = linkwarden;
+				-- Set database owners and collations
+				ALTER DATABASE "matrix-synapse" OWNER TO "matrix-synapse";
+				ALTER DATABASE "linkwarden" OWNER TO "linkwarden";
+				ALTER DATABASE "nextcloud" OWNER TO "nextcloud";
 			'';
-
-
-			# Allow local Unix socket connections and TCP from localhost
+			
 			authentication = lib.mkOverride 10 ''
 				local   all             all                                     trust
 				host    all             all             127.0.0.1/32            trust

@@ -113,14 +113,27 @@
 			};
 		};
 
+		####################
+		# FILE PERMISSIONS #
+		####################
+		systemd.tmpfiles.rules = [
+			"d /run/restic/secrets 0750 ${username} users -"
+			"f ${resticEnvFile} 0640 ${username} users - RESTIC_PASSWORD=${inputs.secrets.resticRepoPass}"
+			"d /mnt/JARK/nextcloud 0755 nextcloud nextcloud - -"
+			"d /mnt/HUSK/nextcloud-external 0755 nextcloud nextcloud - -"
+
+			"d /mnt/CUTUP 0755 root root - -"
+			"d /mnt/JARK 0755 root root - -"
+			"d /mnt/HUSK 0755 root root - -"
+			"d /mnt/JAG 0755 root root - -"
+			"d /mnt/JAY 0755 root root - -"
+			"d /mnt/BACARA 0755 root root - -"
+		];
+
 		#######################
 		# BACKUPS DEFINITIONS #
 		#######################
 
-		systemd.tmpfiles.rules = [
-			"d /run/restic/secrets 0750 ${username} users -"
-				"f ${resticEnvFile} 0640 ${username} users - RESTIC_PASSWORD=${inputs.secrets.resticRepoPass}"
-		];
 		services.restic.backups = {
 			cutupToBacara = {
 				paths = [ "/mnt/CUTUP" ];
