@@ -23,9 +23,11 @@
 				
 				adminuser = "admin";
 				adminpassFile = "/etc/nextcloud-admin-pass";
-				
-				overwriteProtocol = "http";
-				defaultPhoneRegion = "CZ";
+			};
+
+			settings = {
+				overwriteprotocol = "http";
+				default_phone_region = "CZ";
 			};
 			
 			datadir = dataDir;

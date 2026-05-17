@@ -94,6 +94,13 @@
 								allow-insecure = true;
 							}
 							{
+								title = "Nextcloud";
+								url = "http://${config.networking.hostName}.local";
+								icon = "di:nextcloud";
+								timeout = "15s";
+								allow-insecure = true;
+							}
+							{
 								title = "Komga";
 								url = "http://${config.networking.hostName}.local:8060";
 								icon = "di:komga";
