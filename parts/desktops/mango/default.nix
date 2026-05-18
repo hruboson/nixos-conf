@@ -120,14 +120,14 @@
 					wlr-randr --output "$MONITOR" \
 					--on \
 					--mode 2560x1440 \
-					--pos 0,2639 \
+					--pos 0,2520 \
 					--transform normal
 				else
 					echo "$(date): Switching to portrait" >> "$LOG_FILE"
 					wlr-randr --output "$MONITOR" \
 					--on \
 					--mode 2560x1440 \
-					--pos 1120,1519 \
+					--pos 0,0 \
 					--transform 90
 				fi
 				echo "$(date): Done" >> "$LOG_FILE"
