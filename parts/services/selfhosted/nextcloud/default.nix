@@ -14,6 +14,12 @@
 			https = false;
 			
 			package = pkgs.nextcloud33;
+			extraApps = {
+				inherit (config.services.nextcloud.package.packages.apps)
+					news contacts calendar music tasks
+				;
+			};
+			extraAppsEnable = true;
 			
 			config = {
 				dbtype = "pgsql";
