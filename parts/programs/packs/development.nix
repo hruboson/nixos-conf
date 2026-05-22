@@ -9,6 +9,7 @@
 			libgcc
 			neovide
 			filezilla
+			mc
 		];
 
 		virtualisation.docker.enable = true;
