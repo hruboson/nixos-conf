@@ -10,11 +10,23 @@
 
 # NixOS configuration
 
-This is my personal configuration for NixOS. I will most likely split this to multiple repositories or branches for my server/workstation/other. I've also tried writing up a small tutorial for my first installation of NixOS. 
+My personal NixOS configuration and [documentation](#manual) I wrote up during my whole time with NixOS.
 
-See the [Manual](#Manual) section if this is your first time installing NixOS. The purpose of this manual is for me to remember what I did with my config and for others to be able to use my configuration or copy the parts they want while still understanding what they are doing.
+What will you find in this repo ...
 
-# Using this configuration
+1. **[Manual](#manual)** - first install, first setup, desktop configuration, programs configuration, flakes, parts, optimization and much more.
+1. [Using this configuration](#using-this-configuration) - how to install and use my configuration.
+1. [Machine definitions](#machines) - configurations for my devices (desktop, laptop, server, ...).
+1. [Resources](#resources) - compilation of links, videos, books  and other sources I use most often.
+1. [Detailed resources](#resources-detailed) - every single one of my bookmarks concerning NixOS.
+
+---
+
+**See the [Manual](#manual) section** if this is your first time installing NixOS. The purpose of this manual/documentation is for me to remember what I did with my config and for others to be able to use my configuration or copy the parts they want while still understanding what they do.
+
+---
+
+# Using this configuration <a name="using-this-configuration"></a>
 
 > [!WARNING]
 > **OUTDATED:** This section is not yet updated for the parts structure.
@@ -76,32 +88,34 @@ In general my main sources of information include (in no particular order):
 
 *And a word for the AI users out here - please be careful when using tools like ChatGPT or Deepseek. They will often tell you to execute commands that will make your PC automatically non-declarative (usually running `nix-env`). Please be careful with these commands as they might provide temporary fix at the cost of being non-declarative changes. A good rule of thumb for beginners is that if your change does not require the `nixos-rebuild` then it is most likely not declarative (and whats the point of that, am I right ( - ᴗ •́ ). Otherwise I think you will probably have a hard time breaking something - NixOS is quite robust by design with its `generations` you can roll back to. I also found the LLMs to be hallucinating and making stuff up A LOT when it comes to configuration.*
 
-# Manual
+# Manual <a name="manual"></a>
 
 **Table of contents**
 1. [Installation](#installation)
     1. [Graphical installer](#graphical-installer)
-    2. [Minimal installer](#minimal-installer)
-    3. [Raspberry pi 3B](#installation-raspberry)
-    4. [QEMU on Windows host](#qemu-windows)
-    5. [QEMU on Linux host](#qemu-linux)
-    6. [Dualbooting with Windows](#dualboot-windows)
-2. [First login](#first-login)
-3. [Git](#git)
-4. [Flakes](#flakes)
-5. [Home-manager](#home-manager)
+    1. [Minimal installer](#minimal-installer)
+    1. [Raspberry pi 3B](#installation-raspberry)
+    1. [QEMU on Windows host](#qemu-windows)
+    1. [QEMU on Linux host](#qemu-linux)
+    1. [Dualbooting with Windows](#dualboot-windows)
+1. [First login](#first-login)
+1. [Git](#git)
+1. [Flakes](#flakes)
+1. [Home-manager](#home-manager)
+    1. [Nixvim](#nixvim)
     1. [Plasma manager](#plasma-manager)
-6. [Desktop environment](#desktop-environment)
+1. [Desktop environment](#desktop-environment)
     1. [KDE](#desktop-environment-kde)
-    2. [Wayland compositors](#wayland-compositors)
-    3. [Hyprland](#wayland-compositor-hyprland)
-    4. [Sway](#wayland-compositor-sway)
-    5. [Mango](#wayland-compositor-mango)
-7. [Minecraft server](#minecraft-server)
-8. [NixOS optimizations](#nixos-optimizations)
-9. [Resources](#resources-detailed)
+    1. [Wayland compositors](#wayland-compositors)
+        1. [Mango](#wayland-compositor-mango)
+        1. [Hyprland](#wayland-compositor-hyprland)
+        1. [Sway](#wayland-compositor-sway)
+1. [Minecraft server](#minecraft-server)
+1. [Parts](#parts)
+1. [NixOS optimizations](#nixos-optimizations)
+1. [Resources](#resources-detailed)
 
-## 1. Installation <a name="installation"></a>
+## Installation <a name="installation"></a>
 
 You will generally want to follow the [installation for x86-64 system](#11-manual-installation-on-x86-64-system) if you have something like desktop PC or laptop. If you have more specialized hardware, such as Raspberry Pi, your installation might look a bit different. I have so far only installed NixOS on Raspberry Pi 3B. To install NixOS on Raspberry Pi (3B) follow the [Raspberry Pi](#12-raspberry-pi-3b) manual.
 
@@ -113,7 +127,7 @@ VMware seemed to run much smoother, although at the time of writing this I have 
 
 If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland** and want to run **NixOS in virtual machine on Windows**, **I strongly recommend** using [QEMU](https://www.qemu.org/) - see section [installing NixOS on QEMU virtual machine](#13-Installing-NixOS-on-virtual-machine-on-Windows-host-using-QEMU). I have not been able to run any Wayland compositor through Virtualbox or VMware on Windows. This tutorial might be a bit advanced than just using Virtualbox or VMware, but you should be able to customize the virtual machine more and mainly, as previously stated, be able to run **Wayland**.
 
-### 1.1 Manual installation on x86-64 system <a name="installation"></a>
+### Manual installation on x86-64 system <a name="installation"></a>
 
 Just recently I found `sudo nix run github:km-clay/nixos-wizard --extra-experimental-features nix-command --extra-experimental-features flakes` command that runs TUI (terminal user interface) installer, maybe give it a try or follow the manual installation.
 
@@ -162,7 +176,7 @@ Boot up your NixOS minimal ISO and run the following commands. Pay attention to 
 - after successful installation it will ask for new password, this password will be for the root account
 - `reboot` - after this it should boot to installed OS
 
-### 1.2 Raspberry Pi 3B <a name="installation-raspberry"></a>
+### Raspberry Pi 3B <a name="installation-raspberry"></a>
 
 For the RPI installation I found [this guide](https://nix.dev/tutorials/nixos/installing-nixos-on-a-raspberry-pi.html) by [nix.dev](https://nix.dev/) to be the most useful.
 
@@ -248,7 +262,7 @@ in {
     - `nixos-rebuild boot` - should take about 10-20 minutes depending on the speed of your internet connection
     - `reboot` - reboots the system
 
-### 1.3 Installing NixOS on virtual machine on Windows host using QEMU <a name="qemu-windows"></a>
+### Installing NixOS on virtual machine on Windows host using QEMU <a name="qemu-windows"></a>
 
 If you plan on running any Wayland compositor (such as *Sway* or *Hyprland*) through virtual machine on Windows, this is probably the best way to do it. I could not figure out how to run any Wayland compositor through Virtualbox or VMware.
 
@@ -359,7 +373,7 @@ qemu-system-x86_64.exe ^
 
 AND before running `sway` or `hyprland` be sure to run `export WLR_NO_HARDWARE_CURSORS=1` (or set the environment variable somewhere).
 
-### 1.4 Installing NixOS on virtual machine on Linux host using QEMU <a name="qemu-linux"></a>
+### Installing NixOS on virtual machine on Linux host using QEMU <a name="qemu-linux"></a>
 
 This section covers how to install and run QEMU on Fedora. On Linux I did not bother with bridge and just used NAT. If you are using QEMU with a network bridge I'd appreciate if you opened a pull request and shared the steps you did to make it work :-).
 
@@ -444,7 +458,7 @@ If you are having problems running QEMU, try manually enabling the `libvirtd` se
 sudo systemctl enable --now libvirtd
 ```
 
-### 1.5 Dualbooting with Windows <a name="dualboot-windows"></a>
+### Dualbooting with Windows <a name="dualboot-windows"></a>
 
 One thing to be aware when dualbooting with Windows is the size of your EFI partition that was created when Windows was installed. In my case the EFI partition was 100 MB in size. When I first installed NixOS alongside Windows using the existing EFI partition, I could not rebuild due to the `OSError: [Errno 28] No space left on device /boot`. This was fixed by reinstalling NixOS (clearing the partition where it was installed) and creating a new EFI boot partition through the NixOS installer.
 
@@ -483,7 +497,7 @@ boot.loader.grub = {
 ```
 6. Now do `nixos-rebuild switch` with the new configuration. On the next reboot you should get a GRUB bootloader with three entries - `NixOS - Default`, `NixOS - All configurations` and `Windows boot manager`. If you forgot to remove the USB drive or if Windows loads by default you might have to change the boot option in the BIOS again (there should now be a NixOS bootloader entry, select that).
 7. Enjoy your new dualboot system :).
-## 2. First login <a name="first-login"></a>
+## First login <a name="first-login"></a>
 - when first logging in the NixOS login will be `root` with password you set during the `nixos-itwnstall`
 - update channels (package repositories): `nix-channel --update`
 - edit configuration in `/etc/nixos/configuration.nix`, use `nano /etc/nixos/configuration.nix` to edit that file
@@ -495,7 +509,7 @@ boot.loader.grub = {
 - then **rebuild** nix using the `nixos-rebuild switch` (will probably take a while), it will take the configuration file and apply the changes we made in it
 - apply password to the new user: `passwd username`
 
-### 2.1 Connecting to Eduroam
+### Connecting to Eduroam
 - download eduroam activation python script for your university [here](https://cat.eduroam.org/#)
 - run the script using nix shell:
 
@@ -508,7 +522,7 @@ nix-shell -p "python3.withPackages (ps: with ps; [ dbus-python ])" --run python3
     - Run `sudo nmtui`
     - Edit connection -> Eduroam -> Save password for all users
 
-## 3.1 Setting up git and GitHub <a name="git"></a>
+## Setting up git and GitHub <a name="git"></a>
 If you are comfortable using the GitHub CLI tool (`gh`), you can add it to your configuration. The package is `pkgs.gh`.
 
 Or the old fashioned way using SSH keys (which is still quite easy on Linux):
@@ -532,25 +546,30 @@ Or the old fashioned way using SSH keys (which is still quite easy on Linux):
     - after changes rebuild with `sudo nixos-rebuild -I nixos-config=/home/<username>/nixos/configuration.nix`
 - if you get prompt for username and password when pushing to git then try changing remote: `git remote set-url origin git@github.com:<username>/<repository.git>`
 
-## 3.2 Flakes <a name="flakes"></a>
+## Flakes <a name="flakes"></a>
 
 I'm currently in the process of reading [NixOS & Flakes Book - An unofficial book for beginners](https://nixos-and-flakes.thiscute.world/) because I feel like flakes are a bit advanced topic and I don't want to get things wrong. Once I feel more confident I will complete this section.
 
-## 3.3 Home-manager <a name="home-manager"></a>
+## Home-manager <a name="home-manager"></a>
 
 Home-manager lets you manage user files (typically dotfiles) through nix configuration. This can be quite nice if you have a certain themes, keybinds or other settings you want to apply to multiple programs at once in your nix configuration.
 
 In the most basic use, you can just copy a dotfiles directory (or repository) to your `.config` home folder. This is what I'm currently doing and I find it to be the easiest way to manage your dotfiles. There are many advantages to using fully declarative dotfiles through home-manager and nix. For more information about this I recommend [Vimjoyer's video about home-manager](https://youtu.be/FcC2dzecovw?si=wpAe9nwFCOXFvOIe).
 
-### 3.3.1 Plasma-manager <a name="plasma-manager"></a>
+
+### Nixvim <a name="nixvim"></a>
+
+...
+
+### Plasma-manager <a name="plasma-manager"></a>
 
 Plasma-manager is a tool for managing your KDE configuration declaratively. Unfortunately I found it quite lacking of features and configuration options you can set. One of the reasons I switched to NixOS was that I could have my **whole** computer declarative. The biggest problem with KDE is that the configuration files are scattered across the system. This has been a problem for a long time and I do hope that KDE can fix it. There are also tools such as [Konsave](https://github.com/Prayag2/konsave) which I have not personally used (but might give a try in the future).
 
-## 4. Desktop environment <a name="desktop-environment"></a>
+## Desktop environment <a name="desktop-environment"></a>
 
 Desktop environment
 
-### 4.1 KDE <a name="desktop-environment-kde"></a>
+### KDE <a name="desktop-environment-kde"></a>
 
 Installing KDE is as easy as adding these three lines of code to your configuration.
 
@@ -562,7 +581,7 @@ security.rtkit.enable = true;
 
 That's all! Isn't that crazy? And if you want to change this to something else just comment these lines and bring in your own desktop environment.
 
-### 4.2 Wayland compositors <a name="wayland-compositors"></a>
+### Wayland compositors <a name="wayland-compositors"></a>
 
 Both Sway and Hyprland (and other compositors such as Mango, Niri, ...) are a bit more complicated than a simple KDE (or is it rather the other way!?). Well for the user is is probably more complicated to get Hyprland or Sway running that KDE. But they are simpler and should have smaller memory and CPU footprint than a big desktop environment (such as KDE). The advantage (and also disadvantage in some cases) is that you have to bring everything else yourself - lock screen, taskbar, file manager and basically everything else you can think of when you think of desktop environment. They are not a desktop environments per se. Officially they are "window managers". That means they only manage your windows - and that's it. Nothing more, nothing less.
 
@@ -570,183 +589,7 @@ That's also why I will show only the *most basic configuration* of Hyprland and 
 
 I noticed that I've been basically using the Hyprland window managing philosophy on my Windows machine. By using the [Microsofts PowerToys](https://learn.microsoft.com/en-us/windows/powertoys/) (yes, one of the two Microsoft products that don't suck) Fancy Zones utility. I was basically doing what I could be doing in Hyprland automatically, manually.
 
-### 4.2.1 Hyprland <a name="wayland-compositor-hyprland"></a>
-
-In the end, Hyprland was the window manager I stuck with. In my journey to declarative PC I tried Sway, Hyprland and Mango. Hyprland provides quite a few handy features and feels much more polished than the other Wayland compositors I have tried.
-
-I installed Hyprland using the official flake. In your flake inputs add
-
-```
-hyprland.url = "github:hyprwm/Hyprland";
-
-### PLUGINS ### you don't really have to install these if you will not be using them
-hyprland-plugins = {
-    url = "github:hyprwm/hyprland-plugins";
-    inputs.hyprland.follows = "hyprland";
-};
-Hyprspace = {
-    url = "github:KZDKM/Hyprspace";
-    inputs.hyprland.follows = "hyprland";
-};
-```
-
-The plugins are configured WITHOUT home-manager and you can see the code snippets on how to get them work in `machines/workstation/hypr.nix`, `dotfiles/hypr/hyprland.conf` and `dotfiles/hypr/modules/plugins.conf`.
-
-Then onto the Hyprland configuration in NixOS. Notice that the package follows the flake repository.
-
-```
-programs.hyprland = {
-    enable = true;
-    withUWSM = true;
-    xwayland.enable = true;
-    
-    package = inputs.hyprland.packages."${pkgs.system}".hyprland;
-};
-
-services.xserver.enable = false;
-security.polkit.enable = true;
-services.dbus.enable = true;
-hardware.graphics.enable = true;
-
-xdg.portal.enable = true;
-xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-
-# QEMU-specific config
-services.xserver.videoDrivers = [ "virtio" ];
-environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
-```
-
-And some packages with that please:
-
-```
-# hypr utils
-environment.systemPackages = lib.mkAfter(with pkgs; [
-    killall
-    sddm-astronaut # SDDM login screen
-
-    wev
-    wayland
-    wlr-randr
-    wdisplays
-    tuigreet
-
-    hyprpaper
-    hypridle
-    hyprlock
-    waybar
-    eww
-
-    grim					# Screenshot utility
-    slurp					# Select region for grim
-    nwg-wrapper				# Custom widget displayer
-    vicinae					# Launcher
-    pwvucontrol				# volume and sound control
-]);
-```
-
-And other configuration, such as pipewire and login screen components:
-```
-services.pipewire = {
-    enable = true;
-    wireplumber.enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
-};
-
-services.xserver.enable = true;
-# Login screen using sddm and sddm-astronaut theme
-services.displayManager.sddm = {
-	enable = true;
-	extraPackages = [ pkgs.sddm-astronaut ];
-	theme = "sddm-astronaut-theme";
-	autoLogin.relogin = false;
-	wayland.enable = true;
-    # All available settings can be found using the man commang: `man sddm.conf` or online: https://manpages.debian.org/trixie/sddm/sddm.conf.5.en.html
-	settings = {
-		Autologin = {
-			Session = "start-hyprland";
-			User = "username"; # Change this to your user name
-			Relogin = false;
-		};
-	};
-};
-
-```
-
-### 4.2.2 Sway <a name="wayland-compositor-sway"></a>
-
-When using this configuration, please refer to the `machines/workstation/sway.nix` file (or `modules/de/sway.nix` if you are from the future ;) - yeah I'm too lazy to make my config modular for now).
-
-Installing Sway was quite easy, this config should be all you need.
-
-```
-programs.sway.enable = true;
-services.xserver.enable = false; # disable X11
-security.polkit.enable = true;
-
-# enable hardware acceleration
-hardware.graphics = {
-    enable = true;
-};
-
-# QEMU-specific config
-services.xserver.videoDrivers = [ "virtio" ];
-environment.variables.WLR_NO_HARDWARE_CURSORS = "1";
-```
-
-You will most likely want to use these packages with Sway:
-
-```
-# sway utils
-environment.systemPackages = lib.mkAfter(with pkgs; [
-    wev
-    wayland
-    wlr-randr
-
-    tuigreet
-    swaybg
-    swaylock
-    swayidle
-    sway-launcher-desktop	# TUI application launcher
-    grim					# Screenshot utility
-    slurp					# Select region for grim
-    nwg-panel				# Taskbar
-    nwg-wrapper				# custom widget displayer
-]);
-```
-
-Then bring in other components, such as TUI greeter and more:
-
-```
-# graphical login screen (greetd+tuigreet)
-services.greetd = {
-    enable = true;
-    settings = {
-        default_session = {
-            command = ''
-            ${pkgs.tuigreet}/bin/tuigreet --time 
-            --theme "border=yellow;text=cyan"
-            --remember --remember-session --cmd sway";
-            user = "greeter'';
-        };
-    };
-};
-
-# https://github.com/sjcobb2022/nixos-conf/blob/main/hosts/common/optional/greetd.nix
-systemd.services.greetd.serviceConfig = {
-    Type = "idle";
-    StandardInput = "tty";
-    StandardOutput = "tty";
-    StardardError = "journal";
-    TTYReset = true;
-    TTYYVHangup = true;
-    TTYVTDisallocate = true;
-};
-
-```
-
-
-### 4.2.3 Mango <a name="wayland-compositor-mango"></a>
+#### Mango <a name="wayland-compositor-mango"></a>
 
 I installed Mango using the official flake. When using this configuration, please refer to the `machines/workstation/mango.nix` file (or `modules/de/mango.nix` if you are from the future ;) - yeah I'm too lazy to make my config modular for now).
 
@@ -854,7 +697,182 @@ services.pipewire = {
 };
 ```
 
-### 5.1 Minecraft Server <a name="minecraft-server"></a>
+#### Hyprland <a name="wayland-compositor-hyprland"></a>
+
+In the end, Hyprland was the window manager I stuck with. In my journey to declarative PC I tried Sway, Hyprland and Mango. Hyprland provides quite a few handy features and feels much more polished than the other Wayland compositors I have tried.
+
+I installed Hyprland using the official flake. In your flake inputs add
+
+```
+hyprland.url = "github:hyprwm/Hyprland";
+
+### PLUGINS ### you don't really have to install these if you will not be using them
+hyprland-plugins = {
+    url = "github:hyprwm/hyprland-plugins";
+    inputs.hyprland.follows = "hyprland";
+};
+Hyprspace = {
+    url = "github:KZDKM/Hyprspace";
+    inputs.hyprland.follows = "hyprland";
+};
+```
+
+The plugins are configured WITHOUT home-manager and you can see the code snippets on how to get them work in `machines/workstation/hypr.nix`, `dotfiles/hypr/hyprland.conf` and `dotfiles/hypr/modules/plugins.conf`.
+
+Then onto the Hyprland configuration in NixOS. Notice that the package follows the flake repository.
+
+```
+programs.hyprland = {
+    enable = true;
+    withUWSM = true;
+    xwayland.enable = true;
+    
+    package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+};
+
+services.xserver.enable = false;
+security.polkit.enable = true;
+services.dbus.enable = true;
+hardware.graphics.enable = true;
+
+xdg.portal.enable = true;
+xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+# QEMU-specific config
+services.xserver.videoDrivers = [ "virtio" ];
+environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
+```
+
+And some packages with that please:
+
+```
+# hypr utils
+environment.systemPackages = lib.mkAfter(with pkgs; [
+    killall
+    sddm-astronaut # SDDM login screen
+
+    wev
+    wayland
+    wlr-randr
+    wdisplays
+    tuigreet
+
+    hyprpaper
+    hypridle
+    hyprlock
+    waybar
+    eww
+
+    grim					# Screenshot utility
+    slurp					# Select region for grim
+    nwg-wrapper				# Custom widget displayer
+    vicinae					# Launcher
+    pwvucontrol				# volume and sound control
+]);
+```
+
+And other configuration, such as pipewire and login screen components:
+```
+services.pipewire = {
+    enable = true;
+    wireplumber.enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+};
+
+services.xserver.enable = true;
+# Login screen using sddm and sddm-astronaut theme
+services.displayManager.sddm = {
+	enable = true;
+	extraPackages = [ pkgs.sddm-astronaut ];
+	theme = "sddm-astronaut-theme";
+	autoLogin.relogin = false;
+	wayland.enable = true;
+    # All available settings can be found using the man commang: `man sddm.conf` or online: https://manpages.debian.org/trixie/sddm/sddm.conf.5.en.html
+	settings = {
+		Autologin = {
+			Session = "start-hyprland";
+			User = "username"; # Change this to your user name
+			Relogin = false;
+		};
+	};
+};
+
+```
+
+#### Sway <a name="wayland-compositor-sway"></a>
+
+When using this configuration, please refer to the `machines/workstation/sway.nix` file (or `modules/de/sway.nix` if you are from the future ;) - yeah I'm too lazy to make my config modular for now).
+
+Installing Sway was quite easy, this config should be all you need.
+
+```
+programs.sway.enable = true;
+services.xserver.enable = false; # disable X11
+security.polkit.enable = true;
+
+# enable hardware acceleration
+hardware.graphics = {
+    enable = true;
+};
+
+# QEMU-specific config
+services.xserver.videoDrivers = [ "virtio" ];
+environment.variables.WLR_NO_HARDWARE_CURSORS = "1";
+```
+
+You will most likely want to use these packages with Sway:
+
+```
+# sway utils
+environment.systemPackages = lib.mkAfter(with pkgs; [
+    wev
+    wayland
+    wlr-randr
+
+    tuigreet
+    swaybg
+    swaylock
+    swayidle
+    sway-launcher-desktop	# TUI application launcher
+    grim					# Screenshot utility
+    slurp					# Select region for grim
+    nwg-panel				# Taskbar
+    nwg-wrapper				# custom widget displayer
+]);
+```
+
+Then bring in other components, such as TUI greeter and more:
+
+```
+# graphical login screen (greetd+tuigreet)
+services.greetd = {
+    enable = true;
+    settings = {
+        default_session = {
+            command = ''
+            ${pkgs.tuigreet}/bin/tuigreet --time 
+            --theme "border=yellow;text=cyan"
+            --remember --remember-session --cmd sway";
+            user = "greeter'';
+        };
+    };
+};
+
+# https://github.com/sjcobb2022/nixos-conf/blob/main/hosts/common/optional/greetd.nix
+systemd.services.greetd.serviceConfig = {
+    Type = "idle";
+    StandardInput = "tty";
+    StandardOutput = "tty";
+    StardardError = "journal";
+    TTYReset = true;
+    TTYYVHangup = true;
+    TTYVTDisallocate = true;
+};
+
+```
+
+## Minecraft Server <a name="minecraft-server"></a>
 
 The [nix-minecraft](https://github.com/Infinidoge/nix-minecraft) provides a super convenient way to declare multiple Minecraft servers. The only thing that I couldn't get to run, unfortunately, was a way to run a server with `Forge` mods.
 
@@ -868,9 +886,13 @@ ARRCON.exe -H SERVER_ADDRESS -P RCON_PORT -p PASSWORD
 
 The default port (if unspecified) is `25575`.
 
-## 6. NixOS optimizations <a name="nixos-optimizations"></a>
+## Parts
 
-### 6.1 Optimizing storage
+...
+
+## NixOS optimizations <a name="nixos-optimizations"></a>
+
+### Optimizing storage
 
 You can remove all but the current generation using the command `sudo nix-collect-garbage -d`. This is especially useful on devices with lower total storage space (like Raspberry Pi). To also remove unused store paths run `nix-store --gc`.
 
@@ -882,7 +904,7 @@ Setting a maximum number of stored generations can be done by applying following
 boot.loader.generations = 3; # keeps only last three generations
 ```
 
-## 7. Resources <a name="resources-detailed"></a>
+## Resources <a name="resources-detailed"></a>
 
 *If you are from the future I apologize for any dead links :( Please try to find them at [https://web.archive.org/](https://web.archive.org/). Thank you.*
 
