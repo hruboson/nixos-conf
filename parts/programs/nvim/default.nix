@@ -145,6 +145,27 @@
 					};
 				};
 
+				conform-nvim = {
+					enable = true;
+					autoInstall.enable = true;
+					settings = {
+						formatters_by_ft = {
+							nix = [ "nixfmt" ];
+							javascript = [ "prettier" ];
+							typescript = [ "prettier" ];
+							json = [ "prettier" ];
+							markdown = [ "prettier" ];
+							python = [ "black" "isort" ];
+							go = [ "gofmt" ];
+							cpp = [ "clang-format" ];
+							c = [ "clang-format" ];
+
+							# fallback
+							"_" = [ "prettier" ];
+						};
+					};
+				};
+
 				mini-completion.enable = true;
 				nvim-ufo = { # better folds
 					enable = true;
@@ -231,7 +252,6 @@
 							K = "hover";
 							"<leader>rn" = "rename";
 							"<leader>ca" = "code_action";
-							"<leader>f" = "format";
 						};
 						diagnostic = {
 							"[d" = "goto_prev";
@@ -348,6 +368,8 @@
 			{ mode = "n"; key = "<C-x>";   action = ":NvimTreeToggle<cr>"; options.desc = "Toggle NvimTree"; }
 			{ mode = "n"; key = "<Esc>";   action = "<cmd>noh<CR>"; options.desc = "Clear highlight"; }
 			{ mode = "n"; key = "U";       action = "<C-r>"; options.desc = "Redo"; }
+			{ mode = "n"; key = "<leader>f"; action = "<cmd>lua require('conform').format()<CR>"; options.desc = "Format buffer"; }
+			{ mode = "n"; key = "="; action = "<cmd>lua require('conform').format({ range = { start = { vim.fn.line('.'), 0 }, ['end'] = { vim.fn.line('.'), -1 } } })<CR>"; options.desc = "Format line"; }
 
 			# NORMAL - LSP
 			{ mode = "n"; key = "gD";          action = "<cmd>lua vim.lsp.buf.declaration()<CR>"; options.desc = "Go to declaration"; }
@@ -390,6 +412,7 @@
 			# VISUAL - indentation
 			{ mode = "v"; key = "<TAB>"; action = ">gv"; options.desc = "Indent selection"; }
 			{ mode = "v"; key = "U";     action = "<C-r>"; options.desc = "Redo"; }
+			{ mode = "v"; key = "="; action = "<cmd>lua require('conform').format()<CR>"; options.desc = "Format selection"; }
 
 			# VISUAL BLOCK - void deletes
 			{ mode = "x"; key = "d";  action = "\"_d"; }
