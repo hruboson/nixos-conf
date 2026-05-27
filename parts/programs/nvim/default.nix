@@ -144,7 +144,6 @@
 						color_icons = true;
 					};
 				};
-
 				conform-nvim = {
 					enable = true;
 					autoInstall.enable = true;
@@ -165,7 +164,6 @@
 						};
 					};
 				};
-
 				mini-completion.enable = true;
 				nvim-ufo = { # better folds
 					enable = true;
@@ -238,6 +236,7 @@
 
 				# MISC
 				neocord.enable = true;
+				zen-mode.enable = true;
 
 				# IDE (AUTOCOMPLETE, LSP, ...)
 				lsp = {
