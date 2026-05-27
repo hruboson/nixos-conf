@@ -1,4 +1,4 @@
-
+<!--
 > [!WARNING]  
 > **UPDATE:** Parts is mature enough so I have replaced it as main.
 > The Manual is still not updated though. Many of the things written in there are still probably valid for most of the general configurations.
@@ -7,6 +7,7 @@
 > This configuration will most likely not be updated and will eventually move to the `deprecated` branch.
 > If you want to take a look at the new config go to the [`parts` branch](https://github.com/hruboson/nixos-conf/tree/parts). As of 12.04.2026 there is a config for my workstation (arcus) and laptop (fractus).
 > When I feel more confident in my knowledge I will also write a small tutorial on the [`flake-parts`](https://flake.parts/) structure.~~
+-->
 
 # NixOS configuration
 
@@ -26,38 +27,79 @@ What will you find in this repo ...
 
 ---
 
+# Machines <a name="machines"></a>
+
+If you have trouble installing or configuring your NixOS using my configurations (or even your own), don't hesitate to contact me [](). If I have the time I'm more than happy to talk about NixOS ദ്ദി( • ᴗ - )✧.
+
+### Arcus
+
+> [!TIP]
+> The default for desktop PC.
+
+Suitable for desktop PC. If you plan on using this configuration be sure to change the `hardware.nix` and the `desktops.mango.monitors` in `configuration.nix`. You can copy the monitor configuration from running the *Displays* app.
+
+### Fractus
+
+> [!TIP]
+> The default for laptops.
+
+My laptop. Very similar to my desktop PC. I try to keep it as close to it as possible so I can have basically identic environments. Same changes should be applied to this, though on most laptops the monitor config will be the same one.
+
+### Cumulus
+
+> [!TIP]
+> Configure your homelab/homeserver using NixOS.
+
+Homelab/homeserver configuration. Runs surprisingly well. Contains every single module from the `parts/services/selfhosted` directory. This is a good start if you plan on running your own server using NixOS (which is incredibly easy btw).
+
+### QEMU
+
+> [!TIP]
+> A good starting point for testing in virtual environment before you install on real hardware.
+
+This configuration is mostly for testing in the [QEMU virtual machine](https://www.qemu.org/). It will most likely be behind the other machines and will not contain everything as I don't really use it that often but should still work.
+
 # Using this configuration <a name="using-this-configuration"></a>
 
-> [!WARNING]
-> **OUTDATED:** This section is not yet updated for the parts structure.
+Using this configuration requires you to do two main things (see [parts](#parts) in manual for detailed info):
 
-If you want to use this configuration, you have to do few steps first (currently only applies for #server and #raspberrypi flakes, #workstation should be fine without secrets):
+1. Define your machine in `machines/` directory or copy one of the already existing machines (e.g. `arcus`). There should be three files: `configuration.nix`, `hardware.nix` and `default.nix`. 
+    - `configuration.nix` - imports all the modules from parts you want to use, e.g. `appPackDev`, `appPackDesktop`, `mango` and so on...
+    - `hardware.nix` - contains only the configuration generated in `hardware-configuration.nix`.
+    - `default.nix` - boilerplate where you connect the main modules and define username and hostname.
+    - (optional) `system.nix` - machine/hardware specific configuration (e.g. bootloader, drives, ...).
+2. Rebuild your system by running (while you are inside of the `nixos-conf` directory):
+```bash
+nixos-rebuild switch --flake .#your_machine_name
+```
 
-1. clone the repository (duh)
+---
+
+If you want to use the server configuration you will have to define the secrets flake (until I learn how to use sops-nix):
+
+1. clone the repository
 2. create a directory `secrets/` (wherever you want, I recommend inside of this repository)
 3. create `flake.nix` file in the `secrets/` folder with the following content:
 
-```
+```nix
 {
-	description = "Local secrets (not tracked)";
+    description = "Local secrets (not tracked)";
 
-	outputs = { self, ... }:
-	{
-		wifiSSID = "WIFI_NAME";
-		wifiPasswd = "WIFI_PASSWD";
-
+    outputs = { self, ... }:
+    {
+        wifiSSID = "WIFI_NAME";
+        wifiPasswd = "WIFI_PASSWD";
         nextcloudPass = "NEXTCLOUD_ADMIN_PASSWORD";
-
         apiNasaKey = "NASA_API_KEY";
         ...
-	};
+    };
 }
 ```
 
 4. `git init && git add . && git commit -m "Secrets"` inside of the `secrets/` folder
 5. in `flake.nix` (of this repository) change the `url` of `secrets` in inputs to your created `secrets/` folder
 
-```
+```nix
 secrets = {
 	url = "path:/path/to/secrets"; #! It has to be an absolute path
 };
@@ -172,7 +214,7 @@ Boot up your NixOS minimal ISO and run the following commands. Pay attention to 
 - `nano /mnt/etc/nixos/configuration.nix` - edit config
 - install and show all logs:
     1. without flakes: `nixos-install -v`
-    2. without flakes: `nixos-install -v --flake /mnt/etc/nixos#<flake-name>`
+    2. with flakes: `nixos-install -v --flake /mnt/etc/nixos#<flake-name>`
 - after successful installation it will ask for new password, this password will be for the root account
 - `reboot` - after this it should boot to installed OS
 
