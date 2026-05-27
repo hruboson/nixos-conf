@@ -105,7 +105,7 @@ secrets = {
 };
 ```
 
-I hope that this secret management is only temporary and that I will be brave enough to learn and implement [sops-nix](https://www.youtube.com/watch?v=G5f6GC7SnhU) ;).
+I hope that this secret management is only temporary and that I will be brave enough to learn and implement [sops-nix](https://www.youtube.com/watch?v=G5f6GC7SnhU) (˶˃⤙˂˶).
 
 # Resources
 
@@ -326,7 +326,7 @@ Now you are ready to actually set up the virtual machine.
 
 First start by creating your disk image. To create a qcow2 image using QEMU, you can use the command: 
 
-```
+```bash
 qemu-img.exe create -f qcow2 your_image_name.img size
 ```
 
@@ -334,7 +334,7 @@ Replace `your_image_name.img` with your desired file name and `size` with the si
 
 I recommend installing the system using a graphical installer ISO. Start the virtual machine with:
 
-```
+```bash
 qemu-system-x86_64.exe ^
     -m 4096 -cpu max -smp 4 ^
     -device virtio-vga -display sdl ^
@@ -352,7 +352,7 @@ Now you are in a graphical installer and the rest should be quite straightforwar
 
 When running installed system you don't have to specify the `-cdrom` path, so your qemu command should look something like:
 
-```
+```bash
 qemu-system-x86_64.exe ^
     -m 4096 -cpu max -smp 4 ^
     -device virtio-vga -display sdl ^
@@ -367,7 +367,7 @@ I have also compiled a list of commands that might come in handy depending on wh
 
 1. running QEMU with a bridged TAP adapter:
 
-```
+```bash
 qemu-system-x86_64.exe ^
     -m 4096 -cpu max -smp 4 ^
     -device virtio-vga -display sdl ^
@@ -381,7 +381,7 @@ Change the `ifname` in `-netdev` argument to the name of your newly created adap
 
 2. running Sway, Hyprland or any Wayland compositor
 
-```
+```bash
 qemu-system-x86_64.exe ^
     -accel whpx -M q35 ^
     -m 4096 -cpu max -smp 4 ^
@@ -401,7 +401,7 @@ This runs much smoother by using the `-accel whpx` and `-device qxl-vga`. If all
 
 To fix the goofy bug when your cursor is upside down but everything else looks perfect, you can try running:
 
-```
+```bash
 qemu-system-x86_64.exe ^
     -accel whpx -M q35 ^
     -m 4096 -cpu max -smp 4 ^
@@ -417,37 +417,37 @@ AND before running `sway` or `hyprland` be sure to run `export WLR_NO_HARDWARE_C
 
 ### Installing NixOS on virtual machine on Linux host using QEMU <a name="qemu-linux"></a>
 
-This section covers how to install and run QEMU on Fedora. On Linux I did not bother with bridge and just used NAT. If you are using QEMU with a network bridge I'd appreciate if you opened a pull request and shared the steps you did to make it work :-).
+This section covers how to install and run QEMU on Fedora. On Linux I did not bother with bridge and just used NAT. If you are using QEMU with a network bridge I'd appreciate if you opened a pull request and shared the steps you did to make it work (つ╥﹏╥)つ.
 
 I'm using the Fedora 42 distro. If you are on Ubuntu or Arch your installation will most likely be different. See [QEMU installation](https://www.qemu.org/download/#linux) manual for your specific distribution.
 
 First check if virtualization is enabled in BIOS:
-```
+```bash
 egrep -c '(vmx|svm)' /proc/cpuinfo
 ```
 If the output of this command is **0** virtualization is disabled in BIOS.
 
 Fedora ships with everything required to run QEMU/KVM efficiently. All you need to do is install the virtualization group:
 
-```
+```bash
 sudo dnf install @virtualization
 ```
 
 and some additional tools (might not be needed depending on your distro):
 
-```
+```bash
 sudo dnf install qemu-kvm libvirt virt-install bridge-utils
 ```
 
 After that you should be ready to run QEMU. Check that `which qemu` returns a valid path. If it does you are all set.
 
 From now on the commands will be basically the same as in the Windows tutorial section. Create a virtual drive:
-```
+```bash
 qemu-img create -f qcow2 your_image_name.qcow2 size
 ```
 
 Run with graphical installer:
-```
+```bash
 qemu-system-x86_64 \
     -m 4096 -cpu host -smp 4 \
     -device virtio-vga -display sdl \
@@ -461,15 +461,15 @@ qemu-system-x86_64 \
 ```
 If you have trouble with the mouse (jittering, too fast, unresponsive), try switching the display to `-display gtk,gl=on`. This should work with no problem on Linux. The command would look something like:
 
-```
+```bash
 qemu-system-x86_64  \
-	-m 4096 -cpu host -smp 4 \
-	-display gtk,gl=on \
-	-device virtio-vga \
-	-device virtio-keyboard-pci \
-	-device virtio-mouse-pci \
-	-nic user,model=virtio-net-pci \
-	-drive file="/path/to/your/vm/nixos.qcow2",if=virtio,format=qcow2 \
+    -m 4096 -cpu host -smp 4 \
+    -display gtk,gl=on \
+    -device virtio-vga \
+    -device virtio-keyboard-pci \
+    -device virtio-mouse-pci \
+    -nic user,model=virtio-net-pci \
+    -drive file="/path/to/your/vm/nixos.qcow2",if=virtio,format=qcow2 \
     -cdrom "/path/to/your/iso/nixos-installer.iso" \
     -boot d \
     -bios /path/to/your/ovmf/OVMF_CODE.fd \
@@ -482,7 +482,7 @@ The `OVMF_CODE.fd` file should be located at `/usr/share/edk2/ovmf/OVMF_CODE.fd`
 Now you are in a graphical installer and the rest should be quite straightforward. Follow the graphical installation manual. Once you are done you can shut down the virtual machine (either manually through the guest system or just close the QEMU window). At this point NixOS should be installed on your virtual drive (`your_drive.qcow2`).
 
 After installation you don't have to include the installation ISO:
-```
+```bash
 qemu-system-x86_64 \
     -m 4096 -cpu host -smp 4 \
     -device virtio-vga -display sdl \
@@ -496,7 +496,7 @@ qemu-system-x86_64 \
 Again change the `drive file="..."` and `-bios "..."` arguments. This should boot up virtual machine with NixOS installed.
 
 If you are having problems running QEMU, try manually enabling the `libvirtd` service.
-```
+```bash
 sudo systemctl enable --now libvirtd
 ```
 
@@ -524,21 +524,21 @@ I followed [this video tutorial](https://youtu.be/B3OIcws9ygY?si=wq74FCAxk-dNQNM
    If it gets stuck at **46%** DO NOT PANIC. This is normal and it will take a while (could be up to an hour depending on your internet speed). At this point the NixOS installer is downloading all the necessary packages. You can see what it is downloading by clicking the *Toggle logs* button.
    Once the system is installed you can reboot and remove the USB drive from your PC.
 5. On first login change the following settings in `configuration.nix` to use GRUB and to automatically detect the Windows operating system:
-```
+```nix
 # boot.loader.systemd-boot.enable = true # DELETE THIS LINE
 
 # Add the following configuration:
 boot.loader.efi.canTouchVariable = true;
 boot.loader.grub = {
-	enable = true;
-	devices = [ "nodev" ];
-	efiSupport = true;
-	useOSProber = true;
-	default = "saved";
+    enable = true;
+    devices = [ "nodev" ];
+    efiSupport = true;
+    useOSProber = true;
+    default = "saved";
 };
 ```
 6. Now do `nixos-rebuild switch` with the new configuration. On the next reboot you should get a GRUB bootloader with three entries - `NixOS - Default`, `NixOS - All configurations` and `Windows boot manager`. If you forgot to remove the USB drive or if Windows loads by default you might have to change the boot option in the BIOS again (there should now be a NixOS bootloader entry, select that).
-7. Enjoy your new dualboot system :).
+7. Enjoy your new dualboot system (੭˃ᴗ˂)੭
 ## First login <a name="first-login"></a>
 - when first logging in the NixOS login will be `root` with password you set during the `nixos-itwnstall`
 - update channels (package repositories): `nix-channel --update`
@@ -555,7 +555,7 @@ boot.loader.grub = {
 - download eduroam activation python script for your university [here](https://cat.eduroam.org/#)
 - run the script using nix shell:
 
-```
+```bash
 nix-shell -p "python3.withPackages (ps: with ps; [ dbus-python ])" --run python3 <your-eduroam.py>
 ```
 
@@ -615,7 +615,7 @@ Desktop environment
 
 Installing KDE is as easy as adding these three lines of code to your configuration.
 
-```
+```nix
 services.displayManager.sddm.enable = true;
 services.desktopManager.plasma6.enable = true;
 security.rtkit.enable = true;
@@ -633,12 +633,15 @@ I noticed that I've been basically using the Hyprland window managing philosophy
 
 #### Mango <a name="wayland-compositor-mango"></a>
 
-I installed Mango using the official flake. When using this configuration, please refer to the `machines/workstation/mango.nix` file (or `modules/de/mango.nix` if you are from the future ;) - yeah I'm too lazy to make my config modular for now).
+> [!WARNING]
+> There is a new Mango module but the documentation is not updated yet. See the example usage in the `machines/arcus/configuration.nix`.
+
+I installed Mango using the official flake. When using this configuration, please refer to the `machines/workstation/mango.nix` file (or `modules/de/mango.nix` if you are from the future - yeah I'm too lazy to make my config modular for now).
 
 Unfortunately, for some reason Mango was the only one that was glitchy as hell on my QEMU virtual machine and nearly unusable. This might have also been one of the reasons I decided to stick with Hyprland for now.
 
 In your flake inputs add:
-```
+```nix
 mangowc = {
 	url = "github:DreamMaoMao/mango";
 	inputs.nixpkgs.follows = "nixpkgs";
@@ -647,7 +650,7 @@ mangowc = {
 
 Then to configure Mango itself...
 
-```
+```nix
 imports = [ inputs.mangowc.nixosModules.mango ];
 
 programs.mango = {
@@ -666,7 +669,7 @@ environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
 
 This is the core of Mango configuration, but you will most likely want some packages with that:
 
-```
+```nix
 environment.systemPackages = lib.mkAfter(with pkgs; [
     foot
     rofi
@@ -701,7 +704,7 @@ environment.systemPackages = lib.mkAfter(with pkgs; [
 
 You might want to bring in other components such as TUI greeter:
 
-```
+```nix
 # graphical login screen (greetd+tuigreet)
 services.greetd = {
     enable = true;
@@ -730,7 +733,7 @@ systemd.services.greetd.serviceConfig = {
 
 And perhaps a bit of pipewire for your sound card:
 
-```
+```nix
 services.pipewire = {
     enable = true;
     wireplumber.enable = true;
@@ -745,7 +748,7 @@ In the end, Hyprland was the window manager I stuck with. In my journey to decla
 
 I installed Hyprland using the official flake. In your flake inputs add
 
-```
+```nix
 hyprland.url = "github:hyprwm/Hyprland";
 
 ### PLUGINS ### you don't really have to install these if you will not be using them
@@ -763,7 +766,7 @@ The plugins are configured WITHOUT home-manager and you can see the code snippet
 
 Then onto the Hyprland configuration in NixOS. Notice that the package follows the flake repository.
 
-```
+```nix
 programs.hyprland = {
     enable = true;
     withUWSM = true;
@@ -787,7 +790,7 @@ environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
 
 And some packages with that please:
 
-```
+```nix
 # hypr utils
 environment.systemPackages = lib.mkAfter(with pkgs; [
     killall
@@ -814,7 +817,7 @@ environment.systemPackages = lib.mkAfter(with pkgs; [
 ```
 
 And other configuration, such as pipewire and login screen components:
-```
+```nix
 services.pipewire = {
     enable = true;
     wireplumber.enable = true;
@@ -844,11 +847,11 @@ services.displayManager.sddm = {
 
 #### Sway <a name="wayland-compositor-sway"></a>
 
-When using this configuration, please refer to the `machines/workstation/sway.nix` file (or `modules/de/sway.nix` if you are from the future ;) - yeah I'm too lazy to make my config modular for now).
+When using this configuration, please refer to the `machines/workstation/sway.nix` file (or `modules/de/sway.nix` if you are from the future - yeah I'm too lazy to make my config modular for now).
 
 Installing Sway was quite easy, this config should be all you need.
 
-```
+```nix
 programs.sway.enable = true;
 services.xserver.enable = false; # disable X11
 security.polkit.enable = true;
@@ -865,7 +868,7 @@ environment.variables.WLR_NO_HARDWARE_CURSORS = "1";
 
 You will most likely want to use these packages with Sway:
 
-```
+```nix
 # sway utils
 environment.systemPackages = lib.mkAfter(with pkgs; [
     wev
@@ -886,7 +889,7 @@ environment.systemPackages = lib.mkAfter(with pkgs; [
 
 Then bring in other components, such as TUI greeter and more:
 
-```
+```nix
 # graphical login screen (greetd+tuigreet)
 services.greetd = {
     enable = true;
@@ -922,7 +925,7 @@ An example of running Minecraft server using the PaperMC server package can be f
 
 I personally manage the Minecraft server through a Windows machine using `ARRCON`.
 
-```
+```bash
 ARRCON.exe -H SERVER_ADDRESS -P RCON_PORT -p PASSWORD
 ```
 
@@ -942,15 +945,15 @@ If you want to keep only the last three generations and delete the other use the
 
 Setting a maximum number of stored generations can be done by applying following settings in your nix configuration:
 
-```
+```nix
 boot.loader.generations = 3; # keeps only last three generations
 ```
 
 ## Resources <a name="resources-detailed"></a>
 
-*If you are from the future I apologize for any dead links :( Please try to find them at [https://web.archive.org/](https://web.archive.org/). Thank you.*
+*If you are from the future I apologize for any dead links (´•︵•`) ... Please try to find them at [https://web.archive.org/](https://web.archive.org/). ᵗʰᵃᶰᵏᵧₒᵤ  ദ്ദി ˉ꒳ˉ )✧!.*
 
-## General NixOS
+### General NixOS
 
 - [nix-community/nixos-anywhere: Install NixOS everywhere via SSH](https://github.com/nix-community/nixos-anywhere)
 - [Misterio77/nix-starter-configs: Simple and documented config templates](https://github.com/Misterio77/nix-starter-configs)
@@ -978,11 +981,11 @@ boot.loader.generations = 3; # keeps only last three generations
 - [JaKooLit/NixOS-Hyprland: Simple and documented config templates to help you get started with NixOS + home-manager + flakes](https://github.com/JaKooLit/NixOS-Hyprland)
 - [Declare Firefox extensions and settings - Guides - NixOS Discourse](https://discourse.nixos.org/t/declare-firefox-extensions-and-settings/36265)
 
-## Gaming
+### Gaming
 
 - [Heroic Games Launcher](https://heroicgameslauncher.com/)
 
-## Hyprland
+### Hyprland
 
 - [hyprwm/hyprpaper: Hyprpaper is a blazing fast wayland wallpaper utility](https://github.com/hyprwm/hyprpaper)
 - [Hall of Fame | Hyprland](https://hypr.land/hall_of_fame/)
@@ -1001,7 +1004,7 @@ boot.loader.generations = 3; # keeps only last three generations
 - [atx/wlay: Graphical output management for Wayland](https://github.com/atx/wlay)
 - [TypoMustakes/hyprland-toggle-tiling](https://github.com/TypoMustakes/hyprland-toggle-tiling)
 
-## Sway
+### Sway
 
 - [Sway - ArchWiki](https://wiki.archlinux.org/title/Sway)
 - [Sway Cheatsheet](https://depau.github.io/sway-cheatsheet/)
