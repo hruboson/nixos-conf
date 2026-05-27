@@ -31,28 +31,30 @@ What will you find in this repo ...
 
 If you have trouble installing or configuring your NixOS using my configurations (or even your own), don't hesitate to contact me [](). If I have the time I'm more than happy to talk about NixOS ദ്ദി( • ᴗ - )✧.
 
-### Arcus
+See how parts work in the [Using this configuration](#parts-tldr) section or in the [Manual](#parts)
+
+### [Arcus⤴](./machines/arcus/)
 
 > [!TIP]
 > The default for desktop PC.
 
 Suitable for desktop PC. If you plan on using this configuration be sure to change the `hardware.nix` and the `desktops.mango.monitors` in `configuration.nix`. You can copy the monitor configuration from running the *Displays* app.
 
-### Fractus
+### [Fractus⤴](./machines/fractus/)
 
 > [!TIP]
 > The default for laptops.
 
 My laptop. Very similar to my desktop PC. I try to keep it as close to it as possible so I can have basically identic environments. Same changes should be applied to this, though on most laptops the monitor config will be the same one.
 
-### Cumulus
+### [Cumulus⤴](./machines/cumulus/)
 
 > [!TIP]
 > Configure your homelab/homeserver using NixOS.
 
 Homelab/homeserver configuration. Runs surprisingly well. Contains every single module from the `parts/services/selfhosted` directory. This is a good start if you plan on running your own server using NixOS (which is incredibly easy btw).
 
-### QEMU
+### [QEMU⤴](./machines/qemu/)
 
 > [!TIP]
 > A good starting point for testing in virtual environment before you install on real hardware.
@@ -63,6 +65,7 @@ This configuration is mostly for testing in the [QEMU virtual machine](https://w
 
 Using this configuration requires you to do two main things (see [parts](#parts) in manual for detailed info):
 
+<a name="parts-tldr"></a>
 1. Define your machine in `machines/` directory or copy one of the already existing machines (e.g. `arcus`). There should be three files: `configuration.nix`, `hardware.nix` and `default.nix`. 
     - `configuration.nix` - imports all the modules from parts you want to use, e.g. `appPackDev`, `appPackDesktop`, `mango` and so on...
     - `hardware.nix` - contains only the configuration generated in `hardware-configuration.nix`.
