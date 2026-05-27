@@ -611,7 +611,7 @@
 							"SUPER,space,spawn,vicinae toggle"
 							"SUPER,v,spawn,vicinae vicinae://extensions/vicinae/clipboard/history"
 							"SUPER,w,spawn,vicinae vicinae://extensions/sovereign/awww-switcher/wpgrid"
-							"SUPER+SHIFT,w,spawn,vicinae vicinae://extensions/sovereign/awww-switcher/wprandom"
+							#"SUPER+SHIFT,w,spawn,vicinae vicinae://extensions/sovereign/awww-switcher/wprandom"
 							"NONE,Print,spawn_shell,grim -g \"$(slurp -b '#2E2A1E55')\" - | wl-copy"
 							"SUPER,p,spawn_shell,wayscriber --active"
 							"SUPER+SHIFT,p,spawn_shell,wayscriber --freeze"
