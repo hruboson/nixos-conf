@@ -145,6 +145,7 @@ In general my main sources of information include (in no particular order):
     1. [Dualbooting with Windows](#dualboot-windows)
 1. [First login](#first-login)
 1. [Git](#git)
+1. [Hardware capabilities](#hw-capabilities)
 1. [Flakes](#flakes)
 1. [Home-manager](#home-manager)
     1. [Nixvim](#nixvim)
@@ -542,6 +543,7 @@ boot.loader.grub = {
 ```
 6. Now do `nixos-rebuild switch` with the new configuration. On the next reboot you should get a GRUB bootloader with three entries - `NixOS - Default`, `NixOS - All configurations` and `Windows boot manager`. If you forgot to remove the USB drive or if Windows loads by default you might have to change the boot option in the BIOS again (there should now be a NixOS bootloader entry, select that).
 7. Enjoy your new dualboot system (੭˃ᴗ˂)੭
+
 ## First login <a name="first-login"></a>
 - when first logging in the NixOS login will be `root` with password you set during the `nixos-itwnstall`
 - update channels (package repositories): `nix-channel --update`
@@ -591,6 +593,97 @@ Or the old fashioned way using SSH keys (which is still quite easy on Linux):
     - after changes rebuild with `sudo nixos-rebuild -I nixos-config=/home/<username>/nixos/configuration.nix`
 - if you get prompt for username and password when pushing to git then try changing remote: `git remote set-url origin git@github.com:<username>/<repository.git>`
 
+## Hardware capabilities <a name="hw-capabilities"></a>
+
+> [!IMPORTANT]
+> Section under construction...
+
+In this section I go over some of the more hardware-specific configurations, such as: external drives, bluetooth, ...
+
+### Drives
+
+I recommend declaring the always connected drives in the machine system configuration (see example in [`machines/cumulus/system.nix`](./machines/cumulus/system.nix)). To get the UUID of a drive run `lsblk -f`.
+
+Automatically connecting external drives can be achieved through the `udiskie` service.
+
+For the simplest setup you want something like this:
+
+```nix
+# NTFS drive
+fileSystems."/mnt/DRIVE_NAME" = {
+    device = "/dev/disk/by-uuid/AAAAAAAAAAAAA-AAA-AAAAAAA-AAAAA";
+    fsType = "ntfs3";
+    options = [ "rw" "noatime" "uid=1000" "gid=100" ];
+};
+
+# EXT4 drive
+fileSystems."/mnt/OTHER_DRIVE_NAME" = {
+    device = "/dev/disk/by-uuid/BBBBBBBBBBBBBBB-BBB-BBBBB-BBBBB";
+    fsType = "ext4";
+    options = [ "noatime" "commit=60" "lazytime" ];
+};
+
+services.udisks2.enable = true;
+home-manager.users.${username} = {
+    services.udiskie.enable = true;
+    services.udiskie.settings = {
+        automount = true; # automatically mount drives
+    }
+}
+```
+
+See more advanced config in the [`machines/cumulus/system.nix`](./machines/cumulus/system.nix).
+
+#### Backups
+
+For backing up my external drives I use the [`restic`](https://github.com/restic/restic) service. I found this to be the easiest way to have declarative backups in NixOS.
+
+See example usage in [`machines/cumulus/system.nix`](./machines/cumulus/system.nix).
+
+### Bluetooth
+
+If your machine has support for bluetooth, the easiest way to manage bluetooth device is to turn on the `blueman` or `bluetoothctl`:
+
+```nix
+services.blueman.enable = true;
+hardware.bluetooth.enable = true;
+```
+
+You can find example configuration in [`parts/services/bluetooth.nix`](./parts/services/bluetooth.nix).
+
+#### Troubleshooting bluetooth
+
+This section is mostly just a random bits of knowledge I collected while troubleshooting various things...
+
+##### PS5 controller (DualSense) not properly pairing
+
+If your PS5 controller shows inconsistend state:
+```
+Connected: yes
+Paired: no
+Trusted: yes
+```
+
+> [!TIP]
+> When using `bluetoothctl` use the Tab key to automatically complete the MAC address.
+
+It means the controller was only connected temporarily and is not permanently paired. To resolve the issue follow these steps:
+1. Remove existing device:
+    1. Run `bluetoothctl`
+    1. Remove the controller: `remove <MAC_ADDRESS>`
+1. Delete cached pairing data:
+    1. List bluetooth adapters: `ls /var/lib/bluetooth`, you'll see something like FC:B0:DE:83:C7:8A
+    1. Remove the controller entry: `sudo rm -rf /var/lib/bluetooth/<ADAPTER_MAC>/<CONTROLLER_MAC>`
+1. Restart bluetooth service: `sudo systemctl restart bluetooth`
+1. Put controller in pairing mode: hold PS button + Share (top left). Wait for the light to flash quickly.
+1. Pair properly using `bluetoothctl`:
+    1. Run `bluetoothctl`
+    1. Inside run: `power on` -> `agent on` -> `default-agent` -> `scan on`
+    1. Wait for your controller to appear.
+    1. When you see your controller run: `pair <CONTROLLER_MAC>` -> `trust <CONTROLLER_MAC>` -> `connect <CONTROLLER_MAC>`
+
+The issue usually happens by BlueZ keeping a broken cached device state. Hopefully this will help you fix it.
+
 ## Flakes <a name="flakes"></a>
 
 I'm currently in the process of reading [NixOS & Flakes Book - An unofficial book for beginners](https://nixos-and-flakes.thiscute.world/) because I feel like flakes are a bit advanced topic and I don't want to get things wrong. Once I feel more confident I will complete this section.
@@ -604,7 +697,8 @@ In the most basic use, you can just copy a dotfiles directory (or repository) to
 
 ### Nixvim <a name="nixvim"></a>
 
-...
+> [!IMPORTANT]
+> Section under construction...
 
 ### Plasma-manager <a name="plasma-manager"></a>
 
@@ -612,7 +706,7 @@ Plasma-manager is a tool for managing your KDE configuration declaratively. Unfo
 
 ## Desktop environment <a name="desktop-environment"></a>
 
-Desktop environment
+Desktop environments are what turns your PC from terminal-only interface to fully fledged graphical interface. Most people take a desktop environment for granted in any distribution - and rightfully so - but I think it is important to know that the desktop environment is just a program that your system runs at the beginning of startup. This means you can easily exchange it (at least in Linux) for any other desktop environment you'd like: KDE, GNOME, Xfce or any of the Wayland tillers.
 
 ### KDE <a name="desktop-environment-kde"></a>
 
@@ -936,7 +1030,8 @@ The default port (if unspecified) is `25575`.
 
 ## Parts
 
-...
+> [!IMPORTANT]
+> Section under construction...
 
 ## NixOS optimizations <a name="nixos-optimizations"></a>
 
