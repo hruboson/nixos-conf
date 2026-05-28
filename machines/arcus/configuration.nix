@@ -9,6 +9,7 @@
 			self.nixosModules.kitty
 			self.nixosModules.appPackDev
 			self.nixosModules.appPack3D
+			self.nixosModules.appPackDrawing
 			self.nixosModules.appPackNetworking
 			self.nixosModules.appPackSysutils
 			self.nixosModules.appPackDesktop
