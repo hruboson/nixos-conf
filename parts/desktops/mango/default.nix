@@ -154,6 +154,33 @@
 					background-color: @bg_back;
 					padding: 2px 4px;
 				  }
+				  
+				  tooltip {
+				    background-color: #141415;
+				    border: 1px solid rgba(255, 255, 255, 0.1);
+				    border-radius: 6px;
+				  }
+
+				  tooltip label {
+				    color: white;
+				  }
+
+				  /* Tray context menus — GTK menu styling */
+				  menu {
+				    background-color: #141415;
+				    border: 1px solid rgba(255, 255, 255, 0.1);
+				    border-radius: 6px;
+				    padding: 4px 0;
+				  }
+
+				  menuitem {
+				    color: white;
+				    padding: 4px 12px;
+				  }
+
+				  menuitem:hover {
+				    background-color: rgba(200, 200, 200, 0.15);
+				  }
 
 				  /* ── left ── */
 				  #custom-os_button {
