@@ -54,8 +54,8 @@
 				backgrounds = {
 					wallpaper = pkgs.fetchurl {
 						name = "water.jpg";
-						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/fruitiger_aero/drop.jpg";
-						hash = "sha256-82eyZ5MgykxnxKP1aoHEXjRXTLXTbb9HxIT1eC24dDY=";
+						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/gruvbox/gruvbox_kita.png";
+						hash = "sha256-Q4xal1LPSc+UBSgodufcOJ0JyKQj61WT+4osYwdNntA=";
 					};
 				};
 				settings = {
@@ -609,8 +609,6 @@
 						left_handed = 0;
 						middle_button_emulation = 0;
 						swipe_min_threshold = 1;
-						accel_profile = 2;
-						accel_speed = 0.0;
 
 						mousebind = [
 							"SUPER,btn_left,moveresize,curmove"
