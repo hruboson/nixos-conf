@@ -1,11 +1,6 @@
 { self, inputs, ... }: {
 	flake.nixosModules.mango = { config, lib, pkgs, username, ... }: let
 		nixosConfig = config;
-		wallpaper = pkgs.fetchurl {
-			name = "kita.png";
-			url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/gruvbox/kita.png";
-			hash = "sha256-Q4xal1LPSc+UBSgodufcOJ0JyKQj61WT+4osYwdNntA=";
-		};
 	in {
 		imports = [
 			inputs.mango.nixosModules.mango
@@ -495,8 +490,8 @@
 							src = pkgs.fetchFromGitHub {
 								owner = "vicinaehq";
 								repo = "extensions";
-								rev = "d12bcb134d45dedad1a28a18e1cd8807353338d0";
-								sha256 = "sha256-Fa5JvMFVwBzbnOjEV2Cer8ak0zF/CDwdHT7+wslL30w=";
+								rev = "2c12a0b15f33fa9b6e2a29f91f7b1da3e7a80c3b";
+								sha256 = "sha256-p0nK1I0H4Zb/ExHnEC1wgpJJhC0RpgxWUsuwQetNM+Q=";
 							} + "/extensions/awww-switcher";
 						})
 					];
@@ -634,9 +629,9 @@
 							"SUPER,r,reload_config"
 							"SUPER,Return,spawn,kitty"
 							"SUPER,space,spawn,vicinae toggle"
-							"SUPER,v,spawn,vicinae vicinae://extensions/vicinae/clipboard/history"
-							"SUPER,w,spawn,vicinae vicinae://extensions/sovereign/awww-switcher/wpgrid"
-							#"SUPER+SHIFT,w,spawn,vicinae vicinae://extensions/sovereign/awww-switcher/wprandom"
+							"SUPER,v,spawn,vicinae vicinae://launch/clipboard/history"
+							"SUPER,w,spawn,vicinae vicinae://launch/@sovereign/awww-switcher/wpgrid"
+							#"SUPER+SHIFT,w,spawn,vicinae vicinae://launch/@sovereign/awww-switcher/wprandom"
 							"NONE,Print,spawn_shell,grim -g \"$(slurp -b '#2E2A1E55')\" - | wl-copy"
 							"SUPER,p,spawn_shell,wayscriber --active"
 							"SUPER+SHIFT,p,spawn_shell,wayscriber --freeze"
