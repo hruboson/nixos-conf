@@ -11,6 +11,7 @@
 			self.nixosModules.servicesPackHomeserver
 
 			self.nixosModules.selfhostedAudiobookshelf
+			self.nixosModules.selfhostedBentoPDF
 			self.nixosModules.selfhostedDeluge
 			self.nixosModules.selfhostedForgejo
 			self.nixosModules.selfhostedGlance
