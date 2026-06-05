@@ -39,6 +39,6 @@
 		hardware.graphics = { enable = true; enable32Bit = true; };
 
 		services.xserver.videoDrivers = [ "amdgpu" ];
-		system.stateVersion = "25.11";
+		system.stateVersion = "26.05";
 	};
 }

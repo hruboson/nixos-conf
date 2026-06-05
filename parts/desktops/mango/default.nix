@@ -61,7 +61,7 @@
 				profileIcons = {
 					${username} = pkgs.fetchurl {
 						name = "hruon_logo.jpg";
-						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/inversion.png";
+						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/logos_inversion.png";
 						hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
 					};
 				};
