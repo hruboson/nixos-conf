@@ -299,8 +299,8 @@
 						#active-only = true;
 						on-click = "activate";
 						on-click-right = "deactivate";
-						on-scroll-up = "mmsg -d viewtoleft_have_client";
-						on-scroll-down = "mmsg -d viewtoright_have_client";
+						on-scroll-up = "mmsg dispatch viewtoright";
+						on-scroll-down = "mmsg dispatch viewtoleft";
 						sort-by-id = true;
 					};
 
