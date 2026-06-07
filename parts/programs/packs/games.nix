@@ -5,7 +5,7 @@
 			extraPkgs = pkgs': with pkgs'; [
 				gamescope
 				gamemode
-				wineWowPackages.stable
+				wineWow64Packages.stable
 				winetricks
 			];
 		};
