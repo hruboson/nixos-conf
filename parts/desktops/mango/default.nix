@@ -413,9 +413,14 @@
 
 					network = {
 						format-wifi = " {icon} ";
-						format-ethernet = "  ";
-						format-disconnected = "󰌙";
 						format-icons = [ "󰤯 " "󰤟 " "󰤢 " "󰤢 " "󰤨 " ];
+						tooltip-format-wifi = "WiFi connected •ᴗ•";
+
+						format-ethernet = "  ";
+						tooltip-format-ethernet = "Ethernet connected •ᴗ•";
+
+						format-disconnected = " 󰌙 ";
+						tooltip-format-disconnected = "No connection •ᴖ•";
 					};
 					
 					battery = {
