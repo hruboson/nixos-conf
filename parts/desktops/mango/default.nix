@@ -12,6 +12,7 @@
 			self.nixosModules.screenlock
 
 			self.nixosModules.brightnessWidget
+			self.nixosModules.barWidget
 		];
 
 		options.desktops.mango = {
@@ -33,6 +34,8 @@
 				enable = true;
 				showInWaybar = true;
 			};
+			desktops.components.bar.enable = true;
+
 			programs.mango.enable = true;
 			programs.dconf.enable = true;
 			security.polkit.enable = true;
