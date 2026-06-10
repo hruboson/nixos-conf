@@ -44,6 +44,7 @@
 					7007 # Tandoor recipes
 					8010 # Audiobookshelf
 					8060 # Kavita
+					8080 # Wordpress
 					8096 # Jellyfin
 					8112 # Deluge
 					#8448 # Synapse Matrix

@@ -11,7 +11,7 @@
 			self.nixosModules.servicesPackHomeserver
 
 			self.nixosModules.selfhostedAudiobookshelf
-			self.nixosModules.selfhostedBentoPDF
+			#self.nixosModules.selfhostedBentoPDF
 			self.nixosModules.selfhostedDeluge
 			self.nixosModules.selfhostedForgejo
 			self.nixosModules.selfhostedGlance
@@ -24,6 +24,7 @@
 			self.nixosModules.selfhostedPlikd
 			self.nixosModules.selfhostedTailscale
 			self.nixosModules.selfhostedTandoor
+			self.nixosModules.selfhostedWordpress
 		];
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes
