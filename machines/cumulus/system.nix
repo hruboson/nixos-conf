@@ -34,6 +34,7 @@
 				];
 
 				allowedTCPPorts = [ #TODO delegate opening ports to each module
+					21
 					80 
 					443
 					1111 # Glance
