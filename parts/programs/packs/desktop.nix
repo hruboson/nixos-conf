@@ -32,10 +32,24 @@
 			
 			# browser
 			firefox
+			floorp-bin
 
 			# office
 			libreoffice-fresh
+
+			# other
+			gnome-software
 		];
+
+		# enable flatpak (for imperative installs -- sure, go for it)
+		services.flatpak.enable = true;
+		systemd.services.flatpak-repo = {
+			wantedBy = [ "multi-user.target" ];
+			path = [ pkgs.flatpak ];
+			script = ''
+				flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+			'';
+		};
 
 		# should fix kde unpopulated xdg mime apps menu
 		environment.etc."/xdg/menus/applications.menu".text = builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";

@@ -61,7 +61,7 @@
 				profileIcons = {
 					${username} = pkgs.fetchurl {
 						name = "hruon_logo.jpg";
-						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/inversion.png";
+						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/logos_inversion.png";
 						hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
 					};
 				};
@@ -299,8 +299,8 @@
 						#active-only = true;
 						on-click = "activate";
 						on-click-right = "deactivate";
-						on-scroll-up = "mmsg -d viewtoleft_have_client";
-						on-scroll-down = "mmsg -d viewtoright_have_client";
+						on-scroll-up = "mmsg dispatch viewtoright";
+						on-scroll-down = "mmsg dispatch viewtoleft";
 						sort-by-id = true;
 					};
 
@@ -413,9 +413,14 @@
 
 					network = {
 						format-wifi = " {icon} ";
-						format-ethernet = "  ";
-						format-disconnected = "󰌙";
 						format-icons = [ "󰤯 " "󰤟 " "󰤢 " "󰤢 " "󰤨 " ];
+						tooltip-format-wifi = "WiFi connected •ᴗ•";
+
+						format-ethernet = "  ";
+						tooltip-format-ethernet = "Ethernet connected •ᴗ•";
+
+						format-disconnected = " 󰌙 ";
+						tooltip-format-disconnected = "No connection •ᴖ•";
 					};
 					
 					battery = {

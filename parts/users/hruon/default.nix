@@ -8,7 +8,7 @@
 
 		home-manager.users.${username} = {
 			home.username = username;
-			home.stateVersion = "25.11";  # set this to your current nixpkgs version and never change it
+			home.stateVersion = "26.05";  # set this to your current nixpkgs version and never change it
 
 			programs.lazygit.enable = true;
 			programs.git = {
