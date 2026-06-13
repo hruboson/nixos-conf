@@ -32,6 +32,7 @@
 			
 			# browser
 			firefox
+			floorp-bin
 
 			# office
 			libreoffice-fresh
