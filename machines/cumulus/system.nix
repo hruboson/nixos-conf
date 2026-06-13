@@ -142,7 +142,7 @@
 				repository = "/mnt/BACARA/restic";
 				initialize = true;       # auto-init repo if missing
 					timerConfig = {
-						OnCalendar = "monthly 02:00";  # monthly at 2:00 AM
+						OnCalendar = "*-*-01,15 02:00:00";  # every month 1st and 15th at 2AM
 					};
 				exclude = [];
 				environmentFile = resticEnvFile;
@@ -153,7 +153,7 @@
 				repository = "/mnt/JAG/restic";
 				initialize = true;
 				timerConfig = {
-					OnCalendar = "monthly 02:00";  # monthly at 2:00 AM
+					OnCalendar = "*-*-01,15 02:00:00";
 				};
 				environmentFile = resticEnvFile;
 			};
@@ -163,7 +163,7 @@
 				repository = "/mnt/JAY/restic";
 				initialize = true;
 				timerConfig = {
-					OnCalendar = "monthly 02:00";  # monthly at 2:00 AM
+					OnCalendar = "*-*-01,15 02:00:00";
 				};
 				environmentFile = resticEnvFile;
 			};
