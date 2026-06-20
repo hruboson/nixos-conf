@@ -1,823 +1,861 @@
 { self, inputs, ... }: {
-	flake.nixosModules.mango = { config, lib, pkgs, username, ... }: let
-		nixosConfig = config;
-	in {
-		imports = [
-			inputs.mango.nixosModules.mango
-			inputs.silentSDDM.nixosModules.default
-
-			self.nixosModules.waybar
-			self.nixosModules.darkmode
-			self.nixosModules.wlogout
-			self.nixosModules.screenlock
-
-			self.nixosModules.brightnessWidget
-		];
-
-		options.desktops.mango = {
-			monitors = lib.mkOption {
-				type = lib.types.str;
-				description = "Mango monitor configuration";
-			};
-		};
-		options.desktops.waybar = {
-			showRotateScript = lib.mkOption {
-				type = lib.types.bool;
-				description = "Whether to enable and show the monitor rotation script";
-				default = false;
-			};
-		};
-
-		config = {
-			desktops.components.brightnessWidget = {
-				enable = true;
-				showInWaybar = true;
-			};
-			programs.mango.enable = true;
-			programs.dconf.enable = true;
-			security.polkit.enable = true;
-			services.dbus.enable = true;
-			hardware.graphics.enable = true;
-
-			xdg.portal.enable = true;
-			xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-
-			services.displayManager.sddm.enable = true;
-			programs.silentSDDM = {
-				enable = true;
-				theme = "default";
-				backgrounds = {
-					wallpaper = pkgs.fetchurl {
-						name = "water.jpg";
-						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/gruvbox/gruvbox_kita.png";
-						hash = "sha256-Q4xal1LPSc+UBSgodufcOJ0JyKQj61WT+4osYwdNntA=";
-					};
-				};
-				settings = {
-					"LoginScreen" = { background = "water.jpg"; blur = 5; };
-					"LockScreen"  = { background = "water.jpg"; blur = 5; };
-					"General"     = { background-fill-mode = "fill"; };
-				};
-				profileIcons = {
-					${username} = pkgs.fetchurl {
-						name = "hruon_logo.jpg";
-						url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/logos_inversion.png";
-						hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
-					};
-				};
-			};
-
-			fonts.packages = with pkgs; [
-				nerd-fonts.fira-code
-				nerd-fonts.jetbrains-mono
-				vista-fonts
-			];
-
-			environment.systemPackages = with pkgs; [
-				killall
-				wev
-				wayland
-				wayland-utils
-				wl-clipboard
-				wlr-randr
-				wdisplays
-				vicinae # launcher
-				quickshell # widget utility
-				qt6.qtwayland
-				grim # sreenshot utility
-				slurp # select area for grim
-				pwvucontrol
-				pavucontrol
-				pulseaudio
-				playerctl
-				wayscriber # screen annotation tool
-				inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww # wallpaper manager
-
-			]
-			++ lib.optionals config.desktops.waybar.showRotateScript [
-				# rotation toggle script
-				(pkgs.writeShellScriptBin "hdmi2-rotate-toggle" ''
-				MONITOR="HDMI-A-2"
-				LOG_FILE="/tmp/mango-monitor-switch.log"
-				echo "$(date): Starting monitor switch" >> "$LOG_FILE"
-
-				CURRENT=$(wlr-randr | awk -v m="$MONITOR" '
-				$1==m {found=1; next}
-				found && /Transform/ {print $2; exit}
-				')
-				echo "$(date): Current transform: $CURRENT" >> "$LOG_FILE"
-
-				#wlr-randr --output "$MONITOR" --off # if there is a problem when switching uncomment this line
-				#sleep 0.5
-
-				if [ "$CURRENT" = "90" ] || [ "$CURRENT" = "270" ]; then
-					echo "$(date): Switching to landscape" >> "$LOG_FILE"
-					wlr-randr --output "$MONITOR" \
-					--on \
-					--mode 2560x1440 \
-					--pos 0,2520 \
-					--transform normal
-				else
-					echo "$(date): Switching to portrait" >> "$LOG_FILE"
-					wlr-randr --output "$MONITOR" \
-					--on \
-					--mode 2560x1440 \
-					--pos 0,0 \
-					--transform 90
-				fi
-				echo "$(date): Done" >> "$LOG_FILE"
-				'')
-			];
-
-			desktops.waybar = {
-				enable = true;
-				style = ''
-					@define-color bg_hover rgba(200, 200, 200, 0.3);
-					@define-color bg_back rgba(0, 0, 0, 0.3);
-					@define-color content_main white;
-					@define-color separator rgba(255, 255, 255, 0.15);
-
-				  * {
-					font-family: "JetBrainsMono Nerd Font";
-					font-weight: bold;
-					font-size: 13px;
-					background-color: transparent;
-					min-height: 0;
-				  }
-
-				  window#waybar {
-					background-color: @bg_back;
-					padding: 2px 4px;
-				  }
-				  
-				  tooltip {
-				    background-color: #141415;
-				    border: 1px solid rgba(255, 255, 255, 0.1);
-				    border-radius: 6px;
-				  }
-
-				  tooltip label {
-				    color: white;
-				  }
-
-				  /* Tray context menus — GTK menu styling */
-				  menu {
-				    background-color: #141415;
-				    border: 1px solid rgba(255, 255, 255, 0.1);
-				    border-radius: 6px;
-				    padding: 4px 0;
-				  }
-
-				  menuitem {
-				    color: white;
-				    padding: 4px 12px;
-				  }
-
-				  menuitem:hover {
-				    background-color: rgba(200, 200, 200, 0.15);
-				  }
-
-				  /* ── left ── */
-				  #custom-os_button {
-					font-size: 18px;
-					padding: 0 14px 0 8px;
-					transition: background 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-				  }
-
-				  #custom-os_button:hover {
-					background: @bg_hover;
-				  }
-
-				  #workspaces button {
-					color: white;
-				  }
-
-				  #workspaces button.visible  { color: #ddca9e; }
-				  #workspaces button:hover    { color: #d79921; background: transparent; }
-				  #workspaces button.active   { color: black; background-color: #ddca9e; }
-				  #workspaces button.urgent   { background-color: #ef5e5e; }
-
-				  #tags { background-color: transparent; }
-				  #tags button { background-color: #fff; }
-				  #tags button:not(.occupied):not(.focused) { color: transparent; background-color: transparent; }
-				  #tags button.occupied  { background-color: #fff; }
-				  #tags button.focused   { background-color: rgb(186, 142, 213); }
-				  #tags button.urgent    { background: rgb(171, 101, 101); }
-
-				  /* ── right: shared module style ── */
-				  #cpu,
-				  #temperature,
-				  #disk,
-				  #network,
-				  #battery,
-				  #bluetooth,
-				  #pulseaudio,
-				  #mpris,
-				  #clock,
-				  #tray,
-				  #custom-hdmi2_rotate,
-				  #custom-brightness {
-					padding-top: 0px;
-					padding-left: 6px;
-					padding-right: 6px;
-					color: white;
-				  }
-				  #custom-hdmi2_rotate, 
-				  #custom-brightness {
-					padding-right: 12px;
-				  }
-
-				  /* ── right: hover for interactive modules ── */
-				  #bluetooth:hover,
-				  #pulseaudio:hover,
-				  #network:hover,
-				  #custom-hdmi2_rotate:hover,
-				  #custom-os_button:hover {
-					background: @bg_hover;
-					transition: background 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-				  }
-
-				  /* ── group separators (left border on first of each logical group) ── */
-				  #cpu {
-					border-left: 1px solid @separator;
-					margin-left: 4px;
-					padding-left: 8px;
-				  }
-
-				  #tray {
-					border-left: 1px solid @separator;
-					margin-left: 4px;
-					padding-left: 8px;
-				  }
-
-				  #clock {
-					border-left: 1px solid @separator;
-					margin-left: 4px;
-					padding-left: 10px;
-					padding-right: 10px;
-				  }
-
-				  /* ── tray icon states ── */
-				  #tray > .passive       { border-bottom: none; }
-				  #tray > .active        { border-bottom: 3px solid white; }
-				  #tray > .needs-attention { border-bottom: 3px solid orange; }
-				  #tray > widget {
-					transition: background 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-				  }
-				  #tray > widget:hover   { background: @bg_hover; }
-
-				  /* ── mpris (center) ── */
-				  #mpris {
-					color: white;
-					padding: 0 10px;
-				  }
-				'';
-				config = {
-					layer = "top";
-					position = "bottom";
-					height = 15;
-					modules-left = [ "custom/os_button" "ext/workspaces" "wlr/taskbar" ];
-					modules-center = [ "mpris" ];
-					modules-right =
-						(lib.optional config.desktops.waybar.showRotateScript "custom/hdmi2_rotate")
-						++ [
-							"custom/brightness"
-							"cpu"
-							"temperature"
-							"disk"
-							"tray"
-							"bluetooth"
-							"pulseaudio"
-							"network"
-							"battery"
-							"clock"
-						];
-
-					"ext/workspaces" = {
-						format = "{icon}";
-						ignore-hidden = true;
-						#active-only = true;
-						on-click = "activate";
-						on-click-right = "deactivate";
-						on-scroll-up = "mmsg dispatch viewtoright";
-						on-scroll-down = "mmsg dispatch viewtoleft";
-						sort-by-id = true;
-					};
-
-					"wlr/taskbar" = {
-						format = "{icon}";
-						icon-size = 18;
-						spacing = 3;
-						on-click-middle = "close";
-						tooltip-format = "{title}";
-						ignore-list = [];
-						on-click = "activate";
-					};
-
-					/*"dwl/window" = {
-						format = "[{layout}] {title}";
-					};*/
-
-					mpris = {
-						format = "{player_icon}   {title}";
-						format-paused = "{status_icon}   {title}";
-						tooltip-format = "{player} - {title} by {artist}";
-						truncate = 30;
-						ellipsis = true;
-						player-icons = {
-							default = "🎵";
-							spotify = "";
-							firefox = "";
-							chromium = "";
-							mpv = "";
-							vlc = "󰕼";
-						};
-						status-icons = {
-							playing = "";
-							paused = "";
-							stopped = "";
-						};
-
-						on-click = "playerctl play-pause";
-						on-click-right = "playerctl next";
-						on-click-middle = "playerctl previous";
-						on-scroll-up = "pactl set-sink-volume @DEFAULT_SINK@ +5%";
-						on-scroll-down = "pactl set-sink-volume @DEFAULT_SINK@ -5%";
-						ignored-players = [ "" ];  # ignore specific players
-						interval = 1;  # update every second
-						max-length = 50;
-					};
-
-					"custom/hdmi2_rotate" = {
-						format = "󰢅";
-						tooltip = true;
-						tooltip-format = "Toggle HDMI-A-2 rotation";
-						on-click = "hdmi2-rotate-toggle";
-					};
-
-					clock = {
-						format = "{:%R %d.%m.%Y}";
-						tooltip-format = "<tt><small>{calendar}</small></tt>";
-						calendar = {
-							mode = "year";
-							mode-mon-col = 3;
-							weeks-pos = "right";
-							on-scroll = 1;
-							on-click-right = "mode";
-							format = {
-								months = "<span color='#ffead3'><b>{}</b></span>";
-								days = "<span color='#ecc6d9'><b>{}</b></span>";
-								weeks = "<span color='#99ffdd'><b>W{}</b></span>";
-								weekdays = "<span color='#ffcc66'><b>{}</b></span>";
-								today = "<span color='#ff6699'><b><u>{}</u></b></span>";
-							};
-						};
-						actions = {
-							on-click-right = "mode";
-							on-click-forward = "tz_up";
-							on-click-backward = "tz_down";
-							on-scroll-up = "shift_up";
-							on-scroll-down = "shift_down";
-						};
-					};
-
-					cpu = {
-						interval = 5;
-						format = " {usage}% ";
-						max-length = 10;
-					};
-
-					temperature = {
-						hwmon-path-abs = "/sys/devices/platform/coretemp.0/hwmon";
-						input-filename = "temp2_input";
-						critical-threshold = 75;
-						tooltip = false;
-						format-critical = "({temperatureC}°C)";
-						format = "({temperatureC}°C)";
-					};
-
-					disk = {
-						interval = 30;
-						format = "󰋊 {percentage_used}% ";
-						path = "/";
-						tooltip = true;
-						unit = "GB";
-						tooltip-format = "Available {free} of {total}";
-					};
-
-					tray = {
-						icon-size = 18;
-						spacing = 3;
-						show-passive-items = false;
-					};
-
-					network = {
-						format-wifi = " {icon} ";
-						format-icons = [ "󰤯 " "󰤟 " "󰤢 " "󰤢 " "󰤨 " ];
-						tooltip-format-wifi = "WiFi connected •ᴗ•";
-
-						format-ethernet = "  ";
-						tooltip-format-ethernet = "Ethernet connected •ᴗ•";
-
-						format-disconnected = " 󰌙 ";
-						tooltip-format-disconnected = "No connection •ᴖ•";
-					};
-					
-					battery = {
-						states = {
-							good = 95;
-							warning = 30;
-							critical = 20;
-						};
-						format = "{icon} {capacity}%";
-						format-charging = " {capacity}%";
-						format-plugged = " {capacity}%";
-						format-alt = "{time} {icon}";
-						format-icons = [
-							"󰂎"
-							"󰁺"
-							"󰁻"
-							"󰁼"
-							"󰁽"
-							"󰁾"
-							"󰁿"
-							"󰂀"
-							"󰂁"
-							"󰂂"
-							"󰁹"
-						];
-					};
-
-					bluetooth = {
-						format-on = "󰂯";
-						format-off = "󰂲";
-						#format-disabled = "";
-						format-disabled = "󰂲"; 
-						format-connected = "󰂱 {num_connections}";
-						tooltip-format-connected = "{device_enumerate}";
-						tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
-						on-click = "blueman-manager";
-					};
-					
-					pulseaudio = {
-						max-volume = 150;
-						scroll-step = 5;
-						format = "{icon} {volume}%";
-						tooltip-format = "{volume}%";
-						format-muted = " MUTE";
-						format-icons = {
-							default = [
-								" "
-								" "
-								" "
-							];
-						};
-						on-click = "pwvucontrol";
-						on-click-right = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
-					};
-
-					"custom/os_button" = {
-						format = "";
-						on-click = "vicinae toggle";
-						tooltip = false;
-					};
-				};
-			};
-
-			home-manager.users.${username} = { config, ... }: {
-				imports = [ inputs.mango.hmModules.mango ];
-
-				programs.vicinae = {
-					enable = true;
-					extensions = [
-						(config.lib.vicinae.mkExtension {
-							name = "awww-switcher";
-							src = pkgs.fetchFromGitHub {
-								owner = "vicinaehq";
-								repo = "extensions";
-								rev = "2c12a0b15f33fa9b6e2a29f91f7b1da3e7a80c3b";
-								sha256 = "sha256-p0nK1I0H4Zb/ExHnEC1wgpJJhC0RpgxWUsuwQetNM+Q=";
-							} + "/extensions/awww-switcher";
-						})
-					];
-				};
-
-				home.pointerCursor = {
-					name = "Bibata-Modern-Ice";
-					size = 24;
-					package = pkgs.bibata-cursors;
-					gtk.enable = true;
-					x11.enable = true;
-				};
-
-				wayland.windowManager.mango = {
-					enable = true;
-
-					extraConfig = lib.strings.trim nixosConfig.desktops.mango.monitors;
-
-					settings = {
-						env = [
-							"QT_IM_MODULES,wayland;fcitx"
-							"XMODIFIERS,@im=fcitx"
-							"XDG_CURRENT_DESKTOP,mango"
-						];
-
-						/*
-						 * LAYOUTS
-						 */
-
-						# Scroller Layout
-						scroller_structs = 10;
-						scroller_default_proportion = 0.5;
-						scroller_focus_center = 0;
-						scroller_prefer_center = 0;
-						edge_scroller_pointer_focus = 1;
-						scroller_ignore_proportion_single = 0;
-						scroller_default_proportion_single = 1.0;
-
-						# Master-Stack Layout
-						new_is_master = 0;
-						smartgaps = 0;
-						default_mfact = 0.55;
-						default_nmaster = 1;
-
-						# Overview
-						hotarea_size = 10;
-						enable_hotarea = 1;
-						ov_tab_mode = 0;
-						overviewgappi = 5;
-						overviewgappo = 30;
-
-						#!TODO move this to options
-						tagrule = [
-							# Virtual
-							"id:1,monitor_name:Virtual-1,layout_name:deck"
-							"id:2,monitor_name:Virtual-1,layout_name:scroller"
-							"id:3,monitor_name:Virtual-1,layout_name:grid"
-							#eDP-1
-							"id:1,monitor_name:eDP-1,layout_name:scroller"
-							"id:2,monitor_name:eDP-1,layout_name:scroller"
-							"id:3,monitor_name:eDP-1,layout_name:scroller"
-							"id:4,monitor_name:eDP-1,layout_name:deck"
-							"id:5,monitor_name:eDP-1,layout_name:deck"
-							# DP-2
-							"id:1,monitor_name:DP-2,layout_name:deck"
-							"id:2,monitor_name:DP-2,layout_name:deck"
-							"id:3,monitor_name:DP-2,layout_name:deck"
-							"id:4,monitor_name:DP-2,layout_name:deck"
-							"id:5,monitor_name:DP-2,layout_name:deck"
-							"id:6,monitor_name:DP-2,layout_name:deck"
-							"id:7,monitor_name:DP-2,layout_name:deck"
-							"id:8,monitor_name:DP-2,layout_name:deck"
-							"id:9,monitor_name:DP-2,layout_name:deck"
-							# HDMI-A-1
-							"id:1,monitor_name:HDMI-A-1,layout_name:deck"
-							"id:2,monitor_name:HDMI-A-1,layout_name:deck"
-							"id:3,monitor_name:HDMI-A-1,layout_name:deck"
-							"id:4,monitor_name:HDMI-A-1,layout_name:deck"
-							"id:5,monitor_name:HDMI-A-1,layout_name:deck"
-							"id:6,monitor_name:HDMI-A-1,layout_name:deck"
-							"id:7,monitor_name:HDMI-A-1,layout_name:deck"
-							"id:8,monitor_name:HDMI-A-1,layout_name:deck"
-							"id:9,monitor_name:HDMI-A-1,layout_name:deck"
-							# HDMI-A-2 (vertical scroller)
-							"id:1,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
-							"id:2,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
-							"id:3,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
-							"id:4,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
-							"id:5,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
-							"id:6,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
-							"id:7,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
-							"id:8,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
-							"id:9,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
-						];
-
-						repeat_rate = 25;
-						repeat_delay = 600;
-						numlockon = 1;
-						xkb_rules_layout = "cz";
-						xkb_rules_options = "grp:alt_shift_toggle";
-
-						# Trackpad
-						disable_trackpad = 0;
-						tap_to_click = 1;
-						tap_and_drag = 1;
-						drag_lock = false;
-						mouse_natural_scrolling = 0;
-						trackpad_natural_scrolling = 1;
-						disable_while_typing = 1;
-						left_handed = 0;
-						middle_button_emulation = 0;
-						swipe_min_threshold = 1;
-
-						mousebind = [
-							"SUPER,btn_left,moveresize,curmove"
-							"SUPER,btn_right,moveresize,curresize"
-							"SUPER+CTRL,btn_right,killclient"
-						];
-						
-						gesturebind = [
-							# 3-finger: Window focus
-							"none,left,3,focusdir,left"
-							"none,right,3,focusdir,right"
-							"none,up,3,focusdir,up"
-							"none,down,3,focusdir,down"
-
-							# 4-finger: Workspace navigation
-							"none,left,4,viewtoleft_have_client"
-							"none,right,4,viewtoright_have_client"
-							"none,up,4,toggleoverview"
-							"none,down,4,toggleoverview"
-						];
-
-						bind = [
-							"SUPER,r,reload_config"
-							"SUPER,Return,spawn,kitty"
-							"SUPER,space,spawn,vicinae toggle"
-							"SUPER,v,spawn,vicinae vicinae://launch/clipboard/history"
-							"SUPER,w,spawn,vicinae vicinae://launch/@sovereign/awww-switcher/wpgrid"
-							#"SUPER+SHIFT,w,spawn,vicinae vicinae://launch/@sovereign/awww-switcher/wprandom"
-							"NONE,Print,spawn_shell,grim -g \"$(slurp -b '#2E2A1E55')\" - | wl-copy"
-							"SUPER,p,spawn_shell,wayscriber --active"
-							"SUPER+SHIFT,p,spawn_shell,wayscriber --freeze"
-
-							"ALT,Tab,toggleoverview,0"
-							"SUPER,s,switch_layout"
-
-							# vertical_scroller
-							"SUPER,Up,focusdir,up"
-							"SUPER,Down,focusdir,down"
-							"SUPER,equal,set_proportion,+0.1"
-							"SUPER,minus,set_proportion,-0.1"
-
-							# windows
-							"SUPER,Right,focusstack,next"
-							"SUPER,Left,focusstack,prev"
-							"SUPER,Up,exchange_client,up"
-							"SUPER,Down,exchange_client,down"
-							"SUPER+SHIFT,Left,exchange_client,left"
-							"SUPER+SHIFT,Right,exchange_client,right"
-
-							"SUPER+SHIFT,q,killclient"
-							"SUPER,f,togglefullscreen"
-							"SUPER+SHIFT,f,togglefloating"
-
-							# monitor nav
-							"SUPER+CTRL,Left,focusmon,left"
-							"SUPER+CTRL,Right,focusmon,right"
-							"SUPER+CTRL,Up,focusmon,up"
-							"SUPER+CTRL,Down,focusmon,down"
-
-							"SUPER+CTRL+SHIFT,Left,tagmon,left"
-							"SUPER+CTRL+SHIFT,Right,tagmon,right"
-							"SUPER+CTRL+SHIFT,Up,tagmon,up"
-							"SUPER+CTRL+SHIFT,Down,tagmon,down"
-							
-							# tag nav
-							"SUPER,1,view,1,0"
-							"SUPER,2,view,2,0"
-							"SUPER,3,view,3,0"
-							"SUPER,4,view,4,0"
-							"SUPER,5,view,5,0"
-							"SUPER,6,view,6,0"
-							"SUPER,7,view,7,0"
-							"SUPER,8,view,8,0"
-							"SUPER,9,view,9,0"
-							"SUPER+SHIFT,1,tag,1,0"
-							"SUPER+SHIFT,2,tag,2,0"
-							"SUPER+SHIFT,3,tag,3,0"
-							"SUPER+SHIFT,4,tag,4,0"
-							"SUPER+SHIFT,5,tag,5,0"
-							"SUPER+SHIFT,6,tag,6,0"
-							"SUPER+SHIFT,7,tag,7,0"
-							"SUPER+SHIFT,8,tag,8,0"
-							"SUPER+SHIFT,9,tag,9,0"
-
-							# media keys
-							"NONE,XF86AudioPlay,spawn,playerctl play-pause"
-							"NONE,XF86AudioPause,spawn,playerctl play-pause"
-							"NONE,XF86AudioNext,spawn,playerctl next"
-							"NONE,XF86AudioPrev,spawn,playerctl previous"
-
-							"NONE,XF86AudioMute,spawn,pactl set-sink-mute @DEFAULT_SINK@ toggle"
-							"NONE,XF86AudioRaiseVolume,spawn,pactl set-sink-volume @DEFAULT_SINK@ +5%"
-							"NONE,XF86AudioLowerVolume,spawn,pactl set-sink-volume @DEFAULT_SINK@ -5%"
-
-							# hw-specific keys
-							"NONE,XF86MonBrightnessDown,spawn,brightnessctl set 10%-"
-							"NONE,XF86MonBrightnessUp,spawn,brightnessctl set 10%+"
-						];
-
-						axisbind = [
-							"SUPER,UP,focusdir,up"
-							"SUPER,DOWN,focusdir,down"
-						];
-
-						gappih = 5;
-						gappiv = 5;
-						gappoh = 5;
-						gappov = 5;
-						scratchpad_width_ratio = 0.8;
-						scratchpad_height_ratio = 0.9;
-						borderpx = 0;
-						rootcolor = "0x201b14ff";
-						bordercolor = "0x444444ff";
-						focuscolor = "0x8BAA9Bff";
-						maximizescreencolor = "0xBABD2Cff";
-						urgentcolor = "0xad401fff";
-						scratchpadcolor = "0xc4939dff";
-						globalcolor = "0x8d64cfff";
-						overlaycolor = "0x95C381ff";
-
-						# Blur
-						blur = 0;
-						blur_layer = 1;
-						blur_optimized = 1;
-						blur_params_num_passes = 2;
-						blur_params_radius = 5;
-						blur_params_noise = 0.02;
-						blur_params_brightness = 0.9;
-						blur_params_contrast = 0.9;
-						blur_params_saturation = 1.2;
-
-						# Shadows
-						shadows = 0;
-						layer_shadows = 0;
-						shadow_only_floating = 1;
-						shadows_size = 12;
-						shadows_blur = 15;
-						shadows_position_x = 0;
-						shadows_position_y = 0;
-						shadowscolor = "0x000000ff";
-
-						# Rounding / opacity
-						border_radius = 4;
-						no_radius_when_single = 0;
-						focused_opacity = 1.0;
-						unfocused_opacity = 1.0;
-
-						# Animations
-						animations = 1;
-						layer_animations = 1;
-						animation_type_open = "fade";
-						animation_type_close = "fade";
-						layer_animation_type_open = "fade";
-						layer_animation_type_close = "fade";
-						animation_fade_in = 1;
-						animation_fade_out = 1;
-						tag_animation_direction = 0;
-						zoom_initial_ratio = 0.3;
-						zoom_end_ratio = 0.7;
-						fadein_begin_opacity = 0.5;
-						fadeout_begin_opacity = 0.8;
-						animation_duration_move = 500;
-						animation_duration_open = 400;
-						animation_duration_tag = 350;
-						animation_duration_close = 800;
-						animation_duration_focus = 400;
-						animation_curve_open = "0.46,1.0,0.29,1.1";
-						animation_curve_move = "0.46,1.0,0.29,1";
-						animation_curve_tag = "0.46,1.0,0.29,1";
-						animation_curve_close = "0.08,0.92,0,1";
-						animation_curve_focus = "0.46,1.0,0.29,1";
-
-						xwayland_persistence = 1;
-						syncobj_enable = 0;
-						no_border_when_single = 0;
-						axis_bind_apply_timeout = 100;
-						focus_on_activate = 1;
-						sloppyfocus = 1;
-						warpcursor = 1;
-						focus_cross_monitor = 1;
-						focus_cross_tag = 1;
-						circle_layout = "tile,scroller";
-						enable_floating_snap = 1;
-						snap_distance = 50;
-						cursor_size = 24;
-						cursor_theme = "Bibata-Modern-Ice";
-						cursor_hide_timeout = 0;
-						drag_tile_to_tile = 1;
-						single_scratchpad = 1;
-
-						layerrule = "animation_type_open:fade,animation_type_close:fade,layer_name:vicinae";
-						windowrule = [
-							# pwvucontrol - system modal
-							"isfloating:1,animation_type_open:slide,width:1000,height:500,offsetx:100,offsety:100,appid:pwvucontrol"
-
-							# blueman - system modal
-							"isfloating:1,animation_type_open:slide,width:640,height:324,offsetx:100,offsety:100,appid:\\.blueman-manager-wrapped"
-						];
-					};
-
-					autostart_sh = "
-						vicinae server &
-
-						awww-daemon &
-
-						kitty &
-					";
-				};
-			};
-		};
-	};
+  flake.nixosModules.mango =
+    {
+      config,
+      lib,
+      pkgs,
+      username,
+      ...
+    }:
+    let
+      nixosConfig = config;
+    in
+    {
+      imports = [
+        inputs.mango.nixosModules.mango
+        inputs.silentSDDM.nixosModules.default
+
+        self.nixosModules.waybar
+        self.nixosModules.darkmode
+        self.nixosModules.wlogout
+        self.nixosModules.screenlock
+
+        self.nixosModules.brightnessWidget
+      ];
+
+      options.desktops.mango = {
+        monitors = lib.mkOption {
+          type = lib.types.str;
+          description = "Mango monitor configuration";
+        };
+      };
+      options.desktops.waybar = {
+        showRotateScript = lib.mkOption {
+          type = lib.types.bool;
+          description = "Whether to enable and show the monitor rotation script";
+          default = false;
+        };
+      };
+
+      options.desktops.lockscreen = {
+        background = lib.mkOption {
+          type = lib.types.path;
+          description = "Background image for lockscreen and SDDM";
+        };
+
+        profilePicture = lib.mkOption {
+          type = lib.types.path;
+          description = "Profile picture used in SDDM";
+        };
+      };
+
+      config = {
+        desktops.components.brightnessWidget = {
+          enable = true;
+          showInWaybar = true;
+        };
+        programs.mango.enable = true;
+        programs.dconf.enable = true;
+        security.polkit.enable = true;
+        services.dbus.enable = true;
+        hardware.graphics.enable = true;
+
+        xdg.portal.enable = true;
+        xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+        services.displayManager.sddm.enable = true;
+        programs.silentSDDM = {
+          enable = true;
+          theme = "default";
+          backgrounds = {
+            wallpaper = config.desktops.lockscreen.background;
+          };
+          settings = {
+            "LoginScreen" = {
+              background = builtins.head (
+                builtins.match "[a-z0-9]{32}-(.+)" (builtins.baseNameOf config.desktops.lockscreen.background)
+              );
+              blur = 5;
+            };
+            "LockScreen" = {
+              background = builtins.head (
+                builtins.match "[a-z0-9]{32}-(.+)" (builtins.baseNameOf config.desktops.lockscreen.background)
+              );
+              blur = 5;
+            };
+            "General" = {
+              background-fill-mode = "fill";
+            };
+          };
+
+          profileIcons = {
+            ${username} = config.desktops.lockscreen.profilePicture;
+          };
+        };
+
+        fonts.packages = with pkgs; [
+          nerd-fonts.fira-code
+          nerd-fonts.jetbrains-mono
+          vista-fonts
+        ];
+
+        environment.systemPackages =
+          with pkgs;
+          [
+            killall
+            wev
+            wayland
+            wayland-utils
+            wl-clipboard
+            wlr-randr
+            wdisplays
+            vicinae # launcher
+            quickshell # widget utility
+            qt6.qtwayland
+            grim # sreenshot utility
+            slurp # select area for grim
+            pwvucontrol
+            pavucontrol
+            pulseaudio
+            playerctl
+            wayscriber # screen annotation tool
+            inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww # wallpaper manager
+
+          ]
+          ++ lib.optionals config.desktops.waybar.showRotateScript [
+            # rotation toggle script
+            (pkgs.writeShellScriptBin "hdmi2-rotate-toggle" ''
+              MONITOR="HDMI-A-2"
+              LOG_FILE="/tmp/mango-monitor-switch.log"
+              echo "$(date): Starting monitor switch" >> "$LOG_FILE"
+
+              CURRENT=$(wlr-randr | awk -v m="$MONITOR" '
+              $1==m {found=1; next}
+              found && /Transform/ {print $2; exit}
+              ')
+
+              echo "$(date): Current transform: $CURRENT" >> "$LOG_FILE"
+              #wlr-randr --output "$MONITOR" --off # if there is a problem when switching uncomment this line
+              #sleep 0.5
+
+              if [ "$CURRENT" = "90" ] || [ "$CURRENT" = "270" ]; then
+              	echo "$(date): Switching to landscape" >> "$LOG_FILE"
+                wlr-randr --output "$MONITOR" \
+                --on \
+                --mode 2560x1440 \
+                --pos 0,2520 \
+                --transform normal
+              else
+              	echo "$(date): Switching to portrait" >> "$LOG_FILE"
+                wlr-randr --output "$MONITOR" \
+                --on \
+                --mode 2560x1440 \
+                --pos 0,0 \
+                --transform 90
+              fi
+              echo "$(date): Done" >> "$LOG_FILE"
+            '')
+          ];
+
+        desktops.waybar = {
+          enable = true;
+          style = ''
+            @define-color bg_hover rgba(200, 200, 200, 0.3);
+            @define-color bg_back rgba(0, 0, 0, 0.3);
+            @define-color content_main white;
+            @define-color separator rgba(255, 255, 255, 0.15);
+
+            * {
+            font-family: "JetBrainsMono Nerd Font";
+            	font-weight: bold;
+            	font-size: 13px;
+            	background-color: transparent;
+            	min-height: 0;
+            }
+
+            window#waybar {
+            	background-color: @bg_back;
+            	padding: 2px 4px;
+            }
+              
+            tooltip {
+            	background-color: #141415;
+            	border: 1px solid rgba(255, 255, 255, 0.1);
+            	border-radius: 6px;
+            }
+
+            tooltip label {
+            	color: white;
+            }
+
+            /* Tray context menus — GTK menu styling */
+            menu {
+            	background-color: #141415;
+            	border: 1px solid rgba(255, 255, 255, 0.1);
+            	border-radius: 6px;
+            	padding: 4px 0;
+            }
+
+            menuitem {
+            	color: white;
+            	padding: 4px 12px;
+            }
+
+            menuitem:hover {
+            	background-color: rgba(200, 200, 200, 0.15);
+            }
+
+            /* ── left ── */
+            #custom-os_button {
+            	font-size: 18px;
+            	padding: 0 14px 0 8px;
+            	transition: background 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+
+            #custom-os_button:hover {
+            	background: @bg_hover;
+            }
+
+            #workspaces button {
+            	color: white;
+            }
+
+            #workspaces button.visible  { color: #ddca9e; }
+            #workspaces button:hover    { color: #d79921; background: transparent; }
+            #workspaces button.active   { color: black; background-color: #ddca9e; }
+            #workspaces button.urgent   { background-color: #ef5e5e; }
+
+            #tags { background-color: transparent; }
+            #tags button { background-color: #fff; }
+            #tags button:not(.occupied):not(.focused) { color: transparent; background-color: transparent; }
+            #tags button.occupied  { background-color: #fff; }
+            #tags button.focused   { background-color: rgb(186, 142, 213); }
+            #tags button.urgent    { background: rgb(171, 101, 101); }
+
+            /* ── right: shared module style ── */
+            #cpu,
+            #temperature,
+            #disk,
+            #network,
+            #battery,
+            #bluetooth,
+            #pulseaudio,
+            #mpris,
+            #clock,
+            #tray,
+            #custom-hdmi2_rotate,
+            #custom-brightness {
+            	padding-top: 0px;
+            	padding-left: 6px;
+            	padding-right: 6px;
+            	color: white;
+            }
+            #custom-hdmi2_rotate, 
+            #custom-brightness {
+            	padding-right: 12px;
+            }
+
+            /* ── right: hover for interactive modules ── */
+            #bluetooth:hover,
+            #pulseaudio:hover,
+            #network:hover,
+            #custom-hdmi2_rotate:hover,
+            #custom-os_button:hover {
+            	background: @bg_hover;
+            	transition: background 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+
+            /* ── group separators (left border on first of each logical group) ── */
+            #cpu {
+            	border-left: 1px solid @separator;
+            	margin-left: 4px;
+            	padding-left: 8px;
+            }
+
+            #tray {
+            	border-left: 1px solid @separator;
+            	margin-left: 4px;
+            	padding-left: 8px;
+            }
+
+            #clock {
+            	border-left: 1px solid @separator;
+            	margin-left: 4px;
+            	padding-left: 10px;
+            	padding-right: 10px;
+            }
+
+            /* ── tray icon states ── */
+            #tray > .passive       { border-bottom: none; }
+            #tray > .active        { border-bottom: 3px solid white; }
+            #tray > .needs-attention { border-bottom: 3px solid orange; }
+            #tray > widget {
+            	transition: background 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            #tray > widget:hover   { background: @bg_hover; }
+
+            /* ── mpris (center) ── */
+            #mpris {
+            	color: white;
+            	padding: 0 10px;
+            }
+          '';
+          config = {
+            layer = "top";
+            position = "bottom";
+            height = 15;
+            modules-left = [
+              "custom/os_button"
+              "ext/workspaces"
+              "wlr/taskbar"
+            ];
+            modules-center = [ "mpris" ];
+            modules-right = (lib.optional config.desktops.waybar.showRotateScript "custom/hdmi2_rotate") ++ [
+              "custom/brightness"
+              "cpu"
+              "temperature"
+              "disk"
+              "tray"
+              "bluetooth"
+              "pulseaudio"
+              "network"
+              "battery"
+              "clock"
+            ];
+
+            "ext/workspaces" = {
+              format = "{icon}";
+              ignore-hidden = true;
+              #active-only = true;
+              on-click = "activate";
+              on-click-right = "deactivate";
+              on-scroll-up = "mmsg dispatch viewtoright";
+              on-scroll-down = "mmsg dispatch viewtoleft";
+              sort-by-id = true;
+            };
+
+            "wlr/taskbar" = {
+              format = "{icon}";
+              icon-size = 18;
+              spacing = 3;
+              on-click-middle = "close";
+              tooltip-format = "{title}";
+              ignore-list = [ ];
+              on-click = "activate";
+            };
+
+            /*
+              "dwl/window" = {
+              	format = "[{layout}] {title}";
+              };
+            */
+
+            mpris = {
+              format = "{player_icon}   {title}";
+              format-paused = "{status_icon}   {title}";
+              tooltip-format = "{player} - {title} by {artist}";
+              truncate = 30;
+              ellipsis = true;
+              player-icons = {
+                default = "🎵";
+                spotify = "";
+                firefox = "";
+                chromium = "";
+                mpv = "";
+                vlc = "󰕼";
+              };
+              status-icons = {
+                playing = "";
+                paused = "";
+                stopped = "";
+              };
+
+              on-click = "playerctl play-pause";
+              on-click-right = "playerctl next";
+              on-click-middle = "playerctl previous";
+              on-scroll-up = "pactl set-sink-volume @DEFAULT_SINK@ +5%";
+              on-scroll-down = "pactl set-sink-volume @DEFAULT_SINK@ -5%";
+              ignored-players = [ "" ]; # ignore specific players
+              interval = 1; # update every second
+              max-length = 50;
+            };
+
+            "custom/hdmi2_rotate" = {
+              format = "󰢅";
+              tooltip = true;
+              tooltip-format = "Toggle HDMI-A-2 rotation";
+              on-click = "hdmi2-rotate-toggle";
+            };
+
+            clock = {
+              format = "{:%R %d.%m.%Y}";
+              tooltip-format = "<tt><small>{calendar}</small></tt>";
+              calendar = {
+                mode = "year";
+                mode-mon-col = 3;
+                weeks-pos = "right";
+                on-scroll = 1;
+                on-click-right = "mode";
+                format = {
+                  months = "<span color='#ffead3'><b>{}</b></span>";
+                  days = "<span color='#ecc6d9'><b>{}</b></span>";
+                  weeks = "<span color='#99ffdd'><b>W{}</b></span>";
+                  weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+                  today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+                };
+              };
+              actions = {
+                on-click-right = "mode";
+                on-click-forward = "tz_up";
+                on-click-backward = "tz_down";
+                on-scroll-up = "shift_up";
+                on-scroll-down = "shift_down";
+              };
+            };
+
+            cpu = {
+              interval = 5;
+              format = " {usage}% ";
+              max-length = 10;
+            };
+
+            temperature = {
+              hwmon-path-abs = "/sys/devices/platform/coretemp.0/hwmon";
+              input-filename = "temp2_input";
+              critical-threshold = 75;
+              tooltip = false;
+              format-critical = "({temperatureC}°C)";
+              format = "({temperatureC}°C)";
+            };
+
+            disk = {
+              interval = 30;
+              format = "󰋊 {percentage_used}% ";
+              path = "/";
+              tooltip = true;
+              unit = "GB";
+              tooltip-format = "Available {free} of {total}";
+            };
+
+            tray = {
+              icon-size = 18;
+              spacing = 3;
+              show-passive-items = false;
+            };
+
+            network = {
+              format-wifi = " {icon} ";
+              format-icons = [
+                "󰤯 "
+                "󰤟 "
+                "󰤢 "
+                "󰤢 "
+                "󰤨 "
+              ];
+              tooltip-format-wifi = "WiFi connected •ᴗ•";
+
+              format-ethernet = "  ";
+              tooltip-format-ethernet = "Ethernet connected •ᴗ•";
+
+              format-disconnected = " 󰌙 ";
+              tooltip-format-disconnected = "No connection •ᴖ•";
+            };
+
+            battery = {
+              states = {
+                good = 95;
+                warning = 30;
+                critical = 20;
+              };
+              format = "{icon} {capacity}%";
+              format-charging = " {capacity}%";
+              format-plugged = " {capacity}%";
+              format-alt = "{time} {icon}";
+              format-icons = [
+                "󰂎"
+                "󰁺"
+                "󰁻"
+                "󰁼"
+                "󰁽"
+                "󰁾"
+                "󰁿"
+                "󰂀"
+                "󰂁"
+                "󰂂"
+                "󰁹"
+              ];
+            };
+
+            bluetooth = {
+              format-on = "󰂯";
+              format-off = "󰂲";
+              #format-disabled = "";
+              format-disabled = "󰂲";
+              format-connected = "󰂱 {num_connections}";
+              tooltip-format-connected = "{device_enumerate}";
+              tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+              on-click = "blueman-manager";
+            };
+
+            pulseaudio = {
+              max-volume = 150;
+              scroll-step = 5;
+              format = "{icon} {volume}%";
+              tooltip-format = "{volume}%";
+              format-muted = " MUTE";
+              format-icons = {
+                default = [
+                  " "
+                  " "
+                  " "
+                ];
+              };
+              on-click = "pwvucontrol";
+              on-click-right = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
+            };
+
+            "custom/os_button" = {
+              format = "";
+              on-click = "vicinae toggle";
+              tooltip = false;
+            };
+          };
+        };
+
+        home-manager.users.${username} = { config, ... }: {
+          imports = [ inputs.mango.hmModules.mango ];
+
+          programs.vicinae = {
+            enable = true;
+            extensions = [
+              (config.lib.vicinae.mkExtension {
+                name = "awww-switcher";
+                src =
+                  pkgs.fetchFromGitHub {
+                    owner = "vicinaehq";
+                    repo = "extensions";
+                    rev = "2c12a0b15f33fa9b6e2a29f91f7b1da3e7a80c3b";
+                    sha256 = "sha256-p0nK1I0H4Zb/ExHnEC1wgpJJhC0RpgxWUsuwQetNM+Q=";
+                  }
+                  + "/extensions/awww-switcher";
+              })
+            ];
+          };
+
+          home.pointerCursor = {
+            name = "Bibata-Modern-Ice";
+            size = 24;
+            package = pkgs.bibata-cursors;
+            gtk.enable = true;
+            x11.enable = true;
+          };
+
+          wayland.windowManager.mango = {
+            enable = true;
+
+            extraConfig = lib.strings.trim nixosConfig.desktops.mango.monitors;
+
+            settings = {
+              env = [
+                "QT_IM_MODULES,wayland;fcitx"
+                "XMODIFIERS,@im=fcitx"
+                "XDG_CURRENT_DESKTOP,mango"
+              ];
+
+              # * LAYOUTS
+
+              # Scroller Layout
+              scroller_structs = 10;
+              scroller_default_proportion = 0.5;
+              scroller_focus_center = 0;
+              scroller_prefer_center = 0;
+              edge_scroller_pointer_focus = 1;
+              scroller_ignore_proportion_single = 0;
+              scroller_default_proportion_single = 1.0;
+
+              # Master-Stack Layout
+              new_is_master = 0;
+              smartgaps = 0;
+              default_mfact = 0.55;
+              default_nmaster = 1;
+
+              # Overview
+              hotarea_size = 10;
+              enable_hotarea = 1;
+              ov_tab_mode = 0;
+              overviewgappi = 5;
+              overviewgappo = 30;
+
+              #!TODO move this to options
+              tagrule = [
+                # Virtual
+                "id:1,monitor_name:Virtual-1,layout_name:deck"
+                "id:2,monitor_name:Virtual-1,layout_name:scroller"
+                "id:3,monitor_name:Virtual-1,layout_name:grid"
+                #eDP-1
+                "id:1,monitor_name:eDP-1,layout_name:scroller"
+                "id:2,monitor_name:eDP-1,layout_name:scroller"
+                "id:3,monitor_name:eDP-1,layout_name:scroller"
+                "id:4,monitor_name:eDP-1,layout_name:deck"
+                "id:5,monitor_name:eDP-1,layout_name:deck"
+                # DP-2
+                "id:1,monitor_name:DP-2,layout_name:deck"
+                "id:2,monitor_name:DP-2,layout_name:deck"
+                "id:3,monitor_name:DP-2,layout_name:deck"
+                "id:4,monitor_name:DP-2,layout_name:deck"
+                "id:5,monitor_name:DP-2,layout_name:deck"
+                "id:6,monitor_name:DP-2,layout_name:deck"
+                "id:7,monitor_name:DP-2,layout_name:deck"
+                "id:8,monitor_name:DP-2,layout_name:deck"
+                "id:9,monitor_name:DP-2,layout_name:deck"
+                # HDMI-A-1
+                "id:1,monitor_name:HDMI-A-1,layout_name:deck"
+                "id:2,monitor_name:HDMI-A-1,layout_name:deck"
+                "id:3,monitor_name:HDMI-A-1,layout_name:deck"
+                "id:4,monitor_name:HDMI-A-1,layout_name:deck"
+                "id:5,monitor_name:HDMI-A-1,layout_name:deck"
+                "id:6,monitor_name:HDMI-A-1,layout_name:deck"
+                "id:7,monitor_name:HDMI-A-1,layout_name:deck"
+                "id:8,monitor_name:HDMI-A-1,layout_name:deck"
+                "id:9,monitor_name:HDMI-A-1,layout_name:deck"
+                # HDMI-A-2 (vertical scroller)
+                "id:1,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
+                "id:2,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
+                "id:3,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
+                "id:4,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
+                "id:5,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
+                "id:6,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
+                "id:7,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
+                "id:8,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
+                "id:9,monitor_name:HDMI-A-2,layout_name:vertical_scroller"
+              ];
+
+              repeat_rate = 25;
+              repeat_delay = 600;
+              numlockon = 1;
+              xkb_rules_layout = "cz";
+              xkb_rules_options = "grp:alt_shift_toggle";
+
+              # Trackpad
+              disable_trackpad = 0;
+              tap_to_click = 1;
+              tap_and_drag = 1;
+              drag_lock = false;
+              mouse_natural_scrolling = 0;
+              trackpad_natural_scrolling = 1;
+              disable_while_typing = 1;
+              left_handed = 0;
+              middle_button_emulation = 0;
+              swipe_min_threshold = 1;
+
+              mousebind = [
+                "SUPER,btn_left,moveresize,curmove"
+                "SUPER,btn_right,moveresize,curresize"
+                "SUPER+CTRL,btn_right,killclient"
+              ];
+
+              gesturebind = [
+                # 3-finger: Window focus
+                "none,left,3,focusdir,left"
+                "none,right,3,focusdir,right"
+                "none,up,3,focusdir,up"
+                "none,down,3,focusdir,down"
+
+                # 4-finger: Workspace navigation
+                "none,left,4,viewtoleft_have_client"
+                "none,right,4,viewtoright_have_client"
+                "none,up,4,toggleoverview"
+                "none,down,4,toggleoverview"
+              ];
+
+              bind = [
+                "SUPER,r,reload_config"
+                "SUPER,Return,spawn,kitty"
+                "SUPER,space,spawn,vicinae toggle"
+                "SUPER,v,spawn,vicinae vicinae://launch/clipboard/history"
+                "SUPER,w,spawn,vicinae vicinae://launch/@sovereign/awww-switcher/wpgrid"
+                #"SUPER+SHIFT,w,spawn,vicinae vicinae://launch/@sovereign/awww-switcher/wprandom"
+                "NONE,Print,spawn_shell,grim -g \"$(slurp -b '#2E2A1E55')\" - | wl-copy"
+                "SUPER,p,spawn_shell,wayscriber --active"
+                "SUPER+SHIFT,p,spawn_shell,wayscriber --freeze"
+
+                "ALT,Tab,toggleoverview,0"
+                "SUPER,s,switch_layout"
+
+                # vertical_scroller
+                "SUPER,Up,focusdir,up"
+                "SUPER,Down,focusdir,down"
+                "SUPER,equal,set_proportion,+0.1"
+                "SUPER,minus,set_proportion,-0.1"
+
+                # windows
+                "SUPER,Right,focusstack,next"
+                "SUPER,Left,focusstack,prev"
+                "SUPER,Up,exchange_client,up"
+                "SUPER,Down,exchange_client,down"
+                "SUPER+SHIFT,Left,exchange_client,left"
+                "SUPER+SHIFT,Right,exchange_client,right"
+
+                "SUPER+SHIFT,q,killclient"
+                "SUPER,f,togglefullscreen"
+                "SUPER+SHIFT,f,togglefloating"
+
+                # monitor nav
+                "SUPER+CTRL,Left,focusmon,left"
+                "SUPER+CTRL,Right,focusmon,right"
+                "SUPER+CTRL,Up,focusmon,up"
+                "SUPER+CTRL,Down,focusmon,down"
+
+                "SUPER+CTRL+SHIFT,Left,tagmon,left"
+                "SUPER+CTRL+SHIFT,Right,tagmon,right"
+                "SUPER+CTRL+SHIFT,Up,tagmon,up"
+                "SUPER+CTRL+SHIFT,Down,tagmon,down"
+
+                # tag nav
+                "SUPER,1,view,1,0"
+                "SUPER,2,view,2,0"
+                "SUPER,3,view,3,0"
+                "SUPER,4,view,4,0"
+                "SUPER,5,view,5,0"
+                "SUPER,6,view,6,0"
+                "SUPER,7,view,7,0"
+                "SUPER,8,view,8,0"
+                "SUPER,9,view,9,0"
+                "SUPER+SHIFT,1,tag,1,0"
+                "SUPER+SHIFT,2,tag,2,0"
+                "SUPER+SHIFT,3,tag,3,0"
+                "SUPER+SHIFT,4,tag,4,0"
+                "SUPER+SHIFT,5,tag,5,0"
+                "SUPER+SHIFT,6,tag,6,0"
+                "SUPER+SHIFT,7,tag,7,0"
+                "SUPER+SHIFT,8,tag,8,0"
+                "SUPER+SHIFT,9,tag,9,0"
+
+                # media keys
+                "NONE,XF86AudioPlay,spawn,playerctl play-pause"
+                "NONE,XF86AudioPause,spawn,playerctl play-pause"
+                "NONE,XF86AudioNext,spawn,playerctl next"
+                "NONE,XF86AudioPrev,spawn,playerctl previous"
+
+                "NONE,XF86AudioMute,spawn,pactl set-sink-mute @DEFAULT_SINK@ toggle"
+                "NONE,XF86AudioRaiseVolume,spawn,pactl set-sink-volume @DEFAULT_SINK@ +5%"
+                "NONE,XF86AudioLowerVolume,spawn,pactl set-sink-volume @DEFAULT_SINK@ -5%"
+
+                # hw-specific keys
+                "NONE,XF86MonBrightnessDown,spawn,brightnessctl set 10%-"
+                "NONE,XF86MonBrightnessUp,spawn,brightnessctl set 10%+"
+              ];
+
+              axisbind = [
+                "SUPER,UP,focusdir,up"
+                "SUPER,DOWN,focusdir,down"
+              ];
+
+              gappih = 5;
+              gappiv = 5;
+              gappoh = 5;
+              gappov = 5;
+              scratchpad_width_ratio = 0.8;
+              scratchpad_height_ratio = 0.9;
+              borderpx = 0;
+              rootcolor = "0x201b14ff";
+              bordercolor = "0x444444ff";
+              focuscolor = "0x8BAA9Bff";
+              maximizescreencolor = "0xBABD2Cff";
+              urgentcolor = "0xad401fff";
+              scratchpadcolor = "0xc4939dff";
+              globalcolor = "0x8d64cfff";
+              overlaycolor = "0x95C381ff";
+
+              # Blur
+              blur = 0;
+              blur_layer = 1;
+              blur_optimized = 1;
+              blur_params_num_passes = 2;
+              blur_params_radius = 5;
+              blur_params_noise = 0.02;
+              blur_params_brightness = 0.9;
+              blur_params_contrast = 0.9;
+              blur_params_saturation = 1.2;
+
+              # Shadows
+              shadows = 0;
+              layer_shadows = 0;
+              shadow_only_floating = 1;
+              shadows_size = 12;
+              shadows_blur = 15;
+              shadows_position_x = 0;
+              shadows_position_y = 0;
+              shadowscolor = "0x000000ff";
+
+              # Rounding / opacity
+              border_radius = 4;
+              no_radius_when_single = 0;
+              focused_opacity = 1.0;
+              unfocused_opacity = 1.0;
+
+              # Animations
+              animations = 1;
+              layer_animations = 1;
+              animation_type_open = "fade";
+              animation_type_close = "fade";
+              layer_animation_type_open = "fade";
+              layer_animation_type_close = "fade";
+              animation_fade_in = 1;
+              animation_fade_out = 1;
+              tag_animation_direction = 0;
+              zoom_initial_ratio = 0.3;
+              zoom_end_ratio = 0.7;
+              fadein_begin_opacity = 0.5;
+              fadeout_begin_opacity = 0.8;
+              animation_duration_move = 500;
+              animation_duration_open = 400;
+              animation_duration_tag = 350;
+              animation_duration_close = 800;
+              animation_duration_focus = 400;
+              animation_curve_open = "0.46,1.0,0.29,1.1";
+              animation_curve_move = "0.46,1.0,0.29,1";
+              animation_curve_tag = "0.46,1.0,0.29,1";
+              animation_curve_close = "0.08,0.92,0,1";
+              animation_curve_focus = "0.46,1.0,0.29,1";
+
+              xwayland_persistence = 1;
+              syncobj_enable = 0;
+              no_border_when_single = 0;
+              axis_bind_apply_timeout = 100;
+              focus_on_activate = 1;
+              sloppyfocus = 1;
+              warpcursor = 1;
+              focus_cross_monitor = 1;
+              focus_cross_tag = 1;
+              circle_layout = "tile,scroller";
+              enable_floating_snap = 1;
+              snap_distance = 50;
+              cursor_size = 24;
+              cursor_theme = "Bibata-Modern-Ice";
+              cursor_hide_timeout = 0;
+              drag_tile_to_tile = 1;
+              single_scratchpad = 1;
+
+              layerrule = "animation_type_open:fade,animation_type_close:fade,layer_name:vicinae";
+              windowrule = [
+                # pwvucontrol - system modal
+                "isfloating:1,animation_type_open:slide,width:1000,height:500,offsetx:100,offsety:100,appid:pwvucontrol"
+
+                # blueman - system modal
+                "isfloating:1,animation_type_open:slide,width:640,height:324,offsetx:100,offsety:100,appid:\\.blueman-manager-wrapped"
+              ];
+            };
+
+            autostart_sh = "
+			  vicinae server &
+
+			  awww-daemon &
+
+			  kitty &
+			";
+          };
+        };
+      };
+    };
 }

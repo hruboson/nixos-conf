@@ -26,6 +26,17 @@
 		desktops.mango.monitors = ''
 			monitorrule=name:eDP-1,width:1920,height:1080,refresh:60,x:0,y:0,scale:1
 		'';
+		desktops.lockscreen.background = pkgs.fetchurl {
+			name = "moody_blues.webp";
+			url = "https://raw.githubusercontent.com/hruboson/wallpapers/refs/heads/main/jjba/jjba_moody_blues.webp";
+			hash = "sha256-lMTHuOt4fFEMcRr7kaBYxpaOfhyOmXrDpUbaV9vMDDc=";
+		};
+
+		desktops.lockscreen.profilePicture = pkgs.fetchurl {
+			name = "hruon_logo.jpg";
+			url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/logos_inversion.png";
+			hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
+		};
 
 		## SOUND
 		services.pulseaudio.enable = false;
