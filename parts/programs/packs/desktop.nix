@@ -11,9 +11,9 @@
 		in [
 			# files
 			kdePackages.filelight
+			kdePackages.ark
 			kdePackages.dolphin kdePackages.ffmpegthumbs kdePackages.qtimageformats
 			application-menu
-			peazip
 			android-file-transfer
 
 			# img, video, audio
@@ -39,6 +39,20 @@
 
 			# other
 			gnome-software
+			
+			# archive backends for ark
+			unrar
+			p7zip
+			libarchive
+			zip
+			unzip
+			gnutar
+			gzip
+			bzip2
+			xz
+			zstd
+			lrzip
+			lzop
 		];
 
 		# enable flatpak (for imperative installs -- sure, go for it)
@@ -90,17 +104,17 @@
 					"text/markdown" = "firefox.desktop";
 
 					# Archives -> PeaZip
-					"application/zip" = "peazip.desktop";
-					"application/x-zip-compressed" = "peazip.desktop";
-					"application/x-rar" = "peazip.desktop";
-					"application/vnd.rar" = "peazip.desktop";
-					"application/x-7z-compressed" = "peazip.desktop";
-					"application/x-tar" = "peazip.desktop";
-					"application/gzip" = "peazip.desktop";
-					"application/x-gzip" = "peazip.desktop";
-					"application/x-bzip2" = "peazip.desktop";
-					"application/x-xz" = "peazip.desktop";
-					"application/zstd" = "peazip.desktop";
+					"application/zip" = "org.kde.ark.desktop";
+					"application/x-zip-compressed" = "org.kde.ark.desktop";
+					"application/x-rar" = "org.kde.ark.desktop";
+					"application/vnd.rar" = "org.kde.ark.desktop";
+					"application/x-7z-compressed" = "org.kde.ark.desktop";
+					"application/x-tar" = "org.kde.ark.desktop";
+					"application/gzip" = "org.kde.ark.desktop";
+					"application/x-gzip" = "org.kde.ark.desktop";
+					"application/x-bzip2" = "org.kde.ark.desktop";
+					"application/x-xz" = "org.kde.ark.desktop";
+					"application/zstd" = "org.kde.ark.desktop";
 				};
 			};
 		};
