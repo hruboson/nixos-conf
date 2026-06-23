@@ -658,7 +658,7 @@ This section is mostly just a random bits of knowledge I collected while trouble
 
 ##### PS5 controller (DualSense) not properly pairing
 
-If your PS5 controller shows inconsistend state:
+If your PS5 controller shows inconsistent state:
 ```
 Connected: yes
 Paired: no
@@ -719,11 +719,11 @@ services.desktopManager.plasma6.enable = true;
 security.rtkit.enable = true;
 ```
 
-That's all! Isn't that crazy? And if you want to change this to something else just comment these lines and bring in your own desktop environment.
+That's all! Isn't that crazy (⊙_⊙) ? And if you want to change this to something else just comment these lines out and bring in your own desktop environment.
 
 ### Wayland compositors <a name="wayland-compositors"></a>
 
-Both Sway and Hyprland (and other compositors such as Mango, Niri, ...) are a bit more complicated than a simple KDE (or is it rather the other way!?). Well for the user is is probably more complicated to get Hyprland or Sway running that KDE. But they are simpler and should have smaller memory and CPU footprint than a big desktop environment (such as KDE). The advantage (and also disadvantage in some cases) is that you have to bring everything else yourself - lock screen, taskbar, file manager and basically everything else you can think of when you think of desktop environment. They are not a desktop environments per se. Officially they are "window managers". That means they only manage your windows - and that's it. Nothing more, nothing less.
+Mango, Sway and Hyprland (and other compositors such as Niri, ...) are a bit more complicated than a simple KDE (or is it rather the other way (╭ರ_•́) !?). Well for the user is is probably more complicated to get Hyprland or Sway running that KDE. But they are simpler and should have smaller memory and CPU footprint than a big desktop environment (such as KDE). The advantage (and also disadvantage in some cases) is that you have to bring everything else yourself - lock screen, taskbar, file manager and basically everything else you can think of when you think of desktop environment. They are not a desktop environments per se. Officially they are "window managers". That means they only manage your windows - and that's it. Nothing more, nothing less.
 
 That's also why I will show only the *most basic configuration* of Hyprland and Sway. I'd say that at the point of writing this they are more for power-users.
 
@@ -731,118 +731,70 @@ I noticed that I've been basically using the Hyprland window managing philosophy
 
 #### Mango <a name="wayland-compositor-mango"></a>
 
-> [!WARNING]
-> There is a new Mango module but the documentation is not updated yet. See the example usage in the `machines/arcus/configuration.nix`.
+> [!NOTE]
+> Mango is currently the only Wayland compositor I configured using the parts modules. You can obviously configure any other compositor in parts but I just didn't find the need to as Mango takes care of everything I currently need.
 
-I installed Mango using the official flake. When using this configuration, please refer to the `machines/workstation/mango.nix` file (or `modules/de/mango.nix` if you are from the future - yeah I'm too lazy to make my config modular for now).
+[Mangowm](https://mangowm.github.io/) is a modern wayland compositor based on wlroots & scenefx. It is supposed to be lightweight and feature-rich. It supports many different layouts - scroller, master stack, grid, deck and many more. This was the main reason I switched to it over from Hyprland that only supported the tilling layout (at the time I left it) which I honestly did not find that useful.
 
-Unfortunately, for some reason Mango was the only one that was glitchy as hell on my QEMU virtual machine and nearly unusable. This might have also been one of the reasons I decided to stick with Hyprland for now.
+To install Mangowm I recommend using the flake provided in the official [Mangowm repo](https://github.com/mangowm/mango). There is an official doc for [installing mango on NixOS](https://mangowm.github.io/docs/installation/#nixos) or follow these steps to add it to your configuration:
 
-In your flake inputs add:
+1. add mango to `flake.nix` inputs:
+
 ```nix
-mangowc = {
-	url = "github:DreamMaoMao/mango";
-	inputs.nixpkgs.follows = "nixpkgs";
+mango = {
+  url = "github:mangowm/mango";
+  inputs.nixpkgs.follows = "nixpkgs";
 };
 ```
 
-Then to configure Mango itself...
+2. add mango to import in the module you want to configure mango in:
 
 ```nix
-imports = [ inputs.mangowc.nixosModules.mango ];
+imports = [
+  inputs.mango.nixosModules.mango
+  ... # your other imports
+];
+```
+3. enable the mango module:
 
-programs.mango = {
-    enable = true;
-};
-
-services.xserver.enable = false;
-security.polkit.enable = true;
-services.dbus.enable = true;
-hardware.graphics.enable = true;
-
-# QEMU-specific config
-services.xserver.videoDrivers = [ "virtio" ];
-environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
+```nix
+programs.mango.enable = true;
 ```
 
-This is the core of Mango configuration, but you will most likely want some packages with that:
+4. start mango on log in (many different ways, depending on what login manager you use):
 
-```nix
-environment.systemPackages = lib.mkAfter(with pkgs; [
-    foot
-    rofi
-    waybar
-    grim
-    slurp
-    swaybg
-    swaynotificationcenter
-    swayidle
-    swaylock-effects
-    wlogout
+>[!NOTE]
+> I personally use the [SilendSDDM login manager](https://github.com/uiriansan/SilentSDDM) and I install it through flake (similarly to Mango). You can see the config in the [mango](parts/desktops/mango/default.nix) module.
 
-    wl-clipboard
-    cliphist
-    wl-clip-persist
-
-    wlr-randr
-    brightnessctl
-    wlsunset
-
-    pamixer
-    sox
-    sway-audio-idle-inhibit
-
-    grim
-    slurp
-    satty
-
-    swayosd
-]);
 ```
-
-You might want to bring in other components such as TUI greeter:
-
-```nix
-# graphical login screen (greetd+tuigreet)
 services.greetd = {
-    enable = true;
-    settings = {
-        default_session = {
-            command = ''
-            ${pkgs.tuigreet}/bin/tuigreet --time 
-            --theme "border=yellow;text=cyan"
-            --remember --remember-session --cmd mango";
-            user = "greeter'';
-        };
+  enable = true;
+  settings = {
+    initial_session = {
+      command = "mango"; # this is the command you use to run mango (you can also just run it in your terminal to try it out)
+      user = "your-username"; # auto-login on first start, no password required
     };
-};
-
-# https://github.com/sjcobb2022/nixos-conf/blob/main/hosts/common/optional/greetd.nix
-systemd.services.greetd.serviceConfig = {
-    Type = "idle";
-    StandardInput = "tty";
-    StandardOutput = "tty";
-    StandardError = "journal";
-    TTYReset = true;
-    TTYYVHangup = true;
-    TTYVTDisallocate = true;
+    default_session = {
+      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd mango";
+      user = "greeter";
+    };
+  };
 };
 ```
+5. configure it to your liking ⸜(｡˃ᵕ˂)⸝♡ ... (*[nix options](https://mangowm.github.io/docs/nix-options), [my mango config](parts/desktops/mango/default.nix)*).
 
-And perhaps a bit of pipewire for your sound card:
+Find the complete config in the [mango](parts/desktops/mango/default.nix) module. I have also defined few of my own components such as [waybar](parts/desktops/components/waybar.nix) or [brightnessWidget](parts/desktops/components/brightness/default.nix).
 
-```nix
-services.pipewire = {
-    enable = true;
-    wireplumber.enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
-};
-```
+---
+
+Note: I had a bit of a rough time trying to install both Mango and KDE together due to some options I set in the mango module. I ultimately decided to drop this idea since it was more of a curiosity. I did manage to make it kinda "work" and you can see the code of that attempt at the [parts-kde-mango branch](https://github.com/hruboson/nixos-conf/tree/parts-kde-mango).
 
 #### Hyprland <a name="wayland-compositor-hyprland"></a>
 
-In the end, Hyprland was the window manager I stuck with. In my journey to declarative PC I tried Sway, Hyprland and Mango. Hyprland provides quite a few handy features and feels much more polished than the other Wayland compositors I have tried.
+> [!WARNING]
+> I stopped using Hyprland when I switched to parts, so all of this config can be found on the [deprecated](https://github.com/hruboson/nixos-conf/tree/deprecated) branch.
+
+Hyprland provides quite a few handy features and is a "more complete" WM in comparison to Wayland compositors I have tried.
 
 I installed Hyprland using the official flake. In your flake inputs add
 
@@ -886,7 +838,7 @@ services.xserver.videoDrivers = [ "virtio" ];
 environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
 ```
 
-And some packages with that please:
+And some packages with that:
 
 ```nix
 # hypr utils
@@ -924,6 +876,7 @@ services.pipewire = {
 };
 
 services.xserver.enable = true;
+
 # Login screen using sddm and sddm-astronaut theme
 services.displayManager.sddm = {
 	enable = true;
@@ -953,67 +906,10 @@ Installing Sway was quite easy, this config should be all you need.
 programs.sway.enable = true;
 services.xserver.enable = false; # disable X11
 security.polkit.enable = true;
-
-# enable hardware acceleration
-hardware.graphics = {
-    enable = true;
-};
-
-# QEMU-specific config
-services.xserver.videoDrivers = [ "virtio" ];
-environment.variables.WLR_NO_HARDWARE_CURSORS = "1";
 ```
 
-You will most likely want to use these packages with Sway:
+Installing login sscreen and other components is very similar to Hyprland, just change the `Session` in `Autologin` to `"sway"` (or the command to run Sway in case this ever changes).
 
-```nix
-# sway utils
-environment.systemPackages = lib.mkAfter(with pkgs; [
-    wev
-    wayland
-    wlr-randr
-
-    tuigreet
-    swaybg
-    swaylock
-    swayidle
-    sway-launcher-desktop	# TUI application launcher
-    grim					# Screenshot utility
-    slurp					# Select region for grim
-    nwg-panel				# Taskbar
-    nwg-wrapper				# custom widget displayer
-]);
-```
-
-Then bring in other components, such as TUI greeter and more:
-
-```nix
-# graphical login screen (greetd+tuigreet)
-services.greetd = {
-    enable = true;
-    settings = {
-        default_session = {
-            command = ''
-            ${pkgs.tuigreet}/bin/tuigreet --time 
-            --theme "border=yellow;text=cyan"
-            --remember --remember-session --cmd sway";
-            user = "greeter'';
-        };
-    };
-};
-
-# https://github.com/sjcobb2022/nixos-conf/blob/main/hosts/common/optional/greetd.nix
-systemd.services.greetd.serviceConfig = {
-    Type = "idle";
-    StandardInput = "tty";
-    StandardOutput = "tty";
-    StardardError = "journal";
-    TTYReset = true;
-    TTYYVHangup = true;
-    TTYVTDisallocate = true;
-};
-
-```
 ## Gaming <a name="gaming"></a>
 
 I found running games on NixOS to be very convenient and trivially simple (*though I do have full AMD PC (˵ ¬ᴗ¬˵)* ). I'm mostly using [Steam](https://wiki.nixos.org/wiki/Steam/en) and [Heroic Games Launcher](https://wiki.nixos.org/wiki/Heroic_Games_Launcher) (Epic Games and GOG) to run my games. They both provide very nice interface to install and manage Wine and Proton compatibility tools. I did find Proton to be more consistent and successful in running games in Wayland.
