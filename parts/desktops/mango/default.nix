@@ -864,8 +864,6 @@
 			  vicinae server &
 
 			  awww-daemon &
-
-			  kitty &
 			";
           };
         };
