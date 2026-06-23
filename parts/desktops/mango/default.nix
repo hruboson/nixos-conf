@@ -60,8 +60,21 @@
         services.dbus.enable = true;
         hardware.graphics.enable = true;
 
-        xdg.portal.enable = true;
-        xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+        xdg.portal = {
+          enable = true;
+          extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde pkgs.xdg-desktop-portal-gtk ];
+          config = {
+            common = {
+              default = [ "kde" ];
+            };
+
+        	mango = lib.mkForce { # overwrite mango flake.nix
+              default = [ "kde" ];
+              "org.freedesktop.portal.FileChooser" = [ "kde" ];
+              "org.freedesktop.portal.AppChooser" = [ "kde" ];
+            };
+          };
+        };
 
         services.displayManager.sddm.enable = true;
         programs.silentSDDM = {
@@ -669,7 +682,7 @@
               ];
 
               bind = [
-                "SUPER,r,reload_config"
+                "SUPER+SHIFT,r,reload_config"
                 "SUPER,Return,spawn,kitty"
                 "SUPER,space,spawn,vicinae toggle"
                 "SUPER,v,spawn,vicinae vicinae://launch/clipboard/history"
@@ -680,7 +693,7 @@
                 "SUPER+SHIFT,p,spawn_shell,wayscriber --freeze"
 
                 "ALT,Tab,toggleoverview,0"
-                "SUPER,s,switch_layout"
+                #"SUPER,s,switch_layout"
 
                 # vertical_scroller
                 "SUPER,Up,focusdir,up"
