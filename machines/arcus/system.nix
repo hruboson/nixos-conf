@@ -30,7 +30,6 @@
           "gid=100"
           "umask=000"
           "windows_names"
-          "x-systemd.automount"
         ]; # all options at https://www.mankier.com/5/systemd.mount or `man systemd.mount`
       };
 
@@ -41,7 +40,6 @@
           "rw"
           "noatime"
           "nofail"
-          "x-systemd.automount"
         ];
       };
 
