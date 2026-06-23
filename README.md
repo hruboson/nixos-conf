@@ -156,7 +156,8 @@ In general my main sources of information include (in no particular order):
         1. [Mango](#wayland-compositor-mango)
         1. [Hyprland](#wayland-compositor-hyprland)
         1. [Sway](#wayland-compositor-sway)
-1. [Minecraft server](#minecraft-server)
+1. [Gaming](#gaming)
+    1. [Minecraft server](#minecraft-server)
 1. [Parts](#parts)
 1. [NixOS optimizations](#nixos-optimizations)
 1. [Resources](#resources-detailed)
@@ -1013,12 +1014,21 @@ systemd.services.greetd.serviceConfig = {
 };
 
 ```
+## Gaming <a name="gaming"></a>
 
-## Minecraft Server <a name="minecraft-server"></a>
+I found running games on NixOS to be very convenient and trivially simple (*though I do have full AMD PC (˵ ¬ᴗ¬˵)* ). I'm mostly using [Steam](https://wiki.nixos.org/wiki/Steam/en) and [Heroic Games Launcher](https://wiki.nixos.org/wiki/Heroic_Games_Launcher) (Epic Games and GOG) to run my games. They both provide very nice interface to install and manage Wine and Proton compatibility tools. I did find Proton to be more consistent and successful in running games in Wayland.
+
+You can use the [`appPackGames`](parts/programs/packs/games.nix) module to install both Steam and HGL as well as other games and tools (*osu!*, *PS2 emulator*, *Prism Launcher for Minecraft*, *...*).
+
+To set up your graphics card follow the [AMD](https://wiki.nixos.org/wiki/AMD_GPU)/[Nvidia](https://wiki.nixos.org/wiki/NVIDIA)/[Intel](https://wiki.nixos.org/wiki/Intel_Graphics) sections on NixOS wiki as this will vary depending on your hardware.
+
+I also tried running TFT using the [Waydroid](https://wiki.nixos.org/wiki/Waydroid) emulator. I found this to be quite clunky and not really playable, so I discarded this idea completely. TFT is currently the only reason why I keep my 200GB Windows partition in dualboot.
+
+### Minecraft Server <a name="minecraft-server"></a>
 
 The [nix-minecraft](https://github.com/Infinidoge/nix-minecraft) provides a super convenient way to declare multiple Minecraft servers. The only thing that I couldn't get to run, unfortunately, was a way to run a server with `Forge` mods.
 
-An example of running Minecraft server using the PaperMC server package can be found in `machines/server/minecraft-server.nix`. To connect using RCON (Remote Console) you can use programs such as `ARRCON` (Windows) or `rcon-cli` (Linux).
+An example of running Minecraft server using the PaperMC server package can be found in the [`selfhostedMinecraftServer`](parts/services/selfhosted/minecraft-server/default.nix) module. To connect using RCON (Remote Console) you can use programs such as `ARRCON` (Windows) or `rcon-cli` (Linux).
 
 I personally manage the Minecraft server through a Windows machine using `ARRCON`.
 
