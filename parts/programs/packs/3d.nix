@@ -6,7 +6,7 @@
 			openscad
 			orca-slicer
 			#freecad -- I couldn't get even the simplest thing done with this, buggy as hell...
-			#blender -- dont need it for now, maybe later on
+			blender
 		];
 	};
 }
