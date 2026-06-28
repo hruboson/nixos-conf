@@ -12,6 +12,7 @@
 		};
 		nixvim = {
 			url = "github:nix-community/nixvim/nixos-26.05";
+			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		# DESKTOPS
@@ -42,6 +43,7 @@
 		};
 		nix-minecraft = {
 			url = "github:Infinidoge/nix-minecraft";
+			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		# PERSONAL PROJECTS
