@@ -25,7 +25,8 @@ What will you find in this repo ...
 
 **See the [Manual](#manual) section** if this is your first time installing NixOS. The purpose of this manual/documentation is for me to remember what I did with my config and for others to be able to use my configuration or copy the parts they want while still understanding what they do.
 
----
+<small><span style="color: gray;">Obligatory screenshot ([Mangowm](./parts/desktops/mango/default.nix) on [Arcus](./machines/arcus/configuration.nix))</span></small>
+![Screenshot](screenshot.png)
 
 # Machines <a name="machines"></a>
 
