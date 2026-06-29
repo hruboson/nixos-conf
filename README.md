@@ -165,7 +165,7 @@ In general my main sources of information include (in no particular order):
 
 ## Installation <a name="installation"></a>
 
-You will generally want to follow the [installation for x86-64 system](#11-manual-installation-on-x86-64-system) if you have something like desktop PC or laptop. If you have more specialized hardware, such as Raspberry Pi, your installation might look a bit different. I have so far only installed NixOS on Raspberry Pi 3B. To install NixOS on Raspberry Pi (3B) follow the [Raspberry Pi](#12-raspberry-pi-3b) manual.
+You will generally want to follow the [installation for x86-64 system](#graphical-installer) if you have something like desktop PC or laptop. If you have more specialized hardware, such as Raspberry Pi, your installation might look a bit different. I have so far only installed NixOS on Raspberry Pi 3B. To install NixOS on Raspberry Pi (3B) follow the [Raspberry Pi](#installation-raspberry) manual.
 
 When installing NixOS in an virtual environment (such as in Virtualbox or VMware) be careful of the settings. I tried installing and running this config in both Virtualbox and VMware, both were quite a pain in the ass when working on Windows. Running this configuration in Virtualbox on Linux (Fedora 42) was easy and painless (damn you Windows!).
 
@@ -173,7 +173,7 @@ Be sure to enable EFI when creating the machine (this configuration probably won
 
 VMware seemed to run much smoother, although at the time of writing this I have not figured out how to enable EFI in the settings.
 
-If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland** and want to run **NixOS in virtual machine on Windows**, **I strongly recommend** using [QEMU](https://www.qemu.org/) - see section [installing NixOS on QEMU virtual machine](#13-Installing-NixOS-on-virtual-machine-on-Windows-host-using-QEMU). I have not been able to run any Wayland compositor through Virtualbox or VMware on Windows. This tutorial might be a bit advanced than just using Virtualbox or VMware, but you should be able to customize the virtual machine more and mainly, as previously stated, be able to run **Wayland**.
+If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland** and want to run **NixOS in virtual machine on Windows**, **I strongly recommend** using [QEMU](https://www.qemu.org/) - see section [installing NixOS on QEMU virtual machine](#qemu-windows). I have not been able to run any Wayland compositor through Virtualbox or VMware on Windows. This tutorial might be a bit advanced than just using Virtualbox or VMware, but you should be able to customize the virtual machine more and mainly, as previously stated, be able to run **Wayland**.
 
 ### Manual installation on x86-64 system <a name="installation"></a>
 
@@ -189,7 +189,7 @@ Set up partitions - here you will have to select on which drive the system will 
 
 If it gets stuck at **46%** DO NOT PANIC. This is normal and it will take a while (could be up to an hour depending on your internet speed). At this point the NixOS installer is downloading all the necessary packages. You can see what it is downloading by clicking the *Toggle logs* button.
 
-Once the system is installed you can reboot and remove the usb drive/cd/where you have nixos installation on. Then create a new config or bring already existing. Follow the [first login](#2-First-login) section for basic NixOS configuration and rebuild.
+Once the system is installed you can reboot and remove the usb drive/cd/where you have nixos installation on. Then create a new config or bring already existing. Follow the [first login](#first-login) section for basic NixOS configuration and rebuild.
 
 #### Using NixOS minimal ISO <a name="minimal-installer"></a>
 
