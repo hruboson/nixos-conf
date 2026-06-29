@@ -157,7 +157,7 @@ In general my main sources of information include (in no particular order):
         1. [Mango](#wayland-compositor-mango)
         1. [Hyprland](#wayland-compositor-hyprland)
         1. [Sway](#wayland-compositor-sway)
-1. [Gaming](#gaming)
+1. [Gaming](#gaming-manual)
     1. [Minecraft server](#minecraft-server)
 1. [Parts](#parts)
 1. [NixOS optimizations](#nixos-optimizations)
@@ -911,7 +911,7 @@ security.polkit.enable = true;
 
 Installing login sscreen and other components is very similar to Hyprland, just change the `Session` in `Autologin` to `"sway"` (or the command to run Sway in case this ever changes).
 
-## Gaming <a name="gaming"></a>
+## Gaming <a name="gaming-manual"></a>
 
 I found running games on NixOS to be very convenient and trivially simple (*though I do have full AMD PC (˵ ¬ᴗ¬˵)* ). I'm mostly using [Steam](https://wiki.nixos.org/wiki/Steam/en) and [Heroic Games Launcher](https://wiki.nixos.org/wiki/Heroic_Games_Launcher) (Epic Games and GOG) to run my games. They both provide very nice interface to install and manage Wine and Proton compatibility tools. I did find Proton to be more consistent and successful in running games in Wayland.
 
