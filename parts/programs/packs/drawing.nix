@@ -12,6 +12,7 @@
       environment.systemPackages = with pkgs; [
         inkscape-with-extensions
         gimp-with-plugins
+		scribus
       ];
 
       # PhotoGIMP: GIMP patch for Photoshop-like layout
