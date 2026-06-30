@@ -147,7 +147,11 @@ In general my main sources of information include (in no particular order):
 1. [First login](#first-login)
 1. [Git](#git)
 1. [Hardware capabilities](#hw-capabilities)
+    1. [GPU](#gpu)
+    1. [Backups](#backups)
+    1. [Bluetooth](#bluetooth)
 1. [Flakes](#flakes)
+1. [Parts](#parts)
 1. [Home-manager](#home-manager)
     1. [Nixvim](#nixvim)
     1. [Plasma manager](#plasma-manager)
@@ -159,7 +163,6 @@ In general my main sources of information include (in no particular order):
         1. [Sway](#wayland-compositor-sway)
 1. [Gaming](#gaming-manual)
     1. [Minecraft server](#minecraft-server)
-1. [Parts](#parts)
 1. [NixOS optimizations](#nixos-optimizations)
 1. [Resources](#resources-detailed)
 
@@ -597,10 +600,7 @@ Or the old fashioned way using SSH keys (which is still quite easy on Linux):
 
 ## Hardware capabilities <a name="hw-capabilities"></a>
 
-> [!IMPORTANT]
-> Section under construction...
-
-In this section I go over some of the more hardware-specific configurations, such as: external drives, bluetooth, ...
+In this section I go over some of the more hardware-specific configurations, such as: external drives, bluetooth. (I might write up more about this later.)
 
 ### Drives
 
@@ -636,13 +636,39 @@ home-manager.users.${username} = {
 
 See more advanced config in the [`machines/cumulus/system.nix`](./machines/cumulus/system.nix).
 
-#### Backups
+#### GPU <a name="gpu"></a>
+
+To set up your dedicated graphics card follow the [AMD](https://wiki.nixos.org/wiki/AMD_GPU)/[Nvidia](https://wiki.nixos.org/wiki/NVIDIA)/[Intel](https://wiki.nixos.org/wiki/Intel_Graphics) sections on NixOS wiki as this will vary depending on your hardware.
+
+If you use AMD or Intel GPU all you need to do should be just:
+
+```nix
+hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+
+    # for AMD add this line
+    services.xserver.videoDrivers = [ "amdgpu" ];
+
+    # for Intel add these lines
+    etraPackages = with pkgs; [
+        # Required for modern Intel GPUs (Xe iGPU and ARC)
+        intel-media-driver     # VA-API (iHD) userspace
+        vpl-gpu-rt             # oneVPL (QSV) runtime
+        intel-compute-runtime  # OpenCL (NEO) + Level Zero for Arc/Xe
+    ];
+};
+```
+
+In case of any issues I recommend following the Official NixOS Wiki for [AMD](https://wiki.nixos.org/wiki/AMD_GPU)/[Nvidia](https://wiki.nixos.org/wiki/NVIDIA)/[Intel](https://wiki.nixos.org/wiki/Intel_Graphics).
+
+#### Backups <a name="backups"></a>
 
 For backing up my external drives I use the [`restic`](https://github.com/restic/restic) service. I found this to be the easiest way to have declarative backups in NixOS.
 
 See example usage in [`machines/cumulus/system.nix`](./machines/cumulus/system.nix).
 
-### Bluetooth
+### Bluetooth <a name="bluetooth"></a>
 
 If your machine has support for bluetooth, the easiest way to manage bluetooth device is to turn on the `blueman` or `bluetoothctl`:
 
@@ -688,19 +714,61 @@ The issue usually happens by BlueZ keeping a broken cached device state. Hopeful
 
 ## Flakes <a name="flakes"></a>
 
-I'm currently in the process of reading [NixOS & Flakes Book - An unofficial book for beginners](https://nixos-and-flakes.thiscute.world/) because I feel like flakes are a bit advanced topic and I don't want to get things wrong. Once I feel more confident I will complete this section.
+> [!NOTE]
+> Recommended resources: [video](https://youtu.be/JCeYq72Sko0?si=PRawJxHEbx6lIRpy), [book](https://nixos-and-flakes.thiscute.world/)
+
+Nix flakes allow you to pin versions of dependencies (stuff you install) and provides a standardised way to structure Nix projects, which a user can then get on their system declaratively. Although it is an experimental feature, flakes have become de-facto a standard in the community.
+
+The version pinning is very similar to something like a `package.json`/`requirements.txt`/`go.sum`/.... This makes reproducibility even better as with pinned versions you can share your config with anyone.
+
+In practice you mainly define two things:
+
+1. **inputs** (software and other dependencies)
+2. **outputs** (machine definitions)
+
+The inputs can be something like the *nixpkgs*, *Mango wayland compositor*, *nix-minecraft*, *your own project that exposes flake.nix* and so much more.
+
+You then update the software using the command `nix flake update` to update your whole system or `nix flake update <input-name>` to update one single input. This will create file `flake.lock` where the versions will be locked and you can use this file to the rebuild system on your other machines (or even the same on in case something breaks).
+
+To be honest, flakes are such a big tool and topic that I could not possibly exaplain in this manual (っ- ‸ - ς). If you want to learn more I recommend the [NixOS & Flakes Book - An unofficial book for beginners](https://nixos-and-flakes.thiscute.world/).
+
+**TLDR**: I use flakes to install and pin dependencies (software) to make my build reproducible and have some of the software that might not be available in the `nixpkgs` repo.
+
+## Parts
+
+> [!NOTE]
+> Recommended resources: [video](https://www.youtube.com/watch?v=aNgujRXDTdE)
+
+Parts allow you to make your configuration modular with very little overhead. The basic idea here is that instead of including stuff by defining file paths, you define each part of you configuration in a module with a name and then include the module by that name instead of the file name. Another core principle is that all the code related to a given topic should live together in a single module.
+
+Parts handle merging definitions for the same option across multiple modules automatically. This means you can split related configuration for a single topic across several files without worrying about manually combining the results yourself.
 
 ## Home-manager <a name="home-manager"></a>
 
-Home-manager lets you manage user files (typically dotfiles) through nix configuration. This can be quite nice if you have a certain themes, keybinds or other settings you want to apply to multiple programs at once in your nix configuration.
+> [!NOTE]
+> Recommended resources: [video](https://www.youtube.com/watch?v=FcC2dzecovw), [video](https://www.youtube.com/watch?v=EUiXzX7nthY), [video](https://www.youtube.com/watch?v=YZAnJ0rwREA), [video](https://www.youtube.com/watch?v=b641h63lqy0), [video](https://www.youtube.com/watch?v=uP9jDrRvAwM)
 
-In the most basic use, you can just copy a dotfiles directory (or repository) to your `.config` home folder. This is what I'm currently doing and I find it to be the easiest way to manage your dotfiles. There are many advantages to using fully declarative dotfiles through home-manager and nix. For more information about this I recommend [Vimjoyer's video about home-manager](https://youtu.be/FcC2dzecovw?si=wpAe9nwFCOXFvOIe).
+[Home-manager](https://github.com/nix-community/home-manager) lets you manage user-specific environment (typically dotfiles) through nix configuration. This can be quite nice if you have a certain themes, keybinds or other settings you want to apply to multiple programs at once in your nix configuration. There are also many plugins, flakes and other additions that will make configuring almost anything in nix possible.
+
+In the most basic use, you can just copy a dotfiles directory (or repository) to your `.config` home folder. This is what I was doing at first (now at the [deprecated](https://github.com/hruboson/nixos-conf/tree/deprecated) branch ). There are many advantages to using fully declarative dotfiles through home-manager and nix. For more information about this I recommend [Vimjoyer's video about home-manager](https://youtu.be/FcC2dzecovw?si=wpAe9nwFCOXFvOIe).
+
+Currently I have configured the following modules with home-manager:
+
+- [Neovim](parts/programs/nvim/default.nix) ... using the [Nixvim](https://github.com/nix-community/nixvim) configuration system
+- [Mango](parts/desktops/mango/default.nix) ... using the built-in options from Mangos flake
+- [ZSH](parts/programs/kitty/default.nix)
+- [Kitty](parts/programs/kitty/default.nix)
+- [git](parts/users/hruon/default.nix)
+- [default applications (xdg.mimeApps.defaultApplications)](parts/programs/packs/desktop.nix)
 
 
 ### Nixvim <a name="nixvim"></a>
 
-> [!IMPORTANT]
-> Section under construction...
+[Nixvim](https://github.com/nix-community/nixvim) is a configuration system that lets you easily manage your neovim configuration in pure nix code. It is a very handy tool and makes the whole neovim configuration easier, especially setting up LSPs.
+
+The configuration can be found [here](parts/programs/nvim/default.nix).
+
+In theory by running `nixos-rebuild` and copying the generated config in `~/home/${user}/.config/nvim/` you should be able to migrate this config to other distros as well (or just use home-manager on other distros, which is probably easier tbh...).
 
 ### Plasma-manager <a name="plasma-manager"></a>
 
@@ -934,11 +1002,6 @@ ARRCON.exe -H SERVER_ADDRESS -P RCON_PORT -p PASSWORD
 ```
 
 The default port (if unspecified) is `25575`.
-
-## Parts
-
-> [!IMPORTANT]
-> Section under construction...
 
 ## NixOS optimizations <a name="nixos-optimizations"></a>
 
