@@ -93,6 +93,12 @@
         nixpkgs.config.allowUnfree = true;
         programs.discord.enable = true;
 
+		# run apps without confirmation (Dolphin)
+        xdg.configFile."kiorc".text = ''
+          [Executable scripts]
+          behaviourOnLaunch=execute
+        '';
+
         # File types -> app associations
         # mimetype.io/all-types
         xdg.mimeApps = {
