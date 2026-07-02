@@ -14,7 +14,10 @@
         containers.wordpress = {
           image = "wordpress:latest";
           ports = [ "8080:80" ];
-          volumes = [ "/var/lib/wordpress-data:/var/www/html" ];
+          volumes = [ 
+		  	"/var/lib/wordpress-data:/var/www/html"
+			"/var/lib/wordpress-php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini"
+		  ];
           environment = {
             WORDPRESS_DB_HOST = "wordpress-db"; # container name, not localhost
             WORDPRESS_DB_USER = "wordpress";
