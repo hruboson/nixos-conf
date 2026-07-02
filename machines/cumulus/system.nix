@@ -19,7 +19,7 @@
 	in {
 		boot.loader.efi.canTouchEfiVariables = true;
 		boot.loader.grub.enable = true;
-		boot.loader.grub.device = "/dev/sdc";
+		boot.loader.grub.device = "/dev/disk/by-id/ata-Samsung_SSD_840_EVO_250GB_S1DBNSAD910570F";
 		boot.loader.grub.useOSProber = false; # Only nixos running on this server (no other system)
 
 		boot.supportedFilesystems = [ "ntfs" ];
