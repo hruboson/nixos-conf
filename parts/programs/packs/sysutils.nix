@@ -1,7 +1,7 @@
 { self, inputs, ... }: {
 	flake.nixosModules.appPackSysutils = { config, lib, pkgs, username, ... }: {
 		environment.systemPackages = with pkgs; [
-			btop
+			btop btop-rocm
 			dysk
 			mc
 			mission-center

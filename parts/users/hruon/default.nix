@@ -1,5 +1,8 @@
 { self, inputs, ... }: {
-	flake.nixosModules.users = { pkgs, lib, config, username, ... }: {
+	flake.nixosModules.users = { pkgs, lib, config, username, ... }: let 
+		userMail = "hruboson@gmail.com";
+		userName = "Ondřej Hruboš";
+	in {
 		users.groups.media = {}; # group for external drives that need both services and user access
 		users.users.${username} = {
 			isNormalUser = true;
@@ -16,10 +19,19 @@
 				settings = {
 					credential.helper = "${pkgs.gh}/bin/gh auth git-credential";
 					user = {
-						name = "Ondřej Hruboš";
-						email = "hruboson@gmail.com";
+						name = userName;
+						email = userMail;
 						init.defaultBranch = "main";
 						pull.rebase = true;
+					};
+				};
+			};
+			programs.jujutsu = {
+				enable = true;
+				settings = {
+					user = {
+						name = userName;
+						email = userMail;
 					};
 				};
 			};

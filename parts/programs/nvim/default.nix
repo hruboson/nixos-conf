@@ -353,6 +353,7 @@
 			extraPlugins = with pkgs.vimPlugins; [
 				nvim-cokeline
 				plenary-nvim   # cokeline dependency
+				lazyjj-nvim
 			];
 
 			keymaps = [
@@ -399,7 +400,9 @@
 			{ mode = "n"; key = "<leader>tu"; action = "<cmd>Telescope undo<CR>"; options.desc = "Undo history"; }
 			{ mode = "n"; key = "<leader>tc"; action = "<cmd>Telescope conflicts<CR>"; options.desc = "Git conflicts"; }
 			{ mode = "n"; key = "<leader>tp"; action = "<cmd>Telescope neoclip plus<CR>"; options.desc = "Clipboard"; }
+
 			{ mode = "n"; key = "<leader>lg"; action = "<cmd>LazyGit<cr>"; options.desc = "LazyGit"; }
+			{ mode = "n"; key = "<leader>lj"; action = "<cmd>LazyJJ<cr>"; options.desc = "LazyJJ"; }
 
 			# NORMAL - ufo
 			{ mode = "n"; key = "fo"; action = "zc"; options.desc = "Close fold at cursor"; }
@@ -437,6 +440,7 @@
 				-- ── COKELINE ─────────────────────────────────────────────
 				local get_hex = require("cokeline.hlgroups").get_hl_attr
 				local yellow = vim.g.terminal_color_3
+				require('lazyjj').setup({})
 				require("cokeline").setup({
 						default_hl = {
 						fg = function(buffer)
