@@ -508,11 +508,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779871375,
-        "narHash": "sha256-ql4v+3Nrwl//vzLZHXJx38LPba5GbKB8qp6mVqlxrF8=",
+        "lastModified": 1783109291,
+        "narHash": "sha256-AjWfKG4O8YV63EmKpkNBglrTuU02nHzjHhdT37026QU=",
         "owner": "hruboson",
         "repo": "tropikey",
-        "rev": "0d0b02a14ed2e71db0798f36bb5493752e57b1a1",
+        "rev": "5913ff1eb69ed6d52b5e85d64b47ef54a24540d2",
         "type": "github"
       },
       "original": {

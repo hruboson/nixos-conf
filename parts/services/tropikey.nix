@@ -5,7 +5,7 @@
 		];
 		programs.tropikey = {
 			enable = true;
-			enableSshPkcs11 = true;
+			#enableSshPkcs11 = true;
 		};
 	};
 }
