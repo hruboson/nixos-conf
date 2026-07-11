@@ -15,6 +15,11 @@
 		scribus
       ];
 
+      fonts.packages = with pkgs; [
+        newcomputermodern
+        vista-fonts
+      ];
+
       # PhotoGIMP: GIMP patch for Photoshop-like layout
       # Declaratively fetches and extracts the official PhotoGIMP zip
       # Copies files instead of symlinking so GIMP can write to them
