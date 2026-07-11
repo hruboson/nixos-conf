@@ -27,6 +27,7 @@
           heroicWithExtras # epic games + steam + gog in one app
           lutris # Windows games emulator
           bottles # can run windows games if you have the .exe file
+          protontricks # install winetricks verbs (vcrun, dotnet, etc) into a game's proton prefix
 
           libretro.beetle-psx-hw # possible ps5 controller fix
 
