@@ -107,6 +107,7 @@
 		home-manager.users.${username} = home;
 		environment.systemPackages = (with pkgs; [
 			macchina
+			cava # sound visualizer
 		]);
 	};
 }
