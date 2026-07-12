@@ -594,7 +594,7 @@
 
               # Overview
               hotarea_size = 10;
-              enable_hotarea = 1;
+              enable_hotarea = 0;
               ov_tab_mode = 0;
               overviewgappi = 5;
               overviewgappo = 30;
@@ -849,6 +849,7 @@
               cursor_hide_timeout = 0;
               drag_tile_to_tile = 1;
               single_scratchpad = 1;
+			  
 
               layerrule = "animation_type_open:fade,animation_type_close:fade,layer_name:vicinae";
               windowrule = [
