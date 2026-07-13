@@ -1,7 +1,7 @@
 { self, inputs, ... }: {
 	flake.nixosModules.selfhostedForgejo = { config, lib, pkgs, username, ... }: {
 		services.openssh.enable = true;
-		services.openssh.ports = [ 2222 ];
+		services.openssh.ports = [ 2222 22 ];
 		services.forgejo = {
 			enable = true;
 			lfs.enable = true;
