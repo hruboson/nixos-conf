@@ -34,6 +34,12 @@
 			settings = {
 				overwriteprotocol = "http";
 				default_phone_region = "CZ";
+				trusted_domains = [
+					"servernix.local"
+					"servernix.taild0d0db.ts.net"
+					"fd7a:115c:a1e0::2701:2777"
+					"100.70.39.111"
+				];
 			};
 			
 			datadir = dataDir;
