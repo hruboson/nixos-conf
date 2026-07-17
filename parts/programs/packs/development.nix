@@ -13,6 +13,8 @@
 
 			jujutsu
 			lazyjj
+
+			poedit
 		];
 
 		virtualisation.docker.enable = true;
