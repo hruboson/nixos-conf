@@ -41,7 +41,8 @@
 
           # communications
           #discord -> now managed through HM
-          element-desktop
+          element-desktop # matrix client
+		  fluffychat # matrix client
 
           # browser
           firefox
