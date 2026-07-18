@@ -100,6 +100,12 @@
 				};
 				themeFile = "vague";
 			};
+
+			# make kitty the default terminal for Dolphin / KDE
+			home.activation.dolphinDefaultTerminal = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+				run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalApplication kitty
+				run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalService kitty.desktop
+			'';
 		};
 	in {
 		programs.zsh.enable = true;
