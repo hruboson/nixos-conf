@@ -5,6 +5,7 @@
 		imports = [ inputs.nixvim.homeModules.nixvim ];
 
 		programs.nixvim = {
+			nixpkgs.source = inputs.nixpkgs; # fixes issue with conflicting luajit (most likely caused by gamescope)
 			enable = true;
 			defaultEditor = true;
 			viAlias = true;
@@ -514,14 +515,14 @@
 		};
 	};
 
-	home-static = { pkgs, lib, config, ... }: {
+	/*home-static = { pkgs, lib, config, ... }: {
 		programs.neovim = {
 			enable = true;
 			defaultEditor = true;
 		};
 
 		home.file.".config/nvim".source = inputs.nvim-conf;
-	};
+	};*/
 	in {
 		home-manager.users.${username} = home;
 #home-manager.users.${username} = home-static;
