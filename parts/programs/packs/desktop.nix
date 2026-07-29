@@ -7,6 +7,12 @@
       username,
       ...
     }:
+    let
+      pkgs-unstable = import inputs.nixpkgs-unstable {
+        system = pkgs.stdenv.hostPlatform.system;
+        config = config.nixpkgs.config;
+      };
+    in
     {
       nixpkgs.config.allowUnfree = true;
 
@@ -30,7 +36,7 @@
           android-file-transfer
 
           # img, video, audio
-          oculante
+          pkgs-unstable.oculante
           gthumb
           vlc
           spotify
