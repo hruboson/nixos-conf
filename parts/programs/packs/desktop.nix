@@ -24,6 +24,15 @@
             ln -s ${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu \
             $out/etc/xdg/menus/applications.menu
           '';
+
+          oculante-wrapped = pkgs.symlinkJoin {
+            name = "oculante";
+            paths = [ pkgs-unstable.oculante ];
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/oculante --set WINIT_UNIX_BACKEND x11
+            '';
+          };
         in
         [
           # files
@@ -36,7 +45,7 @@
           android-file-transfer
 
           # img, video, audio
-          pkgs-unstable.oculante
+		  oculante-wrapped
           gthumb
           vlc
           spotify
