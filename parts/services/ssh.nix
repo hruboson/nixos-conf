@@ -40,11 +40,11 @@
           enable = true;
         };
 
-        programs.keychain = {
+        /*programs.keychain = {
           enable = true;
           enableBashIntegration = true;
           enableZshIntegration = true;
-        };
+        };*/
       };
     };
 }
