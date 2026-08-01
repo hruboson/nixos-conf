@@ -8,7 +8,7 @@
       ...
     }:
     let
-      addAllKeys = pkgs.writeShellScript "ssh-add-all" ''
+      /*addAllKeys = pkgs.writeShellScript "ssh-add-all" ''
         set -eu
         export PATH=${pkgs.openssh}/bin:$PATH
         for f in "$HOME"/.ssh/*; do
@@ -21,10 +21,10 @@
             ssh-add "$f" </dev/null >/dev/null 2>&1 || true
           fi
         done
-      '';
+      '';*/
     in
     {
-      systemd.user.services.ssh-add-all = {
+      /*systemd.user.services.ssh-add-all = {
         description = "Add all passphrase-less SSH keys to ssh-agent";
         wantedBy = [ "default.target" ];
         after = [ "ssh-agent.socket" ];
@@ -33,7 +33,7 @@
           Type = "oneshot";
           ExecStart = "${addAllKeys}";
         };
-      };
+      };*/
 
       home-manager.users.${username} = {
         programs.ssh = {
