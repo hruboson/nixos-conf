@@ -62,16 +62,17 @@
 
         xdg.portal = {
           enable = true;
-          extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde pkgs.xdg-desktop-portal-gtk ];
+          extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
           config = {
             common = {
               default = [ "kde" ];
             };
 
-        	mango = lib.mkForce { # overwrite mango flake.nix
-              default = [ "kde" ];
-              "org.freedesktop.portal.FileChooser" = [ "kde" ];
-              "org.freedesktop.portal.AppChooser" = [ "kde" ];
+            mango = {
+              default = lib.mkForce [ "kde" ];
+              "org.freedesktop.portal.FileChooser" = lib.mkForce [ "kde" ];
+			  "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "wlr" ];
+			  "org.freedesktop.impl.portal.Screenshot" = lib.mkForce [ "wlr" ];
             };
           };
         };

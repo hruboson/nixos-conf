@@ -50,6 +50,9 @@
           vlc
           spotify
           quodlibet
+		  (pkgs.wrapOBS {
+      		plugins = with pkgs.obs-studio-plugins; [ ];
+		  })
 
           # emulator
           bottles

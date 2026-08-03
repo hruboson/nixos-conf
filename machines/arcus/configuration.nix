@@ -50,6 +50,8 @@
 
 		## SOUND
 		services.pulseaudio.enable = false;
+		security.rtkit.enable = true;
+		services.pipewire.enable = true;
 
 		## TOUCHPAD
 		services.libinput.enable = true;
