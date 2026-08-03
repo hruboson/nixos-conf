@@ -145,11 +145,13 @@ In general my main sources of information include (in no particular order):
     1. [QEMU on Linux host](#qemu-linux)
     1. [Dualbooting with Windows](#dualboot-windows)
 1. [First login](#first-login)
+1. [Connectivity](#connectivity)
+    1. [Bluetooth](#bluetooth)
+    1. [Eduroam](#eduroam)
 1. [Git](#git)
 1. [Hardware capabilities](#hw-capabilities)
     1. [GPU](#gpu)
     1. [Backups](#backups)
-    1. [Bluetooth](#bluetooth)
 1. [Flakes](#flakes)
 1. [Parts](#parts)
 1. [Home-manager](#home-manager)
@@ -319,11 +321,11 @@ If you plan on running any Wayland compositor (such as *Sway* or *Hyprland*) thr
 
 Although setting up a QEMU virtual machine is much more difficult than just running Virtualbox or VMware, I found it to be much smoother experience once you have it set up. It also allows you to run Wayland compositors.
 
-Install QEMU using the [Windows installer (20250819)](https://qemu.weilnetz.de/w64/qemu-w64-setup-20250819.exe) (or choose a newer version [here](https://qemu.weilnetz.de/w64/)). By default the QEMU binaries (.exe files) might not be in PATH. To add them, go to the directory where you installed QEMU, copy the path and add it to environment variables: in Windows search bar search for *environment variables*, click on *edit the system environment variables*, click on *Environment variables...*, double click the item Path under User (or System) variables, click *New* and paste the QEMU directory.
+Install QEMU using the [Windows installer (20260729)](https://qemu.weilnetz.de/w64/2026/qemu-w64-setup-20260729.exe) (or pick up a **newer version *[here](https://qemu.weilnetz.de/w64/)***). By default the QEMU binaries (.exe files) might not be in PATH. To add them, go to the directory where you installed QEMU, copy the path and add it to environment variables: in Windows search bar search for *environment variables*, click on *edit the system environment variables*, click on *Environment variables...*, double click the item Path under User (or System) variables, click *New* and paste the QEMU directory.
 
-Also download the `OVMF/OVMF_CODE.fd` to be able to run UEFI instead of BIOS. At the time of writing this guide (14.11.2025) you can download it [here](https://github.com/kholia/OSX-KVM/raw/refs/heads/master/OVMF_CODE.fd).
+Also download the `OVMF/OVMF_CODE.fd` to be able to run UEFI instead of BIOS. At the time of writing this guide (14.11.2025) you can download it [here](https://qemu.weilnetz.de/test/ovmf/usr/share/OVMF/OVMF_CODE.fd) or see the [download page⤴](https://qemu.weilnetz.de/test/ovmf/usr/share/OVMF/).
 
-The last piece of software you might need is a [TAP-windows 9.21.x](https://swupdate.openvpn.org/community/releases/tap-windows-9.21.2.exe). This program allows you to create a bridged connection for your virtual machine. This guide uses that and I recommend it, mostly just to be able to connect through ssh to your virtual machine. Setting it up in Windows is quite easy:
+*Optional:* The last piece of software you might need is a [TAP-windows 9.21.x](https://swupdate.openvpn.org/community/releases/tap-windows-9.21.2.exe) or grab a [different version⤴](https://sourceforge.net/p/openvpn/mailman/message/35030871/). This program allows you to create a bridged connection for your virtual machine. This guide uses that and I recommend it, mostly just to be able to connect through ssh to your virtual machine. Setting it up in Windows is quite easy:
 
 1. Install [TAP-windows 9.21.x](https://swupdate.openvpn.org/community/releases/tap-windows-9.21.2.exe) or newer version if installation fails
 2. On Windows: go to Control Panel -> Network and Sharing Center -> Change adapter settings
@@ -333,7 +335,7 @@ The last piece of software you might need is a [TAP-windows 9.21.x](https://swup
 
 Now you are ready to actually set up the virtual machine.
 
-First start by creating your disk image. To create a qcow2 image using QEMU, you can use the command: 
+First start by creating your disk image. To create a `qcow2` image using QEMU, you can use the command: 
 
 ```bash
 qemu-img.exe create -f qcow2 your_image_name.img size
@@ -357,7 +359,7 @@ qemu-system-x86_64.exe ^
 
 Change the `drive file="..."`,`-cdrom "..."` and `-bios "..."` arguments to paths to your files on your system.
 
-Now you are in a graphical installer and the rest should be quite straightforward. Follow the [graphical installation manual](#Using_NixOS_graphical_installer). Once you are done you can shut down the virtual machine (either manually through the guest system or just close the QEMU window). At this point NixOS should be installed on your virtual drive (`your_drive.qcow2`).
+Now you are in a graphical installer and the rest should be quite straightforward. Follow the [graphical installation manual](#graphical-installer). Once you are done you can shut down the virtual machine (either manually through the guest system or just close the QEMU window). At this point NixOS should be installed on your virtual drive (`your_drive.qcow2`).
 
 When running installed system you don't have to specify the `-cdrom` path, so your qemu command should look something like:
 
@@ -550,7 +552,7 @@ boot.loader.grub = {
 7. Enjoy your new dualboot system (੭˃ᴗ˂)੭
 
 ## First login <a name="first-login"></a>
-- when first logging in the NixOS login will be `root` with password you set during the `nixos-itwnstall`
+- when first logging in the NixOS login will be `root` with password you set during the `nixos-install`
 - update channels (package repositories): `nix-channel --update`
 - edit configuration in `/etc/nixos/configuration.nix`, use `nano /etc/nixos/configuration.nix` to edit that file
 - uncomment lines starting with `networking.` and set `hostName`
@@ -561,7 +563,54 @@ boot.loader.grub = {
 - then **rebuild** nix using the `nixos-rebuild switch` (will probably take a while), it will take the configuration file and apply the changes we made in it
 - apply password to the new user: `passwd username`
 
-### Connecting to Eduroam
+## Connectivity <a name="connectivity"></a>
+
+### Bluetooth <a name="bluetooth"></a>
+
+If your machine has support for bluetooth, the easiest way to manage bluetooth device is to turn on the `blueman` or `bluetoothctl`:
+
+```nix
+services.blueman.enable = true;
+hardware.bluetooth.enable = true;
+```
+
+You can find example configuration in [`parts/services/bluetooth.nix`](./parts/services/bluetooth.nix).
+
+#### Troubleshooting bluetooth
+
+This section is mostly just a random bits of knowledge I collected while troubleshooting various things...
+
+##### PS5 controller (DualSense) not properly pairing
+
+If your PS5 controller shows inconsistent state:
+```
+Connected: yes
+Paired: no
+Trusted: yes
+```
+
+> [!TIP]
+> When using `bluetoothctl` use the Tab key to autocomplete the MAC address.
+
+It means the controller was only connected temporarily and is not permanently paired. To resolve the issue follow these steps:
+1. Remove existing device:
+    1. Run `bluetoothctl`
+    1. Remove the controller: `remove <MAC_ADDRESS>`
+1. Delete cached pairing data:
+    1. List bluetooth adapters: `ls /var/lib/bluetooth`, you'll see something like FC:B0:DE:83:C7:8A
+    1. Remove the controller entry: `sudo rm -rf /var/lib/bluetooth/<ADAPTER_MAC>/<CONTROLLER_MAC>`
+1. Restart bluetooth service: `sudo systemctl restart bluetooth`
+1. Put controller in pairing mode: hold PS button + Share (top left). Wait for the light to flash quickly.
+1. Pair properly using `bluetoothctl`:
+    1. Run `bluetoothctl`
+    1. Inside run: `power on` -> `agent on` -> `default-agent` -> `scan on`
+    1. Wait for your controller to appear.
+    1. When you see your controller run: `pair <CONTROLLER_MAC>` -> `trust <CONTROLLER_MAC>` -> `connect <CONTROLLER_MAC>`
+
+The issue usually happens by BlueZ keeping a broken cached device state. Hopefully this will help you fix it.
+
+
+### Connecting to Eduroam <a name="eduroam"></a>
 - download eduroam activation python script for your university [here](https://cat.eduroam.org/#)
 - run the script using nix shell:
 
@@ -569,7 +618,7 @@ boot.loader.grub = {
 nix-shell -p "python3.withPackages (ps: with ps; [ dbus-python ])" --run python3 <your-eduroam.py>
 ```
 
-- now you have certificate available in your device and should be able to connect
+- now you have certificate available in your device and should be able to connect (after using your credentials to connect)
 - you might have to enable saving password for all users using `nmtui`:
     - Run `sudo nmtui`
     - Edit connection -> Eduroam -> Save password for all users
@@ -600,7 +649,7 @@ Or the old fashioned way using SSH keys (which is still quite easy on Linux):
 
 ## Hardware capabilities <a name="hw-capabilities"></a>
 
-In this section I go over some of the more hardware-specific configurations, such as: external drives, bluetooth. (I might write up more about this later.)
+In this section I go over some of the more hardware-specific configurations (I might write up more about this later.)
 
 ### Drives
 
@@ -668,50 +717,6 @@ For backing up my external drives I use the [`restic`](https://github.com/restic
 
 See example usage in [`machines/cumulus/system.nix`](./machines/cumulus/system.nix).
 
-### Bluetooth <a name="bluetooth"></a>
-
-If your machine has support for bluetooth, the easiest way to manage bluetooth device is to turn on the `blueman` or `bluetoothctl`:
-
-```nix
-services.blueman.enable = true;
-hardware.bluetooth.enable = true;
-```
-
-You can find example configuration in [`parts/services/bluetooth.nix`](./parts/services/bluetooth.nix).
-
-#### Troubleshooting bluetooth
-
-This section is mostly just a random bits of knowledge I collected while troubleshooting various things...
-
-##### PS5 controller (DualSense) not properly pairing
-
-If your PS5 controller shows inconsistent state:
-```
-Connected: yes
-Paired: no
-Trusted: yes
-```
-
-> [!TIP]
-> When using `bluetoothctl` use the Tab key to automatically complete the MAC address.
-
-It means the controller was only connected temporarily and is not permanently paired. To resolve the issue follow these steps:
-1. Remove existing device:
-    1. Run `bluetoothctl`
-    1. Remove the controller: `remove <MAC_ADDRESS>`
-1. Delete cached pairing data:
-    1. List bluetooth adapters: `ls /var/lib/bluetooth`, you'll see something like FC:B0:DE:83:C7:8A
-    1. Remove the controller entry: `sudo rm -rf /var/lib/bluetooth/<ADAPTER_MAC>/<CONTROLLER_MAC>`
-1. Restart bluetooth service: `sudo systemctl restart bluetooth`
-1. Put controller in pairing mode: hold PS button + Share (top left). Wait for the light to flash quickly.
-1. Pair properly using `bluetoothctl`:
-    1. Run `bluetoothctl`
-    1. Inside run: `power on` -> `agent on` -> `default-agent` -> `scan on`
-    1. Wait for your controller to appear.
-    1. When you see your controller run: `pair <CONTROLLER_MAC>` -> `trust <CONTROLLER_MAC>` -> `connect <CONTROLLER_MAC>`
-
-The issue usually happens by BlueZ keeping a broken cached device state. Hopefully this will help you fix it.
-
 ## Flakes <a name="flakes"></a>
 
 > [!NOTE]
@@ -774,7 +779,7 @@ In theory by running `nixos-rebuild` and copying the generated config in `~/home
 
 Plasma-manager is a tool for managing your KDE configuration declaratively. Unfortunately I found it quite lacking of features and configuration options you can set. One of the reasons I switched to NixOS was that I could have my **whole** computer declarative. The biggest problem with KDE is that the configuration files are scattered across the system. This has been a problem for a long time and I do hope that KDE can fix it. There are also tools such as [Konsave](https://github.com/Prayag2/konsave) which I have not personally used (but might give a try in the future).
 
-## Desktop environment <a name="desktop-environment"></a>
+## Desktop environments <a name="desktop-environment"></a>
 
 Desktop environments are what turns your PC from terminal-only interface to fully fledged graphical interface. Most people take a desktop environment for granted in any distribution - and rightfully so - but I think it is important to know that the desktop environment is just a program that your system runs at the beginning of startup. This means you can easily exchange it (at least in Linux) for any other desktop environment you'd like: KDE, GNOME, Xfce or any of the Wayland tillers.
 
@@ -794,7 +799,7 @@ That's all! Isn't that crazy (⊙_⊙) ? And if you want to change this to somet
 
 Mango, Sway and Hyprland (and other compositors such as Niri, ...) are a bit more complicated than a simple KDE (or is it rather the other way (╭ರ_•́) !?). Well for the user is is probably more complicated to get Hyprland or Sway running that KDE. But they are simpler and should have smaller memory and CPU footprint than a big desktop environment (such as KDE). The advantage (and also disadvantage in some cases) is that you have to bring everything else yourself - lock screen, taskbar, file manager and basically everything else you can think of when you think of desktop environment. They are not a desktop environments per se. Officially they are "window managers". That means they only manage your windows - and that's it. Nothing more, nothing less.
 
-That's also why I will show only the *most basic configuration* of Hyprland and Sway. I'd say that at the point of writing this they are more for power-users.
+That's also why I will show only the *most basic configuration* of Hyprland and Sway. I'd say that at the point of writing this guide they are more for the power-users. But don't let that discourage you in trying them yourselves. They are not too difficult to get up and running especially on NixOS.
 
 I noticed that I've been basically using the Hyprland window managing philosophy on my Windows machine. By using the [Microsofts PowerToys](https://learn.microsoft.com/en-us/windows/powertoys/) (yes, one of the two Microsoft products that don't suck) Fancy Zones utility. I was basically doing what I could be doing in Hyprland automatically, manually.
 
@@ -805,7 +810,7 @@ I noticed that I've been basically using the Hyprland window managing philosophy
 
 [Mangowm](https://mangowm.github.io/) is a modern wayland compositor based on wlroots & scenefx. It is supposed to be lightweight and feature-rich. It supports many different layouts - scroller, master stack, grid, deck and many more. This was the main reason I switched to it over from Hyprland that only supported the tilling layout (at the time I left it) which I honestly did not find that useful.
 
-To install Mangowm I recommend using the flake provided in the official [Mangowm repo](https://github.com/mangowm/mango). There is an official doc for [installing mango on NixOS](https://mangowm.github.io/docs/installation/#nixos) or follow these steps to add it to your configuration:
+To install Mangowm I recommend using the flake provided in the official [Mangowm repo](https://github.com/mangowm/mango). There is an official guide for [installing mango on NixOS](https://mangowm.github.io/docs/installation/#nixos) or follow these steps to add it to your configuration:
 
 1. add mango to `flake.nix` inputs:
 
