@@ -15,6 +15,8 @@
 			lazyjj
 
 			poedit
+
+			hydra-check
 		];
 
 		virtualisation.docker.enable = true;
