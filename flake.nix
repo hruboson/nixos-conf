@@ -27,6 +27,7 @@
     };
     snappy-switcher.url = "github:OpalAayan/snappy-switcher";
     awww.url = "git+https://codeberg.org/LGFae/awww";
+	wayland-desktop-icons.url = "github:hruboson/wayland-desktop-icons";
 
     # ADDITIONAL DOTFILES
 

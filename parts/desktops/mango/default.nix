@@ -14,6 +14,7 @@
       imports = [
         inputs.mango.nixosModules.mango
         inputs.silentSDDM.nixosModules.default
+		inputs.wayland-desktop-icons.nixosModules.default
 
         self.nixosModules.waybar
         self.nixosModules.darkmode
@@ -54,6 +55,8 @@
           enable = true;
           showInWaybar = true;
         };
+		
+		programs.dicons.enable = true;
         programs.mango.enable = true;
         programs.dconf.enable = true;
         security.polkit.enable = true;
@@ -866,6 +869,8 @@
 			  vicinae server &
 
 			  awww-daemon &
+
+			  dicons &
 			";
           };
         };
