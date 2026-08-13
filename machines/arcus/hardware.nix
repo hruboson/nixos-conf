@@ -7,6 +7,7 @@
 
 	  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
 	  boot.initrd.kernelModules = [ ];
+	  boot.binfmt.emulatedSystems = [ "aarch64-linux" ]; # for rpi nixos build
 	  boot.kernelModules = [ "kvm-amd" ];
 	  boot.extraModulePackages = [ ];
 
