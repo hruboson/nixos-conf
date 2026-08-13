@@ -1,7 +1,7 @@
 { self, inputs, ... }: {
 	flake.nixosModules.appPackSysutils = { config, lib, pkgs, username, ... }: {
 		environment.systemPackages = with pkgs; [
-			btop btop-rocm
+			btop
 			dysk
 			mc
 			mission-center
@@ -13,7 +13,9 @@
 
 			# maybe move this to something like appPackAndroid
 			jmtpfs libmtp android-tools usbutils libmtp go-mtpfs # Media Transfer Protocol (for Android devices)
-		];
+		]++ lib.optionals (pkgs.system == "x86_64-linux") [
+          btop-rocm
+        ];
 
 		home-manager.users.${username} = {
 			# File types -> app associations
