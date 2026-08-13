@@ -22,6 +22,7 @@
             # macchina config
             "${config.xdg.configHome}/macchina".source = ./macchina;
           };
+
           programs.zsh = {
             enable = true;
             autosuggestion.enable = true;
@@ -133,14 +134,16 @@
 
           # make kitty the default terminal for Dolphin / KDE
           home.activation.dolphinDefaultTerminal = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            				run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalApplication kitty
-            				run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalService kitty.desktop
-            			'';
+            run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalApplication kitty
+            run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalService kitty.desktop
+          '';
         };
     in
     {
       programs.zsh.enable = true;
       users.users.${username}.shell = pkgs.zsh;
+      users.defaultUserShell = pkgs.zsh;
+
       home-manager.users.${username} = home;
       environment.systemPackages = (
         with pkgs;
