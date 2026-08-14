@@ -55,6 +55,13 @@ My laptop. Very similar to my desktop PC. I try to keep it as close to it as pos
 
 Homelab/homeserver configuration. Runs surprisingly well. Contains every single module from the `parts/services/selfhosted` directory. This is a good start if you plan on running your own server using NixOS (which is incredibly easy btw).
 
+### [Humilis⤴](./machines/humilis/)
+
+> [!TIP]
+> Build NixOS yourself for the Raspberry Pi 3.
+
+Configuration for my Raspberry Pi 3 model B (works for Pi 3 as well). Includes target to build the `.img` yourself rather than downloading from Hydra.
+
 ### [QEMU⤴](./machines/qemu/)
 
 > [!TIP]
@@ -140,7 +147,8 @@ In general my main sources of information include (in no particular order):
 1. [Installation](#installation)
     1. [Graphical installer](#graphical-installer)
     1. [Minimal installer](#minimal-installer)
-    1. [Raspberry pi 3B](#installation-raspberry)
+    1. [Raspberry Pi 3B](#installation-raspberry)
+    1. [Raspberry Pi 3B with custom img](#installation-raspberry-custom-img)
     1. [QEMU on Windows host](#qemu-windows)
     1. [QEMU on Linux host](#qemu-linux)
     1. [Dualbooting with Windows](#dualboot-windows)
@@ -314,6 +322,109 @@ in {
 - rebuild and reboot the system:
     - `nixos-rebuild boot` - should take about 10-20 minutes depending on the speed of your internet connection
     - `reboot` - reboots the system
+
+### Raspberry Pi 3 model B with custom built SD image <a name="installation-raspberry-custom-img"></a>
+
+This installation uses the [Humilis](./machines/humilis/) configuration and the custom SD image that should be built on your main PC (For the rest of this section I will assume you already have another NixOS machine ready to build this image). This means you do not download the SD image from [Hydra](https://hydra.nixos.org/) as in the section above.
+
+The advantage for this method is that you can build the image with your config already inside. No need to then rebuild on the Raspberry pi itself.
+
+When creating this configuration I followed mostly this [repository](https://github.com/lucernae/nixos-pi/) by [lucernae](https://github.com/lucernae). Please refer to his repository if there are any uncertainities or if you get stuck following this short guide. Thanks to my modular setup with parts all I had to do was define the flake outputs:
+
+1. *flake.nixosConfigurations.humilis* or `#humilis` for the configuration that runs on the Raspberry Pi itself
+1. *flake.nixosConfigurations.humilisSdImage* for the same configuration, but with the SD-image module added
+1. *flake.packages.aarch64-linux.humilis-sd-image* which exposes the SD-card image produced by humilisSdImage as a flake package, mainly just gives you more convenient command for building the package
+
+I then expose the SD image as *flake.packages.aarch64-linux.humilis-sd-image* and build it with `nix build .#packages.aarch64-linux.humilis-sd-image`. This produces an `.img` file that can be then put on the SD card using the `dd` utility.
+
+**How to get `#humilis` working**:
+
+1. on your PC add this to your config and rebuild: ```boot.binfmt.emulatedSystems = [ "aarch64-linux" ];```
+1. clone this repository `git clone https://github.com/hruboson/nixos-conf && cd nixos-conf`
+1. either:
+    1. remove the line `services.getty.autologinUser = lib.mkForce null;` in [machines/humilis/configuration.nix](./machines/humilis/configuration.nix)
+    1. or add your public ssh key to [parts/users/user/default.nix](./parts/users/user/default.nix) -> `openssh.authorizedKeys.keys` to be able to connect to the Raspberry through SSH. (to discover the device on your network you can use `sudo nmap -sn 192.168.1.0/24`, [nmap utility](https://search.nixos.org/packages?channel=unstable&query=nmap#show=nmap), `ip route` to find the IP of your local network instead of 192.168.2.0/24)
+1. run `nix build .#packages.aarch64-linux.humilis-sd-image`, **this can take around 4 hours, so plan this build carefully** (๑﹏๑//)
+1. once it finishes, you should see a `result/sd-image/nixos-image-sd-card-XY.ZU.vabcd` file in the repository directory
+    1. if you do not see it, something went wrong, try to build again
+1. write the image to the SD card:
+    1. check what path your sd card has: `lsblk -f` and look for the entry that has the same size as your SD card, or other characteristics by which you can identify your card, it should be something like `dev/sda` or `dev/sde`
+    1. once identified, run: `sudo dd if=result/sd-image/nixos-image-sd-card-26.05.XYZXYZ...  of=/dev/sdxyz bs=4M status=progress  conv=fsync`
+        1. **replace the** `if=...` and `of=...` **for the actual image path and the path of your SD card**.
+    1. safely unmount the SD card: `sudo umount /dev/sdX1 /dev/sdX2` (again replace the X for your actual letter)
+1. insert your SD card into the Raspberry Pi and boot it up
+
+**How to create your own Raspberry Pi configuration and SD image built**:
+
+I will refer to the PC you build the image on as *host* and the Raspberry Pi that will receive the image as *guest*.
+
+1. On your host PC add this to your config and rebuild: 
+```nix 
+boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+```
+2. add [`nixos-hardware`](https://github.com/nixos/nixos-hardware) in your flake inputs:
+```nix
+inputs = {
+  nixos-hardware = {
+    url = "github:NixOS/nixos-hardware";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  ...
+}
+```
+3. create three flake outputs (please refer to the source files in [machines/humilis/default.nix](./machines/humilis/default.nix)):
+    1. your actual configuration (your typical NixOS config)
+    ```nix
+    flake.nixosConfigurations.raspberry = inputs.nixpkgs.lib.nixosSystem {
+      system = "aarch64-linux";
+      modules = [
+        inputs.nixos-hardware.nixosModules.raspberry-pi-3
+        ... other modules
+      ];
+       
+      ... other config
+    }
+    ```
+    2. output that includes the sd-image module, should be almost identical to the output of your actual config
+    ```nix
+    flake.nixosConfigurations.raspberrySdImage = inputs.nixpkgs.lib.nixosSystem {
+      system = "aarch64-linux";
+      modules = [
+        ... other modules
+        "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
+
+        {
+          sdImage.compressImage = false;
+        }
+      ];
+
+      ... other config
+    };
+
+    ```
+    3. package that is then used as a target when building the image
+    ```nix
+    flake.packages.aarch64-linux.raspberry-sd-image =
+      self.nixosConfigurations.raspberrySdImage.config.system.build.sdImage;
+    ```
+4. define your raspberry configuration, for this please refer to three files in the [humilis](./machines/humilis) directory:
+    1. [configuration.nix](./machines/humilis/configuration.nix) - general configuration
+    1. [hardware.nix](./machines/humilis/hardware.nix) - Raspberry Pi hardware specific config
+    1. [system.nix](./machines/humilis/system.nix) - system-specific configuration
+1. make sure there are no errors in the config: `nix eval .#nixosConfigurations.raspberry.config.system.build.toplevel`
+1. test if the SD image is visible as output in flake: `nix flake show --all-systems`
+1. run `nix build .#packages.aarch64-linux.humilis-sd-image`, **this can take around 4 hours, so plan this build carefully** (๑﹏๑//)
+1. once it finishes, you should see a `result/sd-image/nixos-image-sd-card-XY.ZU.vabcd...` file in the repository directory
+    1. if you do not see it, something went wrong, try to build again
+1. write the image to the SD card:
+    1. check what path your sd card has: `lsblk -f` and look for the entry that has the same size as your SD card, or other characteristics by which you can identify your card, it should be something like `dev/sda` or `dev/sde`
+    1. once identified, run: `sudo dd if=result/sd-image/nixos-image-sd-card-26.05.XYZXYZ...  of=/dev/sdxyz bs=4M status=progress  conv=fsync`
+        1. **replace the** `if=...` and `of=...` **for the actual image path and the path of your SD card**.
+    1. safely unmount the SD card: `sudo umount /dev/sdX1 /dev/sdX2` (again replace the X for your actual letter)
+1. insert your SD card into the Raspberry Pi and boot it up
+
+**Enjoy your NixOS on Raspberry Pi** (≧▽≦)**!**
 
 ### Installing NixOS on virtual machine on Windows host using QEMU <a name="qemu-windows"></a>
 
