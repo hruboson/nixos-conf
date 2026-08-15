@@ -11,7 +11,7 @@
     modules = [
       self.nixosModules.humilisConfiguration
       inputs.home-manager.nixosModules.home-manager
-      inputs.nixos-hardware.nixosModules.raspberry-pi-3
+      #inputs.nixos-hardware.nixosModules.raspberry-pi-3
     ];
 
     specialArgs = {

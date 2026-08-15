@@ -5,7 +5,7 @@
 			self.nixosModules.humilisSystem
 			self.nixosModules.users
 
-			self.nixosModules.mango
+			self.nixosModules.vtm
 			self.nixosModules.kitty
 			self.nixosModules.appPackDev
 			self.nixosModules.appPackNetworking
@@ -26,21 +26,6 @@
 		 */
 		services.getty.autologinUser = lib.mkForce null;
 
-		desktops.mango.monitors = ''
-			monitorrule=name:HDMI-A-1,width:1920,height:1080,refresh:60,x:0,y:0,scale:1
-		'';
-		desktops.lockscreen.background = pkgs.fetchurl {
-			name = "abstract_fractal.png";
-			url = "https://raw.githubusercontent.com/hruboson/wallpapers/refs/heads/main/abstract/abstract_fractal_art.png";
-			hash = "sha256-bpw0cSkwFtUmhwyjI2rJTxnjdZQ0cBXihygI8ZA4oE8=";
-		};
-
-		desktops.lockscreen.profilePicture = pkgs.fetchurl {
-			name = "hruon_logo.jpg";
-			url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/logos_inversion.png";
-			hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
-		};
-
 		## SOUND
 		services.pulseaudio.enable = false;
 
@@ -57,7 +42,6 @@
 
 		# LOCALES
 		console = {
-			font = "Lat2-Terminus16";
 			keyMap = "cz-qwertz";
 		};
 		time.timeZone = "Europe/Prague";
