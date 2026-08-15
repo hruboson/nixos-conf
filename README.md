@@ -349,7 +349,7 @@ I then expose the SD image as *flake.packages.aarch64-linux.humilis-sd-image* an
     1. if you do not see it, something went wrong, try to build again
 1. write the image to the SD card:
     1. check what path your sd card has: `lsblk -f` and look for the entry that has the same size as your SD card, or other characteristics by which you can identify your card, it should be something like `dev/sda` or `dev/sde`
-    1. once identified, run: `sudo dd if=result/sd-image/nixos-image-sd-card-26.05.XYZXYZ...  of=/dev/sdxyz bs=4M status=progress  conv=fsync`
+    1. once identified, run: `sudo dd if=result/sd-image/nixos-image-sd-card-26.05.XYZXYZ...  of=/dev/sdxyz bs=16M status=progress  conv=fsync`
         1. **replace the** `if=...` and `of=...` **for the actual image path and the path of your SD card**.
     1. safely unmount the SD card: `sudo umount /dev/sdX1 /dev/sdX2` (again replace the X for your actual letter)
 1. insert your SD card into the Raspberry Pi and boot it up
