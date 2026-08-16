@@ -64,9 +64,6 @@
               nix-shell() {
               	local level=$(( ''${NIX_SHELL_LEVEL:-0} + 1 ))
               	NIX_SHELL_LEVEL=$level command nix-shell "$@" --run "exec zsh"
-
-              	# opens zsh instead of bash
-              	command nix-shell "$@" --run "exec zsh"
               }
 
               nix() {
