@@ -37,9 +37,9 @@
 		'';
 		desktops.waybar.showRotateScript = true;
 		desktops.lockscreen.background = pkgs.fetchurl {
-			name = "abstract_fractal.png";
-			url = "https://raw.githubusercontent.com/hruboson/wallpapers/refs/heads/main/abstract/abstract_fractal_art.png";
-			hash = "sha256-bpw0cSkwFtUmhwyjI2rJTxnjdZQ0cBXihygI8ZA4oE8=";
+			name = "ocean_dark_coral.jpg";
+			url = "https://raw.githubusercontent.com/hruboson/wallpapers/refs/heads/main/ocean/ocean_dark_coral.jpg";
+			hash = "sha256-7Am33XEVVREqtK+8eQU0kKSk05i6UmtUkqgYw6IqrZ0=";
 		};
 
 		desktops.lockscreen.profilePicture = pkgs.fetchurl {
