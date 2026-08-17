@@ -557,6 +557,43 @@
                   + "/extensions/awww-switcher";
               })
             ];
+            settings = {
+              "$schema" = "https://vicinae.com/schemas/config.json";
+
+              theme = {
+                dark = {
+                  name = "vicinae-dark";
+                  icon_theme = "default";
+                };
+              };
+
+              providers = {
+                "@sovereign/awww-switcher" = {
+                  preferences = {
+                    wallpaperPath = "~/nixos-conf/wallpapers";
+                  };
+                };
+
+                applications = {
+                  entrypoints = {
+                    "org.kde.dolphin" = {
+                      alias = "Files";
+                    };
+                    "org.prismlauncher.PrismLauncher" = {
+                      alias = "Minecraft";
+                    };
+                  };
+                };
+
+                power = {
+                  entrypoints = {
+                    "power-off" = {
+                      alias = "Shutdown";
+                    };
+                  };
+                };
+              };
+            };
           };
 
           home.pointerCursor = {
