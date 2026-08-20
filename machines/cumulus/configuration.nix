@@ -25,6 +25,7 @@
 			self.nixosModules.selfhostedTailscale
 			self.nixosModules.selfhostedTandoor
 			self.nixosModules.selfhostedWordpress
+			self.nixosModules.selfhostedPihole
 		];
 
 		nix.settings.experimental-features = [ "nix-command" "flakes" ]; # enable nix commands and flakes

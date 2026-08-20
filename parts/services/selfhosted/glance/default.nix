@@ -149,6 +149,13 @@
 								timeout = "10s";
 								allow-insecure = true;
 							}
+							{
+								title = "Pi-hole";
+								url = "https://${config.networking.hostName}.local:443";
+								icon = "di:pi-hole";
+								timeout = "10s";
+								allow-insecure = true;
+							}
 							];
 						}
 						{
