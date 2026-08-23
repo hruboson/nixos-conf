@@ -11,5 +11,7 @@
 				};
 			};
 		};
+
+      	selfhosted.services.komga.port = 8060;
 	};
 }

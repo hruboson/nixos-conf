@@ -12,5 +12,7 @@
 			user = "${username}";
 			group = "media";
 		};
+
+      	selfhosted.services.jellyfin.port = 8096;
 	};
 }

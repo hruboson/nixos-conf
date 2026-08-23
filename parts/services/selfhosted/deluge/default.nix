@@ -36,5 +36,7 @@
 				stop_seed_ratio = 0.0;
 			};
 		};	
+
+      	selfhosted.services.deluge.port = 8112;
 	};
 }

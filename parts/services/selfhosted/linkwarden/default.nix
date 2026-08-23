@@ -30,5 +30,7 @@
 				user = "linkwarden";
 			};
 		};
+
+      	selfhosted.services.linkwarden.port = 5432;
 	};
 }

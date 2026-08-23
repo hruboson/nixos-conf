@@ -1,5 +1,7 @@
 { self, inputs, ... }: {
 	flake.nixosModules.selfhostedGlance = { config, lib, pkgs, username, ... }: {
+      	selfhosted.services.dash.port = 1111;
+
 		services.glance =  {
 			enable = true;
 			openFirewall = true;
@@ -81,42 +83,42 @@
 							sites = [
 							{
 								title = "Forgejo";
-								url = "http://${config.networking.hostName}.local:2020";
+								url = "https://forgejo.${config.selfhosted.domain}";
 								icon = "di:git";
 								timeout = "10s";
 								allow-insecure = true;
 							}
 							{
 								title = "Jellyfin";
-								url = "http://${config.networking.hostName}.local:8096";
+								url = "https://jellyfin.${config.selfhosted.domain}";
 								icon = "di:jellyfin";
 								timeout = "15s";
 								allow-insecure = true;
 							}
 							{
 								title = "Nextcloud";
-								url = "http://${config.networking.hostName}.local";
+								url = "https://nextcloud.${config.selfhosted.domain}";
 								icon = "di:nextcloud";
 								timeout = "15s";
 								allow-insecure = true;
 							}
 							{
 								title = "Komga";
-								url = "http://${config.networking.hostName}.local:8060";
+								url = "https://komga.${config.selfhosted.domain}";
 								icon = "di:komga";
 								timeout = "15s";
 								allow-insecure = true;
 							}
 							{
 								title = "Library";
-								url = "http://${config.networking.hostName}.local:8010";
+								url = "https://audiobookshelf.${config.selfhosted.domain}";
 								icon = "di:audiobookshelf";
 								timeout = "15s";
 								allow-insecure = true;
 							}
 							{
 								title = "Deluge";
-								url = "http://${config.networking.hostName}.local:8112";
+								url = "https://deluge.${config.selfhosted.domain}";
 								icon = "di:deluge";
 								timeout = "15s";
 								allow-insecure = true;
@@ -130,28 +132,28 @@
 							}*/
 							{
 								title = "Plik";
-								url = "http://${config.networking.hostName}.local:4004";
+								url = "https://plik.${config.selfhosted.domain}";
 								icon = "sh:psitransfer";
 								timeout = "10s";
 								allow-insecure = true;
 							}
 							{
 								title = "Linkwarden";
-								url = "http://${config.networking.hostName}.local:3000";
+								url = "https://linkwarden.${config.selfhosted.domain}";
 								icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/linkwarden.png";
 								timeout = "10s";
 								allow-insecure = true;
 							}
 							{
 								title = "Tandoor";
-								url = "http://${config.networking.hostName}.local:7007";
+								url = "https://tandoor.${config.selfhosted.domain}";
 								icon = "di:tandoor-recipes";
 								timeout = "10s";
 								allow-insecure = true;
 							}
 							{
 								title = "Pi-hole";
-								url = "https://${config.networking.hostName}.local:443";
+								url = "https://pihole.${config.selfhosted.domain}";
 								icon = "di:pi-hole";
 								timeout = "10s";
 								allow-insecure = true;
@@ -174,7 +176,7 @@
 								title = "Development";
 								color = "130 60 45";
 								links = [
-								{ title = "Server Dashboard"; url = "http://servernix.local:1111"; icon = "di:glance"; }
+								{ title = "Server Dashboard"; url = "https://dash.hrubos.dev"; icon = "di:glance"; }
 								{ title = "Github"; url = "https://github.com/hruboson"; icon = "https://www.google.com/s2/favicons?domain=github.com"; }
 								{ title = "Portfolio"; url = "http://www.hrubos.dev/"; icon = "https://hrubos.dev/img/logo-courier-sm.ico"; }
 								];

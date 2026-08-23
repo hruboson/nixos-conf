@@ -14,5 +14,7 @@
 				FeatureAuthentication = "default";
 			};
 		};
+
+      	selfhosted.services.plik.port = 4004;
 	};
 }

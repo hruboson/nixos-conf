@@ -29,5 +29,7 @@
 			# keep default state dir
 			stateDirectory = "matrix-tuwunel";
 		};
+
+      	selfhosted.services.matrix.port = 6167;
 	};
 }

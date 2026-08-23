@@ -24,5 +24,7 @@
 				};
 			};
 		};
+
+      	selfhosted.services.forgejo.port = 2020;
 	};
 }

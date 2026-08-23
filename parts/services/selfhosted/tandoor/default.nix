@@ -8,8 +8,8 @@
 
 			extraConfig = {
 				MEDIA_ROOT = "/var/lib/tandoor-recipes/media";
-				ALLOWED_HOSTS = "servernix.local,127.0.0.1,localhost";
-				CSRF_TRUSTED_ORIGINS = "http://servernix.local:7007,http://127.0.0.1:7007";
+				ALLOWED_HOSTS = "tandoor.${config.selfhosted.domain},servernix.local,127.0.0.1,localhost";
+				CSRF_TRUSTED_ORIGINS = "https://tandoor.${config.selfhosted.domain},http://servernix.local:7007,http://127.0.0.1:7007";
 				GUNICORN_MEDIA = "1";
 			};
 		};
@@ -21,5 +21,7 @@
 		systemd.services.tandoor-recipes.serviceConfig.ReadWritePaths = [ 
 			"/var/lib/tandoor-recipes/media" 
 		];
+
+      	selfhosted.services.tandoor.port = 7007;
 	};
 }

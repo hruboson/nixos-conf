@@ -28,29 +28,18 @@
 			hostName = "servernix";
 			domain = "servernix.local";
 			firewall = {
+				enable = true;
 				trustedInterfaces = [ "tailscale0" ];
 				allowedUDPPorts = [
 					config.services.tailscale.port
+					53 # unbound dns
 				];
 
-				allowedTCPPorts = [ #TODO delegate opening ports to each module
+				allowedTCPPorts = [
 					21
-					80 
-					443
-					1111 # Glance
-					2020 # Forgejo
-					3000 # Linkwarden
-					4004 # Plikd
-					6167 # Tuwunel
-					7007 # Tandoor recipes
-					8010 # Audiobookshelf
-					8060 # Kavita
-					8080 # Wordpress
-					8096 # Jellyfin
-					8112 # Deluge
-					#8448 # Synapse Matrix
-					43000 # Minecraft Vanilla
-					43001 # Minecraft Papermc
+					53 # unbound dns
+					80 # http
+					443 # Caddy
 				];
 			};
 		};

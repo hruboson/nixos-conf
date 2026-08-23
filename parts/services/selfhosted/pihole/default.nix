@@ -18,6 +18,8 @@
             "9.9.9.9"
             "1.1.1.1"
           ];
+		  dns.interface = "lo";
+		  dns.listeningMode = "BIND";
         };
 
         lists = [
@@ -32,7 +34,12 @@
 
       services.pihole-web = {
         enable = true;
-        ports = [ "443s" ];
+        ports = [ "8443" ];
       };
+
+      selfhosted.services.pihole.port = 8443;
+
+      systemd.services.unbound.after = [ "pihole-ftl.service" ];
+      systemd.services.unbound.wants = [ "pihole-ftl.service" ];
     };
 }

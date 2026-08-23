@@ -7,5 +7,7 @@
 			openFirewall = true;
 		};
 		users.users.audiobookshelf.extraGroups = [ "media" ];
+
+      	selfhosted.services.audiobookshelf.port = 8010;
 	};
 }

@@ -9,6 +9,8 @@
       ...
     }:
     {
+
+	  networking.firewall.allowedTCPPorts = [ 8080 ];
       virtualisation.oci-containers = {
         backend = "docker";
         containers.wordpress = {
