@@ -31,6 +31,6 @@
 			};
 		};
 
-      	selfhosted.services.linkwarden.port = 5432;
+      	selfhosted.services.linkwarden.port = 3000;
 	};
 }
