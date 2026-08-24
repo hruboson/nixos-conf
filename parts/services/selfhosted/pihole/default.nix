@@ -13,10 +13,8 @@
         settings = {
           # See <https://docs.pi-hole.net/ftldns/configfile/>
 
-          # External DNS Servers quad9 and cloudflare
           dns.upstreams = [
-            "9.9.9.9"
-            "1.1.1.1"
+			config.selfhosted.lanIp
           ];
 		  dns.interface = "lo";
 		  dns.listeningMode = "BIND";
@@ -38,8 +36,5 @@
       };
 
       selfhosted.services.pihole.port = 8443;
-
-      systemd.services.unbound.after = [ "pihole-ftl.service" ];
-      systemd.services.unbound.wants = [ "pihole-ftl.service" ];
     };
 }

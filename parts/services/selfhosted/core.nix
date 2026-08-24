@@ -104,7 +104,10 @@
         services.unbound = {
           enable = true;
           settings.server = {
-            interface = [ config.selfhosted.lanIp config.selfhosted.tailscaleIp ];
+            interface = [
+              config.selfhosted.lanIp
+              config.selfhosted.tailscaleIp
+            ];
 
 			define-tag = ''"lan ts"'';
 
@@ -112,11 +115,14 @@
               "${config.selfhosted.lanCidr} allow"
               "100.64.0.0/10 allow" # tailscale CGNAT range
               "127.0.0.0/8 allow"
+              "::1 allow"
             ];
 
             access-control-view = [
               "${config.selfhosted.lanCidr} lan-view"
               "100.64.0.0/10 ts-view"
+              "127.0.0.0/8 lan-view"
+              "::1/128 lan-view"
             ];
 
             local-zone = [ ''"${config.selfhosted.domain}." transparent'' ];
