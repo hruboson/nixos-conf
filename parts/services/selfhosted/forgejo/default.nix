@@ -11,12 +11,12 @@
 
 			settings = {
 				server = {
-					DOMAIN = "${config.networking.hostName}.local";
-					ROOT_URL = "http://${config.networking.hostName}.local:2020/";
+					DOMAIN = config.selfhosted.domain;
+					ROOT_URL = "https://forgejo.${config.selfhosted.domain}";
 					HTTP_ADDR = "0.0.0.0";
 					HTTP_PORT = 2020;
 
-					SSH_DOMAIN = "${config.networking.hostName}.local";
+					SSH_DOMAIN = config.selfhosted.domain;
 					SSH_PORT = lib.head config.services.openssh.ports;
 				};
 				service = {
