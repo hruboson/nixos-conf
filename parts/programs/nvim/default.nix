@@ -13,6 +13,12 @@
 
 			colorschemes.vague.enable = true;
 
+            extraPackages = with pkgs; [
+              php
+              phpactor
+              php83Packages.php-cs-fixer
+            ];
+
 			globals = {
 				mapleader = " ";
 				maplocalleader = "\\";
@@ -159,6 +165,7 @@
 							go = [ "gofmt" ];
 							cpp = [ "clang-format" ];
 							c = [ "clang-format" ];
+							php = [ "php_cs_fixer" ];
 
 							# fallback
 							"_" = [ "prettier" ];
@@ -204,6 +211,7 @@
 				};
 				lazygit.enable = true;
 				visual-multi.enable = true;
+				hex.enable = true;
 
 				# PRETTY
 				statuscol = {
@@ -306,6 +314,7 @@
 							package = pkgs.pyright;
 						};
 
+						# C/CPP
 						clangd = {
 							enable = true;
 							filetypes = [ "c" "cpp" "h" "hpp" ];
@@ -343,8 +352,21 @@
 								enableRoslynAnalyzers = true;
 							};*/
 						};
-					};
-				};
+
+                  # PHP
+                  phpactor = {
+                    enable = true;
+                    filetypes = [ "php" ];
+                    autostart = true;
+                    rootMarkers = [
+                      ".git"
+                      "composer.json"
+                      "composer.lock"
+                    ];
+                    package = pkgs.phpactor;
+                  };
+                };
+              };
 
 				lsp-lines.enable = true;
 				#lsp-format.enable = true; !this is autoformatting on save, not for me
@@ -525,6 +547,6 @@
 	};*/
 	in {
 		home-manager.users.${username} = home;
-#home-manager.users.${username} = home-static;
+		#home-manager.users.${username} = home-static;
 	};
 }
