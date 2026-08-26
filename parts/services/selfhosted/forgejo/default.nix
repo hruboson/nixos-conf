@@ -2,6 +2,8 @@
 	flake.nixosModules.selfhostedForgejo = { config, lib, pkgs, username, ... }: {
 		services.openssh.enable = true;
 		services.openssh.ports = [ 2222 22 ];
+	    networking.firewall.allowedTCPPorts = [ 2222 22 ];
+
 		services.forgejo = {
 			enable = true;
 			lfs.enable = true;
@@ -16,7 +18,8 @@
 					HTTP_ADDR = "0.0.0.0";
 					HTTP_PORT = 2020;
 
-					SSH_DOMAIN = config.selfhosted.domain;
+					DISABLE_SSH = false;
+					SSH_DOMAIN = "forgejo.${config.selfhosted.domain}";
 					SSH_PORT = lib.head config.services.openssh.ports;
 				};
 				service = {
