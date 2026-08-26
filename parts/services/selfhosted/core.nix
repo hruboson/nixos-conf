@@ -1,7 +1,7 @@
 { self, inputs, ... }:
 {
   flake.nixosModules.selfhostedCore =
-    { config, lib, ... }:
+    { config, lib, pkgs, ... }:
     with lib;
     {
       options.selfhosted = {
@@ -64,41 +64,43 @@
 
       config = {
         services.caddy.enable = true;
-        /*services.caddy.package = pkgs.caddy.withPlugins {
-          plugins = [ "github.com/caddy-dns/namecheap@latest" ];
-          hash = "";
+        services.caddy.package = pkgs.caddy.withPlugins {
+          plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
+          hash = "sha256-PWadA5qr/gR2qDcT8l8u1Xku7LM2HIfWTLOkzezCYy0=";
         };
-        environment.etc."caddy-namecheap-creds".text = ''
-          ${inputs.secrets.namecheapApiUser}
-          ${inputs.secrets.namecheapApiKey}
-        '';
-
         services.caddy.globalConfig = ''
-          acme_dns namecheap {
-            api_key {env.NAMECHEAP_API_KEY}
-            user {env.NAMECHEAP_USER}
-            client_ip {env.NAMECHEAP_CLIENT_IP}
-          }
+          auto_https disable_redirects
+		  email hruboson@gmail.com
         '';
-
-        systemd.services.caddy.serviceConfig.EnvironmentFile = "/etc/caddy-namecheap-env";
-        environment.etc."caddy-namecheap-env".text = ''
-          NAMECHEAP_API_KEY=${inputs.secrets.namecheapApiKey}
-          NAMECHEAP_USER=${inputs.secrets.namecheapApiUser}
-          NAMECHEAP_CLIENT_IP=${yourServerPublicIp}
-        '';*/
 
         # Caddy: one vhost per registered service
-        services.caddy.virtualHosts = lib.mapAttrs' (
+		# - find local certificate in /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt
+        services.caddy.virtualHosts = lib.concatMapAttrs (
           _: svc:
-          lib.nameValuePair "${svc.subdomain}.${config.selfhosted.domain}" {
-            extraConfig = ''
-			  tls internal
-              reverse_proxy ${svc.proto}://127.0.0.1:${toString svc.port}
-              ${svc.extraCaddyConfig}
-            '';
+          let
+            host = "${svc.subdomain}.${config.selfhosted.domain}";
+            upstream = "${svc.proto}://127.0.0.1:${toString svc.port}";
+          in
+          {
+            "https://${host}" = {
+			  # change the first 3 lines to tls internal for local certificates - then distribute them using the certificate module by connecting to the server ip: 192.168.X.Y:1234
+              extraConfig = ''
+                tls {
+                	dns cloudflare {env.CF_API_TOKEN}
+                }
+                reverse_proxy ${upstream}
+                ${svc.extraCaddyConfig}
+              '';
+            };
+
+            "http://${host}" = {
+              extraConfig = ''
+                reverse_proxy ${upstream}
+              '';
+            };
           }
         ) config.selfhosted.services;
+        systemd.services.caddy.environment.CF_API_TOKEN = inputs.secrets.cloudflareAPIToken;
 
         # DNS: wildcard for *.domain, fall through for apex/www
         services.unbound = {
