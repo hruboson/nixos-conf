@@ -242,6 +242,7 @@
 				scrollview.enable = true;
 				illuminate.enable = true;
 				treesitter-context.enable = true;
+				render-markdown.enable = true;
 
 				# MISC
 				neocord.enable = true;
@@ -452,6 +453,13 @@
 			# TERMINAL
 			{ mode = "t"; key = "<C-Esc>"; action = "<C-\\><C-n>"; options.desc = "Exit terminal mode"; }
 			];
+
+			userCommands = {
+				MD = {
+					bar = false;
+					command = "RenderMarkdown toggle";
+				};
+			};
 
 			extraConfigLua = ''
 				-- ── TREESITTER EXTRAS ────────────────────────────────────
