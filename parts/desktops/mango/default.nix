@@ -560,6 +560,10 @@
             settings = {
               "$schema" = "https://vicinae.com/schemas/config.json";
 
+			  keybinds = {
+			  	toggle-action-panel = "control+K";
+			  };
+
               theme = {
                 dark = {
                   name = "vicinae-dark";
