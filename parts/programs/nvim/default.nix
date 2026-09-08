@@ -73,8 +73,54 @@
 							additional_vim_regex_highlighting = true;
 						};
 						indent.enable = false;
-						auto_install = false;
 					};
+					grammarPackages = with config.programs.nixvim.plugins.treesitter.package.builtGrammars; [
+						c
+						go
+						csv
+						php
+						css
+						nix
+						vim
+						zsh
+						lua
+						cpp
+						xml
+						html
+						yaml
+						vhdl
+						bash
+						yuck
+						java
+						json
+						glsl
+						scss
+						make
+						toml
+						diff
+						ninja
+						regex
+						kitty
+						gosum
+						latex
+						cmake
+						python
+						luadoc
+						phpdoc
+						vimdoc
+						desktop
+						c_sharp
+						arduino
+						doxygen
+						php_only
+						gdscript
+						markdown
+						gitignore
+						typescript
+						dockerfile
+						xresources
+						javascript
+					];
 					package = pkgs.vimPlugins.nvim-treesitter;
 				};
 				nvim-tree = {
