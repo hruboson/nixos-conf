@@ -336,7 +336,11 @@
 							filetypes = [ "nix" "flake" ];
 							autostart = true;
 							settings = {
-								autoArchive = true;
+								nix = {
+									flake = {
+										autoArchive = false;
+									};
+								};
 							};
 						};
 
