@@ -255,6 +255,19 @@
 						};
 					};
 				};
+				aerial = {
+					enable = true;
+					settings = {
+						backends = [
+							"treesitter"
+							"lsp"
+							"markdown"
+							"man"
+						];
+						disable_max_lines = 9000;
+						highlight_on_hover = true;
+					};
+				};
 				lazygit.enable = true;
 				visual-multi.enable = true;
 				hex.enable = true;
@@ -447,6 +460,7 @@
 			{ mode = "n"; key = "<leader>sr";  action = "<cmd>lua vim.lsp.buf.rename()<CR>"; options.desc = "Rename"; }
 			{ mode = "n"; key = "<leader>ac";  action = "<cmd>lua vim.lsp.buf.code_action()<CR>"; options.desc = "Code action"; }
 			{ mode = "n"; key = "qf";          action = "<cmd>lua vim.lsp.buf.code_action()<CR>"; options.desc = "Quick fix"; }
+			{ mode = "n"; key = "<leader>cm";  action = "<cmd>:AerialToggle right<cr>"; options.desc = "Toggle code outline window"; }
 
 			# NORMAL - misc
 			{ mode = "n"; key = "<leader>rme"; action = ":%s/\r//g<CR>"; options.desc = "Remove ^M carriage returns"; }
