@@ -73,33 +73,30 @@
             };
           };
 
-		  # for some reason the swayidle does not work at all, currently running swayidle in the mango autostart_sh down below
-          services.swayidle = {
+          services.hypridle = {
             enable = true;
-            systemdTargets = [ "graphical-session.target" ];
-
-            events = {
-              before-sleep = "loginctl lock-session";
-              lock = "${pkgs.swaylock-effects}/bin/swaylock --daemonize";
+            settings = {
+              general = {
+                before_sleep_cmd = "loginctl lock-session";
+                after_sleep_cmd = "";
+                ignore_dbus_inhibit = false;
+                lock_cmd = "pidof swaylock || ${pkgs.swaylock-effects}/bin/swaylock";
+              };
+              listener = [
+                {
+                  timeout = 600;
+                  on-timeout = "pidof swaylock || ${pkgs.swaylock-effects}/bin/swaylock";
+                }
+                {
+                  timeout = 900;
+                  on-timeout = "systemctl suspend";
+                }
+              ];
             };
-
-            timeouts = [
-              {
-                timeout = 600;
-                command = "${pkgs.swaylock-effects}/bin/swaylock --daemonize";
-              }
-              {
-                timeout = 900;
-                command = "systemctl suspend";
-              }
-            ];
           };
 
           wayland.windowManager.mango.autostart_sh = ''
-            ${pkgs.swayidle}/bin/swayidle -w \
-              timeout 600 '${pkgs.procps}/bin/pgrep -x swaylock || ${pkgs.swaylock-effects}/bin/swaylock --daemonize' \
-              timeout 900 'systemctl suspend' \
-              before-sleep '${pkgs.procps}/bin/pgrep -x swaylock || ${pkgs.swaylock-effects}/bin/swaylock --daemonize' &
+            hypridle &
           '';
 
           wayland.windowManager.mango.settings.switchbind = [
