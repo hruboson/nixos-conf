@@ -9,97 +9,98 @@
     }:
     {
       config = {
-		security.pam.services.hyprlock = {};
+        security.pam.services.swaylock = { };
         security.polkit.enable = true;
+
         home-manager.users.${username} = {
-          programs.hyprlock = {
+          programs.swaylock = {
             enable = true;
+            package = pkgs.swaylock-effects;
+
             settings = {
-              general = {
-                hide_cursor = true;
-                ignore_empty_input = true;
-              };
-              background = [
-                {
-                  path = "screenshot";
-                  blur_passes = 3;
-                  blur_size = 8;
-                  noise = 0.02;
-                  contrast = 1.1;
-                  brightness = 0.8;
-                  vibrancy = 0.2;
-                }
-              ];
+              daemonize = true;
+              ignore-empty-password = true;
+              show-failed-attempts = true;
+              submit-on-touch = true;
 
-              label = [
-                {
-                  # CLOCK
-                  text = ''cmd[update:1000] ${pkgs.coreutils}/bin/date +"%H:%M"'';
-                  color = "rgba(220, 220, 220, 1.0)";
-                  font_size = 96;
-                  font_family = "JetBrainsMono Nerd Font";
-                  position = "0, 80";
-                  halign = "center";
-                  valign = "center";
-                }
+              screenshots = true; # capture the current screen
+              effect-blur = "8x3";
+              effect-vignette = "0.35:0.5";
+              effect-greyscale = true;
+			  fade-in = 0.1;
+              #grace = 3;
 
-                {
-                  # DATE
-                  text = ''cmd[update:1000] ${pkgs.coreutils}/bin/date +"%A, %d %B"'';
-                  color = "rgba(200, 200, 200, 0.8)";
-                  font_size = 22;
-                  font_family = "JetBrainsMono Nerd Font";
-                  position = "0, 10";
-                  halign = "center";
-                  valign = "center";
-                }
-              ];
+              clock = true;
+              timestr = "%H:%M";
+              datestr = "%A, %d %B";
+              font = "JetBrainsMono Nerd Font";
+              font-size = 70;
 
-              input-field = [
-                {
-                  size = "280, 50";
-                  outline_thickness = 2;
-                  outer_color = "rgba(120,120,120,0.3)";
-                  inner_color = "rgba(30,30,30,0.6)";
-                  font_color = "rgba(220,220,220,1.0)";
+              # password ring
+              indicator = true;
+              indicator-radius = 150;
+              indicator-thickness = 5;
+              #indicator-idle-visible = true;
 
-                  fade_on_empty = false;
-                  placeholder_text = "Password...";
+              #TODO take this color from stylix when stylix is implemented
+              key-hl-color = "f3be7cff"; # for now this is the vague-yellow
 
-                  dots_center = true;
+              inside-color = "1e1e1e99";
+              inside-clear-color = "1e1e1e99";
+              inside-caps-lock-color = "1e1e1e99";
+              inside-ver-color = "1e1e1e99";
+              inside-wrong-color = "40202099";
 
-                  position = "0, -80";
-                  halign = "center";
-                  valign = "center";
-                }
-              ];
+              ring-color = "78787866";
+              ring-clear-color = "dcdcdcff";
+              ring-caps-lock-color = "dcdcdcff";
+              ring-ver-color = "78787866";
+              ring-wrong-color = "aa4444ff";
+
+              line-color = "00000000";
+              line-clear-color = "00000000";
+              line-caps-lock-color = "00000000";
+              line-ver-color = "00000000";
+              line-wrong-color = "00000000";
+
+              text-color = "dcdcdcff";
+              text-clear-color = "dcdcdcff";
+              text-caps-lock-color = "dcdcdcff";
+              text-ver-color = "dcdcdcff";
+              text-wrong-color = "dcdcdcff";
+
+              separator-color = "00000000";
             };
           };
-          services.hypridle = {
+
+		  # for some reason the swayidle does not work at all, currently running swayidle in the mango autostart_sh down below
+          services.swayidle = {
             enable = true;
-            settings = {
-              general = {
-                before_sleep_cmd = "loginctl lock-session";
-                after_sleep_cmd = "";
-                ignore_dbus_inhibit = false;
-                lock_cmd = "pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock";
-              };
-              listener = [
-                {
-                  timeout = 600;
-                  on-timeout = "pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock";
-                }
-                {
-                  timeout = 900;
-                  on-timeout = "systemctl suspend";
-                }
-              ];
+            systemdTargets = [ "graphical-session.target" ];
+
+            events = {
+              before-sleep = "loginctl lock-session";
+              lock = "${pkgs.swaylock-effects}/bin/swaylock --daemonize";
             };
+
+            timeouts = [
+              {
+                timeout = 600;
+                command = "${pkgs.swaylock-effects}/bin/swaylock --daemonize";
+              }
+              {
+                timeout = 900;
+                command = "systemctl suspend";
+              }
+            ];
           };
 
           wayland.windowManager.mango.autostart_sh = ''
-            					hypridle &
-            				'';
+            ${pkgs.swayidle}/bin/swayidle -w \
+              timeout 600 '${pkgs.procps}/bin/pgrep -x swaylock || ${pkgs.swaylock-effects}/bin/swaylock --daemonize' \
+              timeout 900 'systemctl suspend' \
+              before-sleep '${pkgs.procps}/bin/pgrep -x swaylock || ${pkgs.swaylock-effects}/bin/swaylock --daemonize' &
+          '';
 
           wayland.windowManager.mango.settings.switchbind = [
             "fold,spawn_shell,systemctl suspend"
