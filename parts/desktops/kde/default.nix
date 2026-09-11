@@ -8,7 +8,6 @@
 				wayland.enable = true;
 			};
 
-			services.displayManager.defaultSession = lib.mkDefault "plasma";
 			programs.xwayland.enable = true;
 
 			environment.systemPackages = with pkgs; [
@@ -32,9 +31,7 @@
 			hardware.graphics.enable = true;
 
 			home-manager.users.${username} = {
-				# Dark mode carries over from the darkmode module,
-				# but KDE manages its own theme — nothing extra needed here.
-				# Add any KDE-specific home-manager config below if wanted.
+
 			};
 		};
 	};
