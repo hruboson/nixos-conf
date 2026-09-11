@@ -1,0 +1,1278 @@
+<!--
+> [!WARNING]  
+> **UPDATE:** Parts is mature enough so I have replaced it as main.
+> The Manual is still not updated though. Many of the things written in there are still probably valid for most of the general configurations.
+> I will write a tutorial/manual for the parts structure soon™. Stay tuned ദ്ദി( • ᴗ - )✧ <br />
+> ~~I'm currently in the process of restructuring this entire configuration using [`flake-parts`](https://flake.parts/). 
+> This configuration will most likely not be updated and will eventually move to the `deprecated` branch.
+> If you want to take a look at the new config go to the [`parts` branch](https://github.com/hruboson/nixos-conf/tree/parts). As of 12.04.2026 there is a config for my workstation (arcus) and laptop (fractus).
+> When I feel more confident in my knowledge I will also write a small tutorial on the [`flake-parts`](https://flake.parts/) structure.~~
+-->
+
+# NixOS configuration
+
+My personal NixOS configuration and [documentation](#manual) I wrote up during my whole time with NixOS.
+
+What will you find in this repo ...
+
+1. **[Manual](#manual)** - first install, first setup, desktop configuration, programs configuration, flakes, parts, optimization and much more.
+1. [Using this configuration](#using-this-configuration) - how to install and use my configuration.
+1. [Machine definitions](#machines) - configurations for my devices (desktop, laptop, server, ...).
+1. [Resources](#resources) - compilation of links, videos, books  and other sources I use most often.
+1. [Detailed resources](#resources-detailed) - every single one of my bookmarks concerning NixOS.
+
+---
+
+**See the [Manual](#manual) section** if this is your first time installing NixOS. The purpose of this manual/documentation is for me to remember what I did with my config and for others to be able to use my configuration or copy the parts they want while still understanding what they do.
+
+<small><span style="color: gray;">Obligatory screenshot ([Mangowm](./parts/desktops/mango/default.nix) on [Arcus](./machines/arcus/configuration.nix))</span></small>
+![Screenshot](screenshot.png)
+
+# Machines <a name="machines"></a>
+
+If you have trouble installing or configuring your NixOS using my configurations (or even your own), don't hesitate to contact me [](). If I have the time I'm more than happy to talk about NixOS ദ്ദി( • ᴗ - )✧.
+
+See how parts work in the [Using this configuration](#parts-tldr) section or in the [Manual](#parts)
+
+### [Arcus⤴](./machines/arcus/)
+
+> [!TIP]
+> The default for desktop PC.
+
+Suitable for desktop PC. If you plan on using this configuration be sure to change the `hardware.nix` and the `desktops.mango.monitors` in `configuration.nix`. You can copy the monitor configuration from running the *Displays* app.
+
+### [Fractus⤴](./machines/fractus/)
+
+> [!TIP]
+> The default for laptops.
+
+My laptop. Very similar to my desktop PC. I try to keep it as close to it as possible so I can have basically identic environments. Same changes should be applied to this, though on most laptops the monitor config will be the same one.
+
+### [Cumulus⤴](./machines/cumulus/)
+
+> [!TIP]
+> Configure your homelab/homeserver using NixOS.
+
+Homelab/homeserver configuration. Runs surprisingly well. Contains every single module from the `parts/services/selfhosted` directory. This is a good start if you plan on running your own server using NixOS (which is incredibly easy btw).
+
+### [Humilis⤴](./machines/humilis/)
+
+> [!TIP]
+> Build NixOS yourself for the Raspberry Pi 3.
+
+Configuration for my Raspberry Pi 3 model B (works for Pi 3 as well). Includes target to build the `.img` yourself rather than downloading from Hydra.
+
+### [QEMU⤴](./machines/qemu/)
+
+> [!TIP]
+> A good starting point for testing in virtual environment before you install on real hardware.
+
+This configuration is mostly for testing in the [QEMU virtual machine](https://www.qemu.org/). It will most likely be behind the other machines and will not contain everything as I don't really use it that often but should still work.
+
+# Using this configuration <a name="using-this-configuration"></a>
+
+Using this configuration requires you to do two main things (see [parts](#parts) in manual for detailed info):
+
+<a name="parts-tldr"></a>
+1. Define your machine in `machines/` directory or copy one of the already existing machines (e.g. `arcus`). There should be three files: `configuration.nix`, `hardware.nix` and `default.nix`. 
+    - `configuration.nix` - imports all the modules from parts you want to use, e.g. `appPackDev`, `appPackDesktop`, `mango` and so on...
+    - `hardware.nix` - contains only the configuration generated in `hardware-configuration.nix`.
+    - `default.nix` - boilerplate where you connect the main modules and define username and hostname.
+    - (optional) `system.nix` - machine/hardware specific configuration (e.g. bootloader, drives, ...).
+2. Rebuild your system by running (while you are inside of the `nixos-conf` directory):
+```bash
+nixos-rebuild switch --flake .#your_machine_name
+```
+
+---
+
+If you want to use the server configuration you will have to define the secrets flake (until I learn how to use sops-nix):
+
+1. clone the repository
+2. create a directory `secrets/` (wherever you want, I recommend inside of this repository)
+3. create `flake.nix` file in the `secrets/` folder with the following content:
+
+```nix
+{
+    description = "Local secrets (not tracked)";
+
+    outputs = { self, ... }:
+    {
+        wifiSSID = "WIFI_NAME";
+        wifiPasswd = "WIFI_PASSWD";
+        nextcloudPass = "NEXTCLOUD_ADMIN_PASSWORD";
+        apiNasaKey = "NASA_API_KEY";
+        ...
+    };
+}
+```
+
+4. `git init && git add . && git commit -m "Secrets"` inside of the `secrets/` folder
+5. in `flake.nix` (of this repository) change the `url` of `secrets` in inputs to your created `secrets/` folder
+
+```nix
+secrets = {
+	url = "path:/path/to/secrets"; #! It has to be an absolute path
+};
+```
+
+I hope that this secret management is only temporary and that I will be brave enough to learn and implement [sops-nix](https://www.youtube.com/watch?v=G5f6GC7SnhU) (˶˃⤙˂˶).
+
+# Resources
+
+Before you dive into the world of NixOS, I recommend looking at this small list of resources I've compiled over my period of learning and configuring NixOS. You can find the complete list in the [Resources](#resources-detailed) section.
+
+What you will find there is a mix of my bookmarks, videos, blogs, books and other media I found to be useful when learning NixOS.
+
+In general my main sources of information include (in no particular order):
+
+- [NixOS package search](https://search.nixos.org/packages)
+    - For when you need to check package availability or some basic options.
+- [NixOS manual](https://nixos.org/manual/nixos/stable/)
+    - More in-depth content about the OS, packages and settings. For me this was kind of the thing I went to when I was lost configuring something.
+- [nix.dev](https://nix.dev/)
+    - Official documentation for the Nix ecosystem.
+- [NixOS Wiki](https://wiki.nixos.org/wiki/NixOS_Wiki)
+    - Official NixOS Wiki, though this was mostly for very basic things.
+- [MyNixOS search](https://mynixos.com/)
+    - This website provides very nice compilation of all options of any package in NixOS.
+- [Vimojer's youtube videos](https://www.youtube.com/@vimjoyer/videos)
+    - He's honestly the G.O.A.T of NixOS when it comes to anything. I've watched almost every single one of his videos which are not only informative but also entertaining as well.
+
+*And a word for the AI users out here - please be careful when using tools like ChatGPT or Deepseek. They will often tell you to execute commands that will make your PC automatically non-declarative (usually running `nix-env`). Please be careful with these commands as they might provide temporary fix at the cost of being non-declarative changes. A good rule of thumb for beginners is that if your change does not require the `nixos-rebuild` then it is most likely not declarative (and whats the point of that, am I right ( - ᴗ •́ ). Otherwise I think you will probably have a hard time breaking something - NixOS is quite robust by design with its `generations` you can roll back to. I also found the LLMs to be hallucinating and making stuff up A LOT when it comes to configuration.*
+
+# Manual <a name="manual"></a>
+
+**Table of contents**
+1. [Installation](#installation)
+    1. [Graphical installer](#graphical-installer)
+    1. [Minimal installer](#minimal-installer)
+    1. [Raspberry Pi 3B](#installation-raspberry)
+    1. [Raspberry Pi 3B with custom img](#installation-raspberry-custom-img)
+    1. [QEMU on Windows host](#qemu-windows)
+    1. [QEMU on Linux host](#qemu-linux)
+    1. [Dualbooting with Windows](#dualboot-windows)
+1. [First login](#first-login)
+1. [Connectivity](#connectivity)
+    1. [Bluetooth](#bluetooth)
+    1. [Eduroam](#eduroam)
+1. [Git](#git)
+1. [Hardware capabilities](#hw-capabilities)
+    1. [GPU](#gpu)
+    1. [Backups](#backups)
+1. [Flakes](#flakes)
+1. [Parts](#parts)
+1. [Home-manager](#home-manager)
+    1. [Nixvim](#nixvim)
+    1. [Plasma manager](#plasma-manager)
+1. [Desktop environment](#desktop-environment)
+    1. [KDE](#desktop-environment-kde)
+    1. [Wayland compositors](#wayland-compositors)
+        1. [Mango](#wayland-compositor-mango)
+        1. [Hyprland](#wayland-compositor-hyprland)
+        1. [Sway](#wayland-compositor-sway)
+1. [Gaming](#gaming-manual)
+    1. [Minecraft server](#minecraft-server)
+1. [NixOS optimizations](#nixos-optimizations)
+1. [Resources](#resources-detailed)
+
+## Installation <a name="installation"></a>
+
+You will generally want to follow the [installation for x86-64 system](#graphical-installer) if you have something like desktop PC or laptop. If you have more specialized hardware, such as Raspberry Pi, your installation might look a bit different. I have so far only installed NixOS on Raspberry Pi 3B. To install NixOS on Raspberry Pi (3B) follow the [Raspberry Pi](#installation-raspberry) manual.
+
+When installing NixOS in an virtual environment (such as in Virtualbox or VMware) be careful of the settings. I tried installing and running this config in both Virtualbox and VMware, both were quite a pain in the ass when working on Windows. Running this configuration in Virtualbox on Linux (Fedora 42) was easy and painless (damn you Windows!).
+
+Be sure to enable EFI when creating the machine (this configuration probably won't work without EFI enabled). On Virtualbox I experienced brutal graphical lags when running KDE Plasma 6. I fixed this by switching to older graphics controller (VBoxSVGA or VBoxVGA). The newer graphics controller (VMSVGA) did not work, I was getting tons of visual glitches and the interface was so laggy I could not get anything done.
+
+VMware seemed to run much smoother, although at the time of writing this I have not figured out how to enable EFI in the settings.
+
+If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland** and want to run **NixOS in virtual machine on Windows**, **I strongly recommend** using [QEMU](https://www.qemu.org/) - see section [installing NixOS on QEMU virtual machine](#qemu-windows). I have not been able to run any Wayland compositor through Virtualbox or VMware on Windows. This tutorial might be a bit advanced than just using Virtualbox or VMware, but you should be able to customize the virtual machine more and mainly, as previously stated, be able to run **Wayland**.
+
+### Manual installation on x86-64 system <a name="installation"></a>
+
+Just recently I found `sudo nix run github:km-clay/nixos-wizard --extra-experimental-features nix-command --extra-experimental-features flakes` command that runs TUI (terminal user interface) installer, maybe give it a try or follow the manual installation.
+
+#### Using NixOS graphical installer <a name="graphical-installer"></a>
+
+Installing NixOS using the graphical installer is quite straightforward. I found it to be no harder than installing Fedora or Ubuntu.
+
+Boot up your NixOS graphical installer and just follow the installer. You will be prompted to choose your Location, Keyboard layout, set up your user and root account, choose your desktop environment (choose whichever you like the most, if you want Windows-like choose KDE Plasma, if you want Mac-like choose Gnome), allow unfree software... 
+
+Set up partitions - here you will have to select on which drive the system will install and also whether to erase the whole disk or manually partition. If you have a laptop or PC where there will only be one system (NixOS) you can select *Erase disk*. Also select a swap partition to be created, otherwise there is a good chance you might run out of RAM during the installation. If you want to utilize hibernation also select that. Otherwise every other settings should stay default. Click your way through the next buttons and start the installation by clicking the *Install* button. This process can take a while (about 30 minutes or more) depending on your hardware and your internet speed.
+
+If it gets stuck at **46%** DO NOT PANIC. This is normal and it will take a while (could be up to an hour depending on your internet speed). At this point the NixOS installer is downloading all the necessary packages. You can see what it is downloading by clicking the *Toggle logs* button.
+
+Once the system is installed you can reboot and remove the usb drive/cd/where you have nixos installation on. Then create a new config or bring already existing. Follow the [first login](#first-login) section for basic NixOS configuration and rebuild.
+
+#### Using NixOS minimal ISO <a name="minimal-installer"></a>
+
+Boot up your NixOS minimal ISO and run the following commands. Pay attention to some of the arguments to different commands as they may vary on your system.
+
+- (optional) `sudo loadkeys cz-qwertz` - change keyboard locale
+- `sudo -s`
+- `lsblk` ... check drives
+- create partition
+    - `fdisk /dev/sda` (instead of `sda` your drive might have a different name, such as `sdb` or `sdc`)
+    - `g`, `n` - UEFI boot partition, `<enter><enter>+500M` (500 MB UEFI), `t` change partition type, `1` - EFI system, `n` - Swap partition, `<enter><enter>+4096M` (4 GB swap), `t` change partition type, `2` - choose partition number (swap is 2, UEFI 1), `19` - Linux swap partition number (see `L` for all), `n` - System partition, `<enter><enter><enter>` (Allocates rest),
+    - `w` - write changes to disk
+- `mkfs.fat /dev/sda1` - make FAT partition
+- `mkswap /dev/sda2` - make swap partition
+- `swapon /dev/sda2` - enable the swap partition
+- `mkfs.ext4 /dev/sda3` - make EXT4 partition on Linux filesystem
+- `mount /dev/sda3 /mnt`
+- `mkdir /mnt/boot` - create boot folder
+- `mount /dev/sda1 /mnt/boot` - mount UEFI partition to boot folder
+- `nixos-generate-config --root /mnt/` - generate default config file
+- (optional) if you have configuration ready (on GitHub for example):
+    - `cp -a /mnt/etc/nixos /root/nixos-config-backup` - backup the generated config
+    - `rm -rf /mnt/etc/nixos/` - remove generated config
+    - `git clone https://github.com/<username>/<nixos-conf.git> /mnt/etc/nixos`
+    - **IMPORTANT** copy the `hardware-configuration.nix` back: 
+        1. without flakes: `cp /root/nixos-config-backup/hardware-configuration.nix /mnt/etc/nixos/hardware-configuration.nix`
+        2. with flakes (adjust to your config): `cp /root/nixos-config-backup/hardware-configuration.nix /mnt/etc/nixos/hardware/<flake-name>-hardware.nix`
+- `nano /mnt/etc/nixos/configuration.nix` - edit config
+- install and show all logs:
+    1. without flakes: `nixos-install -v`
+    2. with flakes: `nixos-install -v --flake /mnt/etc/nixos#<flake-name>`
+- after successful installation it will ask for new password, this password will be for the root account
+- `reboot` - after this it should boot to installed OS
+
+### Raspberry Pi 3B <a name="installation-raspberry"></a>
+
+For the RPI installation I found [this guide](https://nix.dev/tutorials/nixos/installing-nixos-on-a-raspberry-pi.html) by [nix.dev](https://nix.dev/) to be the most useful.
+
+I was setting up my SD card on a Windows machine using Etcher to flash it.
+
+- download NixOS live image from [Hydra](https://hydra.nixos.org/job/nixos/trunk-combined/nixos.sd_image.aarch64-linux)
+    - this is different from installer - the system will already be installed on the SD card after flashing
+    - just look for the latest (newest) build
+    - at the time of writing this guide I used [nixos-image-sd-card-25.11pre882227.01f116e4df6a-aarch64-linux.img.zst](https://hydra.nixos.org/build/310514045)
+- use [7-zip](https://www.7-zip.org/) or other extracting utility to extract the downloaded archive (`nixos-image-sd-card-*.img.zst`)
+- use [Etcher](https://etcher.balena.io/) or other flashing utility to flash the `nixos-image-sd-card-*.img` onto the SD card
+    - do not use the compressed file as that will not work
+- now you can insert the SD card into the Raspberry Pi (turn it off before inserting)
+- after inserting the SD card power on the Raspberry Pi, a basic NixOS command line (TTY) should show up
+    - what you see now is the live system - you will not have to install anything
+    - from here on you can go your own way if you want and bring your own configuration, be careful tho because Raspberry Pi needs some specific settings turned on
+- the basic configuration should look something like (for Raspberry Pi 3B):
+
+```nix
+# as of 24.10.2025 you can download this using (in elevated mode): curl -L https://tinyurl.com/tutorial-nixos-install-rpi4 > /etc/nixos/configuration.nix
+{ config, pkgs, lib, ... }:
+
+let
+    user = "guest";
+    password = "guest";
+    SSID = "mywifi";
+    SSIDpassword = "mypassword";
+    interface = "wlan0";
+    hostname = "myhostname";
+in {
+
+    boot = {
+        kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
+        initrd.availableKernelModules = [ "xhci_pci" "usbhid" "usb_storage" ];
+        loader = {
+            grub.enable = false;
+            generic-extlinux-compatible.enable = true;
+        };
+    };
+
+    fileSystems = {
+        "/" = {
+            device = "/dev/disk/by-label/NIXOS_SD";
+            fsType = "ext4";
+            options = [ "noatime" ];
+        };
+    };
+
+    networking = {
+        hostName = hostname;
+        wireless = {
+            enable = true;
+            networks."${SSID}".psk = SSIDpassword;
+            interfaces = [ interface ];
+        };
+    };
+
+    environment.systemPackages = with pkgs; [ vim ];
+
+    services.openssh.enable = true;
+
+    users = {
+        mutableUsers = false;
+        users."${user}" = {
+            isNormalUser = true;
+            password = password;
+            extraGroups = [ "wheel" ];
+        };
+    };
+
+    hardware.enableRedistributableFirmware = true;
+    system.stateVersion = "25.11";
+}
+```
+- replace the `user`, `password`, `SSID` (wifi name), `SSIDpassword` (wifi password), `hostname` to your desired values
+- create a swap file (otherwise rebuild takes waaaaaaaaaaaay too long):
+    - `sudo fallocate -l 4G /swap` - allocates 4GB for the swap file
+    - `sudo chmod 600 /swap`
+    - `sudo mkswap /swap`
+    - `sudo swapon /swap`
+- to enable and set WiFi before the first rebuild you can run `nmtui`
+- rebuild and reboot the system:
+    - `nixos-rebuild boot` - should take about 10-20 minutes depending on the speed of your internet connection
+    - `reboot` - reboots the system
+
+### Raspberry Pi 3 model B with custom built SD image <a name="installation-raspberry-custom-img"></a>
+
+This installation uses the [Humilis](./machines/humilis/) configuration and the custom SD image that should be built on your main PC (For the rest of this section I will assume you already have another NixOS machine ready to build this image). This means you do not download the SD image from [Hydra](https://hydra.nixos.org/) as in the section above.
+
+The advantage for this method is that you can build the image with your config already inside. No need to then rebuild on the Raspberry pi itself.
+
+When creating this configuration I followed mostly this [repository](https://github.com/lucernae/nixos-pi/) by [lucernae](https://github.com/lucernae). Please refer to his repository if there are any uncertainities or if you get stuck following this short guide. Thanks to my modular setup with parts all I had to do was define the flake outputs:
+
+1. *flake.nixosConfigurations.humilis* or `#humilis` for the configuration that runs on the Raspberry Pi itself
+1. *flake.nixosConfigurations.humilisSdImage* for the same configuration, but with the SD-image module added
+1. *flake.packages.aarch64-linux.humilis-sd-image* which exposes the SD-card image produced by humilisSdImage as a flake package, mainly just gives you more convenient command for building the package
+
+I then expose the SD image as *flake.packages.aarch64-linux.humilis-sd-image* and build it with `nix build .#packages.aarch64-linux.humilis-sd-image`. This produces an `.img` file that can be then put on the SD card using the `dd` utility.
+
+**How to get `#humilis` working**:
+
+1. on your PC add this to your config and rebuild: ```boot.binfmt.emulatedSystems = [ "aarch64-linux" ];```
+1. clone this repository `git clone https://github.com/hruboson/nixos-conf && cd nixos-conf`
+1. either:
+    1. remove the line `services.getty.autologinUser = lib.mkForce null;` in [machines/humilis/configuration.nix](./machines/humilis/configuration.nix)
+    1. or add your public ssh key to [parts/users/user/default.nix](./parts/users/user/default.nix) -> `openssh.authorizedKeys.keys` to be able to connect to the Raspberry through SSH. (to discover the device on your network you can use `sudo nmap -sn 192.168.1.0/24`, [nmap utility](https://search.nixos.org/packages?channel=unstable&query=nmap#show=nmap), `ip route` to find the IP of your local network instead of 192.168.2.0/24)
+1. run `nix build .#packages.aarch64-linux.humilis-sd-image`, **this can take around 4 hours, so plan this build carefully** (๑﹏๑//)
+1. once it finishes, you should see a `result/sd-image/nixos-image-sd-card-XY.ZU.vabcd` file in the repository directory
+    1. if you do not see it, something went wrong, try to build again
+1. write the image to the SD card:
+    1. check what path your sd card has: `lsblk -f` and look for the entry that has the same size as your SD card, or other characteristics by which you can identify your card, it should be something like `dev/sda` or `dev/sde`
+    1. once identified, run: `sudo dd if=result/sd-image/nixos-image-sd-card-26.05.XYZXYZ...  of=/dev/sdxyz bs=16M status=progress  conv=fsync`
+        1. **replace the** `if=...` and `of=...` **for the actual image path and the path of your SD card**.
+    1. safely unmount the SD card: `sudo umount /dev/sdX1 /dev/sdX2` (again replace the X for your actual letter)
+1. insert your SD card into the Raspberry Pi and boot it up
+
+**How to create your own Raspberry Pi configuration and SD image built**:
+
+I will refer to the PC you build the image on as *host* and the Raspberry Pi that will receive the image as *guest*.
+
+1. On your host PC add this to your config and rebuild: 
+```nix 
+boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+```
+2. add [`nixos-hardware`](https://github.com/nixos/nixos-hardware) in your flake inputs:
+```nix
+inputs = {
+  nixos-hardware = {
+    url = "github:NixOS/nixos-hardware";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  ...
+}
+```
+3. create three flake outputs (please refer to the source files in [machines/humilis/default.nix](./machines/humilis/default.nix)):
+    1. your actual configuration (your typical NixOS config)
+    ```nix
+    flake.nixosConfigurations.raspberry = inputs.nixpkgs.lib.nixosSystem {
+      system = "aarch64-linux";
+      modules = [
+        inputs.nixos-hardware.nixosModules.raspberry-pi-3
+        ... other modules
+      ];
+       
+      ... other config
+    }
+    ```
+    2. output that includes the sd-image module, should be almost identical to the output of your actual config
+    ```nix
+    flake.nixosConfigurations.raspberrySdImage = inputs.nixpkgs.lib.nixosSystem {
+      system = "aarch64-linux";
+      modules = [
+        ... other modules
+        "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
+
+        {
+          sdImage.compressImage = false;
+        }
+      ];
+
+      ... other config
+    };
+
+    ```
+    3. package that is then used as a target when building the image
+    ```nix
+    flake.packages.aarch64-linux.raspberry-sd-image =
+      self.nixosConfigurations.raspberrySdImage.config.system.build.sdImage;
+    ```
+4. define your raspberry configuration, for this please refer to three files in the [humilis](./machines/humilis) directory:
+    1. [configuration.nix](./machines/humilis/configuration.nix) - general configuration
+    1. [hardware.nix](./machines/humilis/hardware.nix) - Raspberry Pi hardware specific config
+    1. [system.nix](./machines/humilis/system.nix) - system-specific configuration
+1. make sure there are no errors in the config: `nix eval .#nixosConfigurations.raspberry.config.system.build.toplevel`
+1. test if the SD image is visible as output in flake: `nix flake show --all-systems`
+1. run `nix build .#packages.aarch64-linux.humilis-sd-image`, **this can take around 4 hours, so plan this build carefully** (๑﹏๑//)
+1. once it finishes, you should see a `result/sd-image/nixos-image-sd-card-XY.ZU.vabcd...` file in the repository directory
+    1. if you do not see it, something went wrong, try to build again
+1. write the image to the SD card:
+    1. check what path your sd card has: `lsblk -f` and look for the entry that has the same size as your SD card, or other characteristics by which you can identify your card, it should be something like `dev/sda` or `dev/sde`
+    1. once identified, run: `sudo dd if=result/sd-image/nixos-image-sd-card-26.05.XYZXYZ...  of=/dev/sdxyz bs=4M status=progress  conv=fsync`
+        1. **replace the** `if=...` and `of=...` **for the actual image path and the path of your SD card**.
+    1. safely unmount the SD card: `sudo umount /dev/sdX1 /dev/sdX2` (again replace the X for your actual letter)
+1. insert your SD card into the Raspberry Pi and boot it up
+
+**Enjoy your NixOS on Raspberry Pi** (≧▽≦)**!**
+
+### Installing NixOS on virtual machine on Windows host using QEMU <a name="qemu-windows"></a>
+
+If you plan on running any Wayland compositor (such as *Sway* or *Hyprland*) through virtual machine on Windows, this is probably the best way to do it. I could not figure out how to run any Wayland compositor through Virtualbox or VMware.
+
+Although setting up a QEMU virtual machine is much more difficult than just running Virtualbox or VMware, I found it to be much smoother experience once you have it set up. It also allows you to run Wayland compositors.
+
+Install QEMU using the [Windows installer (20260729)](https://qemu.weilnetz.de/w64/2026/qemu-w64-setup-20260729.exe) (or pick up a **newer version *[here](https://qemu.weilnetz.de/w64/)***). By default the QEMU binaries (.exe files) might not be in PATH. To add them, go to the directory where you installed QEMU, copy the path and add it to environment variables: in Windows search bar search for *environment variables*, click on *edit the system environment variables*, click on *Environment variables...*, double click the item Path under User (or System) variables, click *New* and paste the QEMU directory.
+
+Also download the `OVMF/OVMF_CODE.fd` to be able to run UEFI instead of BIOS. At the time of writing this guide (14.11.2025) you can download it [here](https://qemu.weilnetz.de/test/ovmf/usr/share/OVMF/OVMF_CODE.fd) or see the [download page⤴](https://qemu.weilnetz.de/test/ovmf/usr/share/OVMF/).
+
+*Optional:* The last piece of software you might need is a [TAP-windows 9.21.x](https://swupdate.openvpn.org/community/releases/tap-windows-9.21.2.exe) or grab a [different version⤴](https://sourceforge.net/p/openvpn/mailman/message/35030871/). This program allows you to create a bridged connection for your virtual machine. This guide uses that and I recommend it, mostly just to be able to connect through ssh to your virtual machine. Setting it up in Windows is quite easy:
+
+1. Install [TAP-windows 9.21.x](https://swupdate.openvpn.org/community/releases/tap-windows-9.21.2.exe) or newer version if installation fails
+2. On Windows: go to Control Panel -> Network and Sharing Center -> Change adapter settings
+3. Select both Ethernet and your new TAP adapter (something like Ethernet 2 or Ethernet 3) - remember this one as you will need it later when running the QEMU virtual machine
+4. Right click -> Bridge Connections
+5. new bridge should be created
+
+Now you are ready to actually set up the virtual machine.
+
+First start by creating your disk image. To create a `qcow2` image using QEMU, you can use the command: 
+
+```bash
+qemu-img.exe create -f qcow2 your_image_name.img size
+```
+
+Replace `your_image_name.img` with your desired file name and `size` with the size you want, such as `64G` for 64 gigabytes. I recommend this size as its not too big but also not too small. In my experience a NixOS can get quite big if you don't optimize or clear your generations properly. 
+
+I recommend installing the system using a graphical installer ISO. Start the virtual machine with:
+
+```bash
+qemu-system-x86_64.exe ^
+    -m 4096 -cpu max -smp 4 ^
+    -device virtio-vga -display sdl ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -nic user,model=virtio-net-pci ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -cdrom "C:\Path\to\iso\nixos.iso" ^
+    -boot d ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+
+Change the `drive file="..."`,`-cdrom "..."` and `-bios "..."` arguments to paths to your files on your system.
+
+Now you are in a graphical installer and the rest should be quite straightforward. Follow the [graphical installation manual](#graphical-installer). Once you are done you can shut down the virtual machine (either manually through the guest system or just close the QEMU window). At this point NixOS should be installed on your virtual drive (`your_drive.qcow2`).
+
+When running installed system you don't have to specify the `-cdrom` path, so your qemu command should look something like:
+
+```bash
+qemu-system-x86_64.exe ^
+    -m 4096 -cpu max -smp 4 ^
+    -device virtio-vga -display sdl ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -nic user,model=virtio-net-pci ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+Again change the `drive file="..."` and `-bios "..."` arguments. This should boot up virtual machine with NixOS installed.
+
+I have also compiled a list of commands that might come in handy depending on what you are trying to achieve:
+
+1. running QEMU with a bridged TAP adapter:
+
+```bash
+qemu-system-x86_64.exe ^
+    -m 4096 -cpu max -smp 4 ^
+    -device virtio-vga -display sdl ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -netdev tap,id=mynet0,ifname="Ethernet 3",script=no,downscript=no ^
+    -device virtio-net-pci,netdev=mynet0 ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+Change the `ifname` in `-netdev` argument to the name of your newly created adapter (the one you created at the beginning of this installation).
+
+2. running Sway, Hyprland or any Wayland compositor
+
+```bash
+qemu-system-x86_64.exe ^
+    -accel whpx -M q35 ^
+    -m 4096 -cpu max -smp 4 ^
+    -device qxl-vga,vgamem_mb=4096 ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -netdev tap,id=mynet0,ifname="Ethernet 3",script=no,downscript=no ^
+    -device virtio-net-pci,netdev=mynet0 ^
+    -usb -device usb-tablet ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+
+Change the `ifname` in `-netdev` argument to the name of your network adapter.
+This runs much smoother by using the `-accel whpx` and `-device qxl-vga`. If all you see is black screen try resizing the QEMU window few times.
+
+3. my cursor is upside down
+
+To fix the goofy bug when your cursor is upside down but everything else looks perfect, you can try running:
+
+```bash
+qemu-system-x86_64.exe ^
+    -accel whpx -M q35 ^
+    -m 4096 -cpu max -smp 4 ^
+    -device qxl-vga,vgamem_mb=4096 ^
+    -device virtio-keyboard-pci -device virtio-mouse-pci ^
+    -netdev tap,id=mynet0,ifname="Ethernet 3",script=no,downscript=no ^
+    -device virtio-net-pci,netdev=mynet0 ^
+    -drive file="C:\Path\to\vm\nixos.qcow2",if=virtio,format=qcow2 ^
+    -bios "C:\Path\to\qemu\OVMF_CODE.fd"
+```
+
+AND before running `sway` or `hyprland` be sure to run `export WLR_NO_HARDWARE_CURSORS=1` (or set the environment variable somewhere).
+
+### Installing NixOS on virtual machine on Linux host using QEMU <a name="qemu-linux"></a>
+
+This section covers how to install and run QEMU on Fedora. On Linux I did not bother with bridge and just used NAT. If you are using QEMU with a network bridge I'd appreciate if you opened a pull request and shared the steps you did to make it work (つ╥﹏╥)つ.
+
+I'm using the Fedora 42 distro. If you are on Ubuntu or Arch your installation will most likely be different. See [QEMU installation](https://www.qemu.org/download/#linux) manual for your specific distribution.
+
+First check if virtualization is enabled in BIOS:
+```bash
+egrep -c '(vmx|svm)' /proc/cpuinfo
+```
+If the output of this command is **0** virtualization is disabled in BIOS.
+
+Fedora ships with everything required to run QEMU/KVM efficiently. All you need to do is install the virtualization group:
+
+```bash
+sudo dnf install @virtualization
+```
+
+and some additional tools (might not be needed depending on your distro):
+
+```bash
+sudo dnf install qemu-kvm libvirt virt-install bridge-utils
+```
+
+After that you should be ready to run QEMU. Check that `which qemu` returns a valid path. If it does you are all set.
+
+From now on the commands will be basically the same as in the Windows tutorial section. Create a virtual drive:
+```bash
+qemu-img create -f qcow2 your_image_name.qcow2 size
+```
+
+Run with graphical installer:
+```bash
+qemu-system-x86_64 \
+    -m 4096 -cpu host -smp 4 \
+    -device virtio-vga -display sdl \
+    -device virtio-keyboard-pci -device virtio-mouse-pci \
+    -nic user,model=virtio-net-pci \
+    -drive file="/path/to/your/vm/nixos.qcow2",if=virtio,format=qcow2 \
+    -cdrom "/path/to/your/iso/nixos-installer.iso" \
+    -boot d \
+    -bios /path/to/your/ovmf/OVMF_CODE.fd \
+    --enable-kvm
+```
+If you have trouble with the mouse (jittering, too fast, unresponsive), try switching the display to `-display gtk,gl=on`. This should work with no problem on Linux. The command would look something like:
+
+```bash
+qemu-system-x86_64  \
+    -m 4096 -cpu host -smp 4 \
+    -display gtk,gl=on \
+    -device virtio-vga \
+    -device virtio-keyboard-pci \
+    -device virtio-mouse-pci \
+    -nic user,model=virtio-net-pci \
+    -drive file="/path/to/your/vm/nixos.qcow2",if=virtio,format=qcow2 \
+    -cdrom "/path/to/your/iso/nixos-installer.iso" \
+    -boot d \
+    -bios /path/to/your/ovmf/OVMF_CODE.fd \
+    --enable-kvm
+```
+
+Change the `-drive file="..."`,`-cdrom "..."` and `-bios "..."` arguments to paths to your files on your system.
+The `OVMF_CODE.fd` file should be located at `/usr/share/edk2/ovmf/OVMF_CODE.fd`. If not just download it [here](https://github.com/kholia/OSX-KVM/raw/refs/heads/master/OVMF_CODE.fd) and pass the path to the file in the `-bios` argument.
+
+Now you are in a graphical installer and the rest should be quite straightforward. Follow the graphical installation manual. Once you are done you can shut down the virtual machine (either manually through the guest system or just close the QEMU window). At this point NixOS should be installed on your virtual drive (`your_drive.qcow2`).
+
+After installation you don't have to include the installation ISO:
+```bash
+qemu-system-x86_64 \
+    -m 4096 -cpu host -smp 4 \
+    -device virtio-vga -display sdl \
+    -device virtio-keyboard-pci -device virtio-mouse-pci \
+    -nic user,model=virtio-net-pci \
+    -drive file="/path/to/your/vm/nixos.qcow2",if=virtio,format=qcow2 \
+    -boot d \
+    -bios /path/to/your/ovmf/OVMF_CODE.fd \
+    --enable-kvm
+```
+Again change the `drive file="..."` and `-bios "..."` arguments. This should boot up virtual machine with NixOS installed.
+
+If you are having problems running QEMU, try manually enabling the `libvirtd` service.
+```bash
+sudo systemctl enable --now libvirtd
+```
+
+### Dualbooting with Windows <a name="dualboot-windows"></a>
+
+One thing to be aware when dualbooting with Windows is the size of your EFI partition that was created when Windows was installed. In my case the EFI partition was 100 MB in size. When I first installed NixOS alongside Windows using the existing EFI partition, I could not rebuild due to the `OSError: [Errno 28] No space left on device /boot`. This was fixed by reinstalling NixOS (clearing the partition where it was installed) and creating a new EFI boot partition through the NixOS installer.
+
+**If you are using BitLocker and SecureBoot follow these steps first!!!**. On most modern Windows 11 machines these options are turned on automatically when you buy your device. With these on you will have a hard time installing NixOS alongside your Windows. Fortunately there is an easy fix:
+1. Turn off BitLocker in Windows settings - Go to Control Panel -> System and Security -> BitLocker Drive Encryption -> Turn off Bitlocker. This will run for about 30 to 60 minutes (or more on older hardware) depending on the speed and size of your drive. DO NOT TURN OFF YOUR PC WHEN DECRYPTION IS ONGOING!
+2. Turn off SecureBoot in BIOS. To enter BIOS you usually turn down your PC, hold F2 or DELETE (or other keys depending on your machine/motherboard) and press the power button to start the PC while holding the key down. In there navigate to something like Security -> Secure boot (will be different on every machine) and turn it off.
+
+Now you should be ready to get started installing NixOS.
+
+I followed [this video tutorial](https://youtu.be/B3OIcws9ygY?si=wq74FCAxk-dNQNMx), but the steps are similar to dualbooting any other Linux system:
+
+1. Create a USB flash drive with the NixOS installer flashed on it. First download the NixOS graphical installer on the [official website](https://nixos.org/download/#nixos-iso). Then flash it onto a USB flash drive using either [Rufus](https://rufus.ie/en/) or [Etcher](https://etcher.balena.io/)
+2. Allocate drive space through Windows Disk Management. Shrink the Disk where Windows is installed to your desired size. You should now have an Unallocated partition to which you we will install the NixOS. I recommend around 100-200 GB of space if you want to maybe try it out and larger if you really mean it with NixOS.
+3. Now plug in the flashed USB drive to your PC and boot into it. This step will wary depending on your motherboard. Usually you go into BIOS by pressing F2 or DEL keys while the PC is booting up. In the BIOS you select to boot into the USB drive. After you select this option save and exit BIOS and you should boot into the graphical installer. In the newer versions it will first ask you which DE you want to boot into (KDE or Gnome). This doesn't really matter as this option only applies to the installer itself. During the installation you will be prompted to choose which DE you want to install.
+4. Go through the steps until you get to the `Partitions` section. Here select `Manual partitioning`, click on `Next`. Select the `Free space` partition, it should have the same size as what you allocated in the Windows Disk Management. 
+   Now click on the `Create` button. Change the size to `1024 MiB` for the boot partition and change the File system to `fat32`, mount point to `/boot`, FS Label to `boot` and select the `boot` in Flags. Click on `OK` to create the boot partition. 
+   Again click on `Create` while still having the `Free space` selected. This time create a swap partition with the size of `8192 MiB`, File system `linuxswap`, leave mount point empty and select the `swap` in Flags. Click on `OK` to create the swap partition.
+   For the last time click on `Create` button, leave the size as is (allocates the rest of the free space), select ext4 filesystem, mount point `/` (root), FS Label `root` and in the Flags select `root`. Click on `OK` to create the root partition.
+   In the end you should have 3 new partitions: boot, swap and root.
+   To continue in the installation click on `Next`, check the settings you applied and hit `Install`. This process can take a while (about 30 minutes or more) depending on your hardware and your internet speed.
+   If it gets stuck at **46%** DO NOT PANIC. This is normal and it will take a while (could be up to an hour depending on your internet speed). At this point the NixOS installer is downloading all the necessary packages. You can see what it is downloading by clicking the *Toggle logs* button.
+   Once the system is installed you can reboot and remove the USB drive from your PC.
+5. On first login change the following settings in `configuration.nix` to use GRUB and to automatically detect the Windows operating system:
+```nix
+# boot.loader.systemd-boot.enable = true # DELETE THIS LINE
+
+# Add the following configuration:
+boot.loader.efi.canTouchVariable = true;
+boot.loader.grub = {
+    enable = true;
+    devices = [ "nodev" ];
+    efiSupport = true;
+    useOSProber = true;
+    default = "saved";
+};
+```
+6. Now do `nixos-rebuild switch` with the new configuration. On the next reboot you should get a GRUB bootloader with three entries - `NixOS - Default`, `NixOS - All configurations` and `Windows boot manager`. If you forgot to remove the USB drive or if Windows loads by default you might have to change the boot option in the BIOS again (there should now be a NixOS bootloader entry, select that).
+7. Enjoy your new dualboot system (੭˃ᴗ˂)੭
+
+## First login <a name="first-login"></a>
+- when first logging in the NixOS login will be `root` with password you set during the `nixos-install`
+- update channels (package repositories): `nix-channel --update`
+- edit configuration in `/etc/nixos/configuration.nix`, use `nano /etc/nixos/configuration.nix` to edit that file
+- uncomment lines starting with `networking.` and set `hostName`
+- uncomment `services.openssh.enable = true;` - enables ssh
+- set timezone
+- adding user by uncommenting the `users` section
+- install packages by writing them in the `environment.systemPackages = with pkgs; [ ...`
+- then **rebuild** nix using the `nixos-rebuild switch` (will probably take a while), it will take the configuration file and apply the changes we made in it
+- apply password to the new user: `passwd username`
+
+## Connectivity <a name="connectivity"></a>
+
+### Bluetooth <a name="bluetooth"></a>
+
+If your machine has support for bluetooth, the easiest way to manage bluetooth device is to turn on the `blueman` or `bluetoothctl`:
+
+```nix
+services.blueman.enable = true;
+hardware.bluetooth.enable = true;
+```
+
+You can find example configuration in [`parts/services/bluetooth.nix`](./parts/services/bluetooth.nix).
+
+#### Troubleshooting bluetooth
+
+This section is mostly just a random bits of knowledge I collected while troubleshooting various things...
+
+##### PS5 controller (DualSense) not properly pairing
+
+If your PS5 controller shows inconsistent state:
+```
+Connected: yes
+Paired: no
+Trusted: yes
+```
+
+> [!TIP]
+> When using `bluetoothctl` use the Tab key to autocomplete the MAC address.
+
+It means the controller was only connected temporarily and is not permanently paired. To resolve the issue follow these steps:
+1. Remove existing device:
+    1. Run `bluetoothctl`
+    1. Remove the controller: `remove <MAC_ADDRESS>`
+1. Delete cached pairing data:
+    1. List bluetooth adapters: `ls /var/lib/bluetooth`, you'll see something like FC:B0:DE:83:C7:8A
+    1. Remove the controller entry: `sudo rm -rf /var/lib/bluetooth/<ADAPTER_MAC>/<CONTROLLER_MAC>`
+1. Restart bluetooth service: `sudo systemctl restart bluetooth`
+1. Put controller in pairing mode: hold PS button + Share (top left). Wait for the light to flash quickly.
+1. Pair properly using `bluetoothctl`:
+    1. Run `bluetoothctl`
+    1. Inside run: `power on` -> `agent on` -> `default-agent` -> `scan on`
+    1. Wait for your controller to appear.
+    1. When you see your controller run: `pair <CONTROLLER_MAC>` -> `trust <CONTROLLER_MAC>` -> `connect <CONTROLLER_MAC>`
+
+The issue usually happens by BlueZ keeping a broken cached device state. Hopefully this will help you fix it.
+
+
+### Connecting to Eduroam <a name="eduroam"></a>
+- download eduroam activation python script for your university [here](https://cat.eduroam.org/#)
+- run the script using nix shell:
+
+```bash
+nix-shell -p "python3.withPackages (ps: with ps; [ dbus-python ])" --run python3 <your-eduroam.py>
+```
+
+- now you have certificate available in your device and should be able to connect (after using your credentials to connect)
+- you might have to enable saving password for all users using `nmtui`:
+    - Run `sudo nmtui`
+    - Edit connection -> Eduroam -> Save password for all users
+
+## Setting up git and GitHub <a name="git"></a>
+If you are comfortable using the GitHub CLI tool (`gh`), you can add it to your configuration. The package is `pkgs.gh`.
+
+Or the old fashioned way using SSH keys (which is still quite easy on Linux):
+- enable ssh agent and git in configuration:
+    - `programs.ssh.startAgent = true;`
+    - add `git` to system packages
+    - you might have to reboot after this change
+- generate ssh keys:
+    - `ssh-keygen -t ed25519 -C "email@example.com"`
+    - `ssh-add ~/.ssh/id_ed25519`
+    - print the public key and upload it to GitHub: `cat ~/.ssh/id_ed25519.pub`, on GitHub go to Settings > SSH and GPG keys > New SSH key
+- creating new NixOS configuration repository
+    - `mkdir -p ~/nixos-conf` - create new directory in home directory to edit the config... this will be later used to rebuild the system
+    -  `sudo cp -r /etc/nixos/* ~/nixos-conf/` - copy existing configuration
+    - `sudo chown -R $USER ~/nixos-conf` - set ownership of the directory to current user
+    - `echo "hardware-configuration.nix" >> ~/nixos-conf/.gitignore` - ignore `hardware-configuraton.nix` file in the git repository
+    - `cd ~/nixos-conf`, `git init`, `git add .`, `git commit -m "Initial configuration"`, `git branch -M main`, `git remote add origin git@github.com:<username>/<nixos-conf.git>`, `git push -u origin main`
+    - rebuild from the newly created directory: `sudo nixos-rebuild switch -I nixos-config=~/nixos-conf`
+- editing already cloned repository (if you cloned config during installation)
+    - `cp -r /etc/nixos ~/`
+    - after changes rebuild with `sudo nixos-rebuild -I nixos-config=/home/<username>/nixos/configuration.nix`
+- if you get prompt for username and password when pushing to git then try changing remote: `git remote set-url origin git@github.com:<username>/<repository.git>`
+
+## Hardware capabilities <a name="hw-capabilities"></a>
+
+In this section I go over some of the more hardware-specific configurations (I might write up more about this later.)
+
+### Drives
+
+I recommend declaring the always connected drives in the machine system configuration (see example in [`machines/cumulus/system.nix`](./machines/cumulus/system.nix)). To get the UUID of a drive run `lsblk -f`.
+
+Automatically connecting external drives can be achieved through the `udiskie` service.
+
+For the simplest setup you want something like this:
+
+```nix
+# NTFS drive
+fileSystems."/mnt/DRIVE_NAME" = {
+    device = "/dev/disk/by-uuid/AAAAAAAAAAAAA-AAA-AAAAAAA-AAAAA";
+    fsType = "ntfs3";
+    options = [ "rw" "noatime" "uid=1000" "gid=100" ];
+};
+
+# EXT4 drive
+fileSystems."/mnt/OTHER_DRIVE_NAME" = {
+    device = "/dev/disk/by-uuid/BBBBBBBBBBBBBBB-BBB-BBBBB-BBBBB";
+    fsType = "ext4";
+    options = [ "noatime" "commit=60" "lazytime" ];
+};
+
+services.udisks2.enable = true;
+home-manager.users.${username} = {
+    services.udiskie.enable = true;
+    services.udiskie.settings = {
+        automount = true; # automatically mount drives
+    }
+}
+```
+
+See more advanced config in the [`machines/cumulus/system.nix`](./machines/cumulus/system.nix).
+
+#### GPU <a name="gpu"></a>
+
+To set up your dedicated graphics card follow the [AMD](https://wiki.nixos.org/wiki/AMD_GPU)/[Nvidia](https://wiki.nixos.org/wiki/NVIDIA)/[Intel](https://wiki.nixos.org/wiki/Intel_Graphics) sections on NixOS wiki as this will vary depending on your hardware.
+
+If you use AMD or Intel GPU all you need to do should be just:
+
+```nix
+hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+
+    # for AMD add this line
+    services.xserver.videoDrivers = [ "amdgpu" ];
+
+    # for Intel add these lines
+    etraPackages = with pkgs; [
+        # Required for modern Intel GPUs (Xe iGPU and ARC)
+        intel-media-driver     # VA-API (iHD) userspace
+        vpl-gpu-rt             # oneVPL (QSV) runtime
+        intel-compute-runtime  # OpenCL (NEO) + Level Zero for Arc/Xe
+    ];
+};
+```
+
+In case of any issues I recommend following the Official NixOS Wiki for [AMD](https://wiki.nixos.org/wiki/AMD_GPU)/[Nvidia](https://wiki.nixos.org/wiki/NVIDIA)/[Intel](https://wiki.nixos.org/wiki/Intel_Graphics).
+
+#### Backups <a name="backups"></a>
+
+For backing up my external drives I use the [`restic`](https://github.com/restic/restic) service. I found this to be the easiest way to have declarative backups in NixOS.
+
+See example usage in [`machines/cumulus/system.nix`](./machines/cumulus/system.nix).
+
+## Flakes <a name="flakes"></a>
+
+> [!NOTE]
+> Recommended resources: [video](https://youtu.be/JCeYq72Sko0?si=PRawJxHEbx6lIRpy), [book](https://nixos-and-flakes.thiscute.world/)
+
+Nix flakes allow you to pin versions of dependencies (stuff you install) and provides a standardised way to structure Nix projects, which a user can then get on their system declaratively. Although it is an experimental feature, flakes have become de-facto a standard in the community.
+
+The version pinning is very similar to something like a `package.json`/`requirements.txt`/`go.sum`/.... This makes reproducibility even better as with pinned versions you can share your config with anyone.
+
+In practice you mainly define two things:
+
+1. **inputs** (software and other dependencies)
+2. **outputs** (machine definitions)
+
+The inputs can be something like the *nixpkgs*, *Mango wayland compositor*, *nix-minecraft*, *your own project that exposes flake.nix* and so much more.
+
+You then update the software using the command `nix flake update` to update your whole system or `nix flake update <input-name>` to update one single input. This will create file `flake.lock` where the versions will be locked and you can use this file to the rebuild system on your other machines (or even the same on in case something breaks).
+
+To be honest, flakes are such a big tool and topic that I could not possibly exaplain in this manual (っ- ‸ - ς). If you want to learn more I recommend the [NixOS & Flakes Book - An unofficial book for beginners](https://nixos-and-flakes.thiscute.world/).
+
+**TLDR**: I use flakes to install and pin dependencies (software) to make my build reproducible and have some of the software that might not be available in the `nixpkgs` repo.
+
+## Parts
+
+> [!NOTE]
+> Recommended resources: [video](https://www.youtube.com/watch?v=aNgujRXDTdE)
+
+Parts allow you to make your configuration modular with very little overhead. The basic idea here is that instead of including stuff by defining file paths, you define each part of you configuration in a module with a name and then include the module by that name instead of the file name. Another core principle is that all the code related to a given topic should live together in a single module.
+
+Parts handle merging definitions for the same option across multiple modules automatically. This means you can split related configuration for a single topic across several files without worrying about manually combining the results yourself.
+
+## Home-manager <a name="home-manager"></a>
+
+> [!NOTE]
+> Recommended resources: [video](https://www.youtube.com/watch?v=FcC2dzecovw), [video](https://www.youtube.com/watch?v=EUiXzX7nthY), [video](https://www.youtube.com/watch?v=YZAnJ0rwREA), [video](https://www.youtube.com/watch?v=b641h63lqy0), [video](https://www.youtube.com/watch?v=uP9jDrRvAwM)
+
+[Home-manager](https://github.com/nix-community/home-manager) lets you manage user-specific environment (typically dotfiles) through nix configuration. This can be quite nice if you have a certain themes, keybinds or other settings you want to apply to multiple programs at once in your nix configuration. There are also many plugins, flakes and other additions that will make configuring almost anything in nix possible.
+
+In the most basic use, you can just copy a dotfiles directory (or repository) to your `.config` home folder. This is what I was doing at first (now at the [deprecated](https://github.com/hruboson/nixos-conf/tree/deprecated) branch ). There are many advantages to using fully declarative dotfiles through home-manager and nix. For more information about this I recommend [Vimjoyer's video about home-manager](https://youtu.be/FcC2dzecovw?si=wpAe9nwFCOXFvOIe).
+
+Currently I have configured the following modules with home-manager:
+
+- [Neovim](parts/programs/nvim/default.nix) ... using the [Nixvim](https://github.com/nix-community/nixvim) configuration system
+- [Mango](parts/desktops/mango/default.nix) ... using the built-in options from Mangos flake
+- [ZSH](parts/programs/kitty/default.nix)
+- [Kitty](parts/programs/kitty/default.nix)
+- [git](parts/users/hruon/default.nix)
+- [default applications (xdg.mimeApps.defaultApplications)](parts/programs/packs/desktop.nix)
+
+
+### Nixvim <a name="nixvim"></a>
+
+[Nixvim](https://github.com/nix-community/nixvim) is a configuration system that lets you easily manage your neovim configuration in pure nix code. It is a very handy tool and makes the whole neovim configuration easier, especially setting up LSPs.
+
+The configuration can be found [here](parts/programs/nvim/default.nix).
+
+In theory by running `nixos-rebuild` and copying the generated config in `~/home/${user}/.config/nvim/` you should be able to migrate this config to other distros as well (or just use home-manager on other distros, which is probably easier tbh...).
+
+### Plasma-manager <a name="plasma-manager"></a>
+
+Plasma-manager is a tool for managing your KDE configuration declaratively. Unfortunately I found it quite lacking of features and configuration options you can set. One of the reasons I switched to NixOS was that I could have my **whole** computer declarative. The biggest problem with KDE is that the configuration files are scattered across the system. This has been a problem for a long time and I do hope that KDE can fix it. There are also tools such as [Konsave](https://github.com/Prayag2/konsave) which I have not personally used (but might give a try in the future).
+
+## Desktop environments <a name="desktop-environment"></a>
+
+Desktop environments are what turns your PC from terminal-only interface to fully fledged graphical interface. Most people take a desktop environment for granted in any distribution - and rightfully so - but I think it is important to know that the desktop environment is just a program that your system runs at the beginning of startup. This means you can easily exchange it (at least in Linux) for any other desktop environment you'd like: KDE, GNOME, Xfce or any of the Wayland tillers.
+
+### KDE <a name="desktop-environment-kde"></a>
+
+Installing KDE is as easy as adding these three lines of code to your configuration.
+
+```nix
+services.displayManager.sddm.enable = true;
+services.desktopManager.plasma6.enable = true;
+security.rtkit.enable = true;
+```
+
+That's all! Isn't that crazy (⊙_⊙) ? And if you want to change this to something else just comment these lines out and bring in your own desktop environment.
+
+### Wayland compositors <a name="wayland-compositors"></a>
+
+Mango, Sway and Hyprland (and other compositors such as Niri, ...) are a bit more complicated than a simple KDE (or is it rather the other way (╭ರ_•́) !?). Well for the user is is probably more complicated to get Hyprland or Sway running that KDE. But they are simpler and should have smaller memory and CPU footprint than a big desktop environment (such as KDE). The advantage (and also disadvantage in some cases) is that you have to bring everything else yourself - lock screen, taskbar, file manager and basically everything else you can think of when you think of desktop environment. They are not a desktop environments per se. Officially they are "window managers". That means they only manage your windows - and that's it. Nothing more, nothing less.
+
+That's also why I will show only the *most basic configuration* of Hyprland and Sway. I'd say that at the point of writing this guide they are more for the power-users. But don't let that discourage you in trying them yourselves. They are not too difficult to get up and running especially on NixOS.
+
+I noticed that I've been basically using the Hyprland window managing philosophy on my Windows machine. By using the [Microsofts PowerToys](https://learn.microsoft.com/en-us/windows/powertoys/) (yes, one of the two Microsoft products that don't suck) Fancy Zones utility. I was basically doing what I could be doing in Hyprland automatically, manually.
+
+#### Mango <a name="wayland-compositor-mango"></a>
+
+> [!NOTE]
+> Mango is currently the only Wayland compositor I configured using the parts modules. You can obviously configure any other compositor in parts but I just didn't find the need to as Mango takes care of everything I currently need.
+
+[Mangowm](https://mangowm.github.io/) is a modern wayland compositor based on wlroots & scenefx. It is supposed to be lightweight and feature-rich. It supports many different layouts - scroller, master stack, grid, deck and many more. This was the main reason I switched to it over from Hyprland that only supported the tilling layout (at the time I left it) which I honestly did not find that useful.
+
+To install Mangowm I recommend using the flake provided in the official [Mangowm repo](https://github.com/mangowm/mango). There is an official guide for [installing mango on NixOS](https://mangowm.github.io/docs/installation/#nixos) or follow these steps to add it to your configuration:
+
+1. add mango to `flake.nix` inputs:
+
+```nix
+mango = {
+  url = "github:mangowm/mango";
+  inputs.nixpkgs.follows = "nixpkgs";
+};
+```
+
+2. add mango to import in the module you want to configure mango in:
+
+```nix
+imports = [
+  inputs.mango.nixosModules.mango
+  ... # your other imports
+];
+```
+3. enable the mango module:
+
+```nix
+programs.mango.enable = true;
+```
+
+4. start mango on log in (many different ways, depending on what login manager you use):
+
+>[!NOTE]
+> I personally use the [SilendSDDM login manager](https://github.com/uiriansan/SilentSDDM) and I install it through flake (similarly to Mango). You can see the config in the [mango](parts/desktops/mango/default.nix) module.
+
+```
+services.greetd = {
+  enable = true;
+  settings = {
+    initial_session = {
+      command = "mango"; # this is the command you use to run mango (you can also just run it in your terminal to try it out)
+      user = "your-username"; # auto-login on first start, no password required
+    };
+    default_session = {
+      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd mango";
+      user = "greeter";
+    };
+  };
+};
+```
+5. configure it to your liking ⸜(｡˃ᵕ˂)⸝♡ ... (*[nix options](https://mangowm.github.io/docs/nix-options), [my mango config](parts/desktops/mango/default.nix)*).
+
+Find the complete config in the [mango](parts/desktops/mango/default.nix) module. I have also defined few of my own components such as [waybar](parts/desktops/components/waybar.nix) or [brightnessWidget](parts/desktops/components/brightness/default.nix).
+
+---
+
+Note: I had a bit of a rough time trying to install both Mango and KDE together due to some options I set in the mango module. I ultimately decided to drop this idea since it was more of a curiosity. I did manage to make it kinda "work" and you can see the code of that attempt at the [parts-kde-mango branch](https://github.com/hruboson/nixos-conf/tree/parts-kde-mango).
+
+#### Hyprland <a name="wayland-compositor-hyprland"></a>
+
+> [!WARNING]
+> I stopped using Hyprland when I switched to parts, so all of this config can be found on the [deprecated](https://github.com/hruboson/nixos-conf/tree/deprecated) branch.
+
+Hyprland provides quite a few handy features and is a "more complete" WM in comparison to Wayland compositors I have tried.
+
+I installed Hyprland using the official flake. In your flake inputs add
+
+```nix
+hyprland.url = "github:hyprwm/Hyprland";
+
+### PLUGINS ### you don't really have to install these if you will not be using them
+hyprland-plugins = {
+    url = "github:hyprwm/hyprland-plugins";
+    inputs.hyprland.follows = "hyprland";
+};
+Hyprspace = {
+    url = "github:KZDKM/Hyprspace";
+    inputs.hyprland.follows = "hyprland";
+};
+```
+
+The plugins are configured WITHOUT home-manager and you can see the code snippets on how to get them work in `machines/workstation/hypr.nix`, `dotfiles/hypr/hyprland.conf` and `dotfiles/hypr/modules/plugins.conf`.
+
+Then onto the Hyprland configuration in NixOS. Notice that the package follows the flake repository.
+
+```nix
+programs.hyprland = {
+    enable = true;
+    withUWSM = true;
+    xwayland.enable = true;
+    
+    package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+};
+
+services.xserver.enable = false;
+security.polkit.enable = true;
+services.dbus.enable = true;
+hardware.graphics.enable = true;
+
+xdg.portal.enable = true;
+xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+# QEMU-specific config
+services.xserver.videoDrivers = [ "virtio" ];
+environment.variables.WLE_NO_HARDWARE_CURSORS = "1";
+```
+
+And some packages with that:
+
+```nix
+# hypr utils
+environment.systemPackages = lib.mkAfter(with pkgs; [
+    killall
+    sddm-astronaut # SDDM login screen
+
+    wev
+    wayland
+    wlr-randr
+    wdisplays
+    tuigreet
+
+    hyprpaper
+    hypridle
+    hyprlock
+    waybar
+    eww
+
+    grim					# Screenshot utility
+    slurp					# Select region for grim
+    nwg-wrapper				# Custom widget displayer
+    vicinae					# Launcher
+    pwvucontrol				# volume and sound control
+]);
+```
+
+And other configuration, such as pipewire and login screen components:
+```nix
+services.pipewire = {
+    enable = true;
+    wireplumber.enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+};
+
+services.xserver.enable = true;
+
+# Login screen using sddm and sddm-astronaut theme
+services.displayManager.sddm = {
+	enable = true;
+	extraPackages = [ pkgs.sddm-astronaut ];
+	theme = "sddm-astronaut-theme";
+	autoLogin.relogin = false;
+	wayland.enable = true;
+    # All available settings can be found using the man commang: `man sddm.conf` or online: https://manpages.debian.org/trixie/sddm/sddm.conf.5.en.html
+	settings = {
+		Autologin = {
+			Session = "start-hyprland";
+			User = "username"; # Change this to your user name
+			Relogin = false;
+		};
+	};
+};
+
+```
+
+#### Sway <a name="wayland-compositor-sway"></a>
+
+When using this configuration, please refer to the `machines/workstation/sway.nix` file (or `modules/de/sway.nix` if you are from the future - yeah I'm too lazy to make my config modular for now).
+
+Installing Sway was quite easy, this config should be all you need.
+
+```nix
+programs.sway.enable = true;
+services.xserver.enable = false; # disable X11
+security.polkit.enable = true;
+```
+
+Installing login sscreen and other components is very similar to Hyprland, just change the `Session` in `Autologin` to `"sway"` (or the command to run Sway in case this ever changes).
+
+## Gaming <a name="gaming-manual"></a>
+
+I found running games on NixOS to be very convenient and trivially simple (*though I do have full AMD PC (˵ ¬ᴗ¬˵)* ). I'm mostly using [Steam](https://wiki.nixos.org/wiki/Steam/en) and [Heroic Games Launcher](https://wiki.nixos.org/wiki/Heroic_Games_Launcher) (Epic Games and GOG) to run my games. They both provide very nice interface to install and manage Wine and Proton compatibility tools. I did find Proton to be more consistent and successful in running games in Wayland.
+
+You can use the [`appPackGames`](parts/programs/packs/games.nix) module to install both Steam and HGL as well as other games and tools (*osu!*, *PS2 emulator*, *Prism Launcher for Minecraft*, *...*).
+
+To set up your graphics card follow the [AMD](https://wiki.nixos.org/wiki/AMD_GPU)/[Nvidia](https://wiki.nixos.org/wiki/NVIDIA)/[Intel](https://wiki.nixos.org/wiki/Intel_Graphics) sections on NixOS wiki as this will vary depending on your hardware.
+
+I also tried running TFT using the [Waydroid](https://wiki.nixos.org/wiki/Waydroid) emulator. I found this to be quite clunky and not really playable, so I discarded this idea completely. TFT is currently the only reason why I keep my 200GB Windows partition in dualboot.
+
+### Minecraft Server <a name="minecraft-server"></a>
+
+The [nix-minecraft](https://github.com/Infinidoge/nix-minecraft) provides a super convenient way to declare multiple Minecraft servers. The only thing that I couldn't get to run, unfortunately, was a way to run a server with `Forge` mods.
+
+An example of running Minecraft server using the PaperMC server package can be found in the [`selfhostedMinecraftServer`](parts/services/selfhosted/minecraft-server/default.nix) module. To connect using RCON (Remote Console) you can use programs such as `ARRCON` (Windows) or `rcon-cli` (Linux).
+
+I personally manage the Minecraft server through a Windows machine using `ARRCON`.
+
+```bash
+ARRCON.exe -H SERVER_ADDRESS -P RCON_PORT -p PASSWORD
+```
+
+The default port (if unspecified) is `25575`.
+
+## NixOS optimizations <a name="nixos-optimizations"></a>
+
+### Optimizing storage
+
+You can remove all but the current generation using the command `sudo nix-collect-garbage -d`. This is especially useful on devices with lower total storage space (like Raspberry Pi). To also remove unused store paths run `nix-store --gc`.
+
+If you want to keep only the last three generations and delete the other use the command `nix-env --delete-generations +3 --profile /nix/var/nix/profiles/system`.
+
+Setting a maximum number of stored generations can be done by applying following settings in your nix configuration:
+
+```nix
+boot.loader.generations = 3; # keeps only last three generations
+```
+
+## Resources <a name="resources-detailed"></a>
+
+*If you are from the future I apologize for any dead links (´•︵•`) ... Please try to find them at [https://web.archive.org/](https://web.archive.org/). ᵗʰᵃᶰᵏᵧₒᵤ  ദ്ദി ˉ꒳ˉ )✧!.*
+
+### NixOS
+
+- [nix-community/nixos-anywhere: Install NixOS everywhere via SSH [maintainers=@Mic92 @Lassulus @phaer @Enzime @a-kenji]](https://github.com/nix-community/nixos-anywhere)
+- [Misterio77/nix-starter-configs: Simple and documented config templates to help you get started with NixOS + home-manager + flakes. All the boilerplate you need!](https://github.com/Misterio77/nix-starter-configs)
+- [NixOS Search - Packages](https://search.nixos.org/packages)
+- [MyNixOS](https://mynixos.com/)
+- [Matrix - NixOS Wiki](https://nixos.wiki/wiki/Matrix)
+- [NixOS Manual](https://nixos.org/manual/nixos/stable/index.html#module-services-matrix)
+- [How to setup a Matrix homeserver – /techblog](https://www.redpill-linpro.com/techblog/2025/04/08/matrix-basic-en.html)
+- [Appendix A. Plasma-Manager Options](https://nix-community.github.io/plasma-manager/options.xhtml)
+- [Packaging existing software with Nix — nix.dev documentation](https://nix.dev/tutorials/packaging-existing-software.html)
+- [Installing NixOS on a Raspberry Pi — nix.dev documentation](https://nix.dev/tutorials/nixos/installing-nixos-on-a-raspberry-pi.html)
+- [Introduction to Nix & NixOS | NixOS & Flakes Book](https://nixos-and-flakes.thiscute.world/introduction/)
+- [Matrix - NixOS Wiki](https://wiki.nixos.org/wiki/Matrix)
+- [zupo/nix: My personal notes and memos about playing with NixOS on a Raspberry PI](https://github.com/zupo/nix)
+- [Forgejo - NixOS Wiki](https://wiki.nixos.org/wiki/Forgejo)
+- [Storage optimization - NixOS Wiki](https://nixos.wiki/wiki/Storage_optimization)
+- [Plasma-Manager - NixOS Wiki](https://nixos.wiki/wiki/Plasma-Manager)
+- [Preface | NixOS & Flakes Book](https://nixos-and-flakes.thiscute.world/preface)
+- [Generating an ISO with my entire system configuration inside it : NixOS](https://old.reddit.com/r/NixOS/comments/18lixd3/generating_an_iso_with_my_entire_system/)
+- [Friendly reminder: optimize-store is not on by default and you may be using a lot of disk space : NixOS](https://old.reddit.com/r/NixOS/comments/1cunvdw/friendly_reminder_optimizestore_is_not_on_by/)
+- [Hyprland on NixOS (w/ UWSM)](https://www.tonybtw.com/tutorial/nixos-hyprland/)
+- [SnowflakeOS](https://snowflakeos.org/)
+- [mateowoetam/desktop.nix: My Desktop PC (Work in progress) NixOS configuraiton file - Codeberg.org](https://codeberg.org/mateowoetam/desktop.nix)
+- [sioodmy/dotfiles: My NixOS configuration flake that moggs yours in term of eval times](https://github.com/sioodmy/dotfiles)
+- [JaKooLit/NixOS-Hyprland: To Automate Installation of Hyprland on NixOS using flakes. NOTE: Dot configs are not written in Nix.](https://github.com/JaKooLit/NixOS-Hyprland)
+- [Declare Firefox extensions and settings - Guides - NixOS Discourse](https://discourse.nixos.org/t/declare-firefox-extensions-and-settings/36265)
+- [NixOS 51: Using Plasma-Manager to Configure KDE Plasma Desktop Settings - YouTube](https://www.youtube.com/watch?v=2r0KnIZX5HY)
+- [Infinidoge/nix-minecraft: An attempt to better support Minecraft-related content for the Nix ecosystem](https://github.com/Infinidoge/nix-minecraft)
+- [Forge support · Issue #15 · Infinidoge/nix-minecraft](https://github.com/Infinidoge/nix-minecraft/issues/15)
+- [DavHau/nix-portable: Nix - Static, Permissionless, Installation-free, Pre-configured](https://github.com/DavHau/nix-portable)
+- [running an external binary on NixOS](https://l-lin.github.io/nix/running-an-external-binary-on-NixOS)
+- [nix-community/nix-direnv: A fast, persistent use_nix/use_flake implementation for direnv [maintainer=@Mic92 / @bbenne10]](https://github.com/nix-community/nix-direnv)
+- [gpskwlkr/nixos-hyprland-flake: NixOS flake containing full system configuration](https://github.com/gpskwlkr/nixos-hyprland-flake)
+- [pshycodr/airctl: Modern GTK4 based wifi management tool](https://github.com/pshycodr/airctl)
+- [rcalixte/awesome-wayland: A curated list of Wayland resources](https://github.com/rcalixte/awesome-wayland)
+- [Cudiph/cwcwm: Hackable wayland compositor](https://github.com/Cudiph/cwcwm)
+- [MayNiklas/eduroam-flake: install eduroam on Nix systems](https://github.com/MayNiklas/eduroam-flake)
+- [Conda on NixOS | Jaakko Luttinen](https://www.jaakkoluttinen.fi/blog/conda-on-nixos/)
+- [nix-zulip/nix-zulip: A packaging of Zulip server for NixOS - AFNix](https://git.afnix.fr/nix-zulip/nix-zulip)
+- [for SDDM users: What SDDM theme do you use? : NixOS](https://old.reddit.com/r/NixOS/comments/1r6bblf/for_sddm_users_what_sddm_theme_do_you_use/)
+- [nicolkrit999/nixOS: Personal nixOS config](https://github.com/nicolkrit999/nixOS/tree/main)
+- [uiriansan/SilentSDDM: A very customizable SDDM theme that actually looks good.](https://github.com/uiriansan/SilentSDDM)
+- [ranger097/ranger097_nixos_dotfiles: 90ish% Clone of my system in the form of a nixos flake.](https://github.com/ranger097/ranger097_nixos_dotfiles)
+- [Simple Restic Backups on Nixos | I.M Blogging](https://imranmustafa.net/simple-restic-backup-on-nixos/)
+- [lakinduakash/linux-wifi-hotspot: Feature-rich wifi hotspot creator for Linux which provides both GUI and command-line interface. It is also able to create a hotspot using the same wifi card which is connected to an AP already ( Similar to Windows 10).](https://github.com/lakinduakash/linux-wifi-hotspot)
+- [ornicar/dotfiles: NixOs & Neovim](https://github.com/ornicar/dotfiles?tab=readme-ov-file)
+- [nix-config/home/gabriel/features/desktop/common/firefox.nix at main · Misterio77/nix-config](https://github.com/Misterio77/nix-config/blob/main/home/gabriel/features/desktop/common/firefox.nix)
+- [GitHub - the-nix-way/dev-templates: Dev environments for numerous languages based on Nix flakes [maintainer=@lucperkins] · GitHub](https://github.com/the-nix-way/dev-templates)
+- [eduardofuncao/nali: Example of a barebones NixOS config using the dendritic pattern](https://github.com/eduardofuncao/nali)
+- [Lanzaboote - Official NixOS Wiki](https://wiki.nixos.org/wiki/Lanzaboote)
+- [lanzaboote/docs/getting-started/prepare-your-system.md at master · nix-community/lanzaboote](https://github.com/nix-community/lanzaboote/blob/master/docs/getting-started/prepare-your-system.md)
+- [NVF | The Superior Way To Configure Neovim With Nix - YouTube](https://www.youtube.com/watch?v=uP9jDrRvAwM)
+- [dharmx/walls: All of my wallpapers in one repo.](https://github.com/dharmx/walls/tree/main)
+- [Spotify doesn't open after upgrade · Issue #295670 · NixOS/nixpkgs](https://github.com/NixOS/nixpkgs/issues/295670)
+- [GGUF model list](https://mitjafelicijan.github.io/gguf-list/)
+- [adamlwgriffiths/nix-shells: Example nix shells for different languages / use cases](https://github.com/adamlwgriffiths/nix-shells)
+- [NixOS Series 3: Software Packaging 101 - Lan Tian @ Blog](https://lantian.pub/en/article/modify-computer/nixos-packaging.lantian/)
+- [Blaming nixos/hosts/workstation/configuration.nix at main · VoidNxSEC/nixos · GitHub](https://github.com/VoidNxSEC/nixos/blame/main/hosts/workstation/configuration.nix)
+- [openscad/openscad at openscad-2026.01.01-TEST2](https://github.com/openscad/openscad/tree/openscad-2026.01.01-TEST2)
+- [gmodena/nix-flatpak: Install flatpaks declaratively](https://github.com/gmodena/nix-flatpak)
+- [Home](https://maniacx.github.io/BudsLink/)
+
+### Server
+
+- [TeamSharedHealth - Paper Plugin | Hangar](https://hangar.papermc.io/ArwenOC/TeamSharedHealth)
+- [sasek333/nixos-hosted-ai-starter-kit: The Self-hosted AI Starter Kit is an open-source template that quickly sets up a local AI environment. Curated by n8n, adpted for nixos by me :), it provides essential tools for creating secure, self-hosted AI workflows.](https://github.com/sasek333/nixos-hosted-ai-starter-kit)
+- [Worlds - Paper Plugin | Hangar](https://hangar.papermc.io/TheNextLvl/Worlds)
+- [aster-void/nix-mc: NixOS module for Minecraft servers (Forge/NeoForge/Bedrock)](https://github.com/aster-void/nix-mc)
+- [Minecraft_Forge_on_NixOS.md](https://gist.github.com/cyber-murmel/4aeae3b5dafc72f12827b3284a9da481)
+- [nixos-configurations/stargazer/minecraft-servers.nix at master · mkaito/nixos-configurations](https://github.com/mkaito/nixos-configurations/blob/master/stargazer/minecraft-servers.nix)
+- [mkaito/nixos-modded-minecraft-servers: A NixOS module to run multiple modded minecraft servers.](https://github.com/mkaito/nixos-modded-minecraft-servers)
+- [Running Matrix Synapse on NixOS - Foxy Possibilities - Two foxes. Endless possibilities.](https://www.foxypossibilities.com/2018/02/04/running-matrix-synapse-on-nixos/)
+- [matrix-construct/tuwunel: Official successor to conduwuit](https://github.com/matrix-construct/tuwunel)
+- [IogaMaster/flux: Create and deploy game servers with nix](https://github.com/IogaMaster/flux)
+
+### Gaming
+
+- [Heroic Games Launcher](https://heroicgameslauncher.com/)
+
+### Hyprland
+
+- [hyprwm/hyprpaper: Hyprpaper is a blazing fast wayland wallpaper utility with IPC controls.](https://github.com/hyprwm/hyprpaper)
+- [Hall of Fame | Hyprland](https://hypr.land/hall_of_fame/)
+- [xfcasio/amadeus: Amadeus desktop](https://github.com/xfcasio/amadeus)
+- [end-4/dots-hyprland: uhh questioning the meaning of dotfiles](https://github.com/end-4/dots-hyprland?tab=readme-ov-file)
+- [hyprland-plugins/hyprbars at main · hyprwm/hyprland-plugins](https://github.com/hyprwm/hyprland-plugins/tree/main/hyprbars)
+- [hyprland-community/awesome-hyprland: Awesome list for Hyprland [maintainer=@yavko]](https://github.com/hyprland-community/awesome-hyprland)
+- [caelestia-dots/shell: ‼️ No waybar here ‼️](https://github.com/caelestia-dots/shell)
+- [GitHub - saatvik333/wayland-bongocat: bongocat for your desktop ₍^. .^₎](https://github.com/saatvik333/wayland-bongocat)
+- [JakeStanger/ironbar: Customisable Wayland GTK4 bar written in Rust.](https://github.com/JakeStanger/ironbar?tab=readme-ov-file)
+- [coffeeispower/woomer: Zoomer application for Wayland inspired by tsoding's boomer](https://github.com/coffeeispower/woomer)
+- [zakk4223/hyprNStack: Hyprland plugin for N-stack tiling layout](https://github.com/zakk4223/hyprNStack)
+- [I may have taken plugins too far... : hyprland](https://old.reddit.com/r/hyprland/comments/11p2chb/i_may_have_taken_plugins_too_far/)
+- [elythh/flake: my unavoidable system configuration](https://github.com/elythh/flake)
+- [Rastersoft / Desktop Icons NG · GitLab](https://gitlab.com/rastersoft/desktop-icons-ng)
+- [atx/wlay: Graphical output management for Wayland](https://github.com/atx/wlay)
+- [TypoMustakes/hyprland-toggle-tiling](https://github.com/TypoMustakes/hyprland-toggle-tiling)
+- [XNM1/linux-nixos-hyprland-config-dotfiles: Linux 🐧 configuration based on NixOS ❄️, Hyprland, and Catppuccin Macchiato theme 😸 for a consistent, complete, and customizable experience. 🚀](https://github.com/XNM1/linux-nixos-hyprland-config-dotfiles?tab=readme-ov-file#-components)
+- [Naman-Adhikari/Nixos_config: My configs, the Nix way.](https://github.com/Naman-Adhikari/Nixos_config)
+- [HeinzDev/Hyprland-dotfiles: Welcome to my NixOS hyprland config](https://github.com/HeinzDev/Hyprland-dotfiles)
+- [outfoxxed/hy3: Hyprland plugin for an i3 / sway like manual tiling layout](https://github.com/outfoxxed/hy3)
+- [Axenide/Ambxst: An Axtremely customizable shell.](https://github.com/Axenide/Ambxst)
+- [ezratweaver/adw-bluetooth: GNOME Inspired LibAdwaita Bluetooth Applet](https://github.com/ezratweaver/adw-bluetooth)
+- [Vijay-papanaboina/wifi-manager](https://github.com/Vijay-papanaboina/wifi-manager?tab=readme-ov-file#nix)
+- ["Hyprland was started without start-hyprland..." error on startup when using NixOs and `withUWSM` · hyprwm/Hyprland · Discussion #12661](https://github.com/hyprwm/Hyprland/discussions/12661)
+- [ilyamiro/nixos-configuration: Configuration for my NixOS setup](https://github.com/ilyamiro/nixos-configuration)
+
+### Virtualization
+
+- [KVM/qemu mit QXL – hohe Auflösungen und virtuelle Monitore im Gastsystem definieren und nutzen – I | Linux-Blog – Dr. Mönchmeyer / anracon](https://linux-blog.anracom.com/2017/07/06/kvmqemu-mit-qxl-hohe-aufloesungen-und-virtuelle-monitore-im-gastsystem-definieren-und-nutzen-i/)
+- [command line - Adding a second monitor on qemu virtual machine - Super User](https://superuser.com/questions/1655709/adding-a-second-monitor-on-qemu-virtual-machine)
+
+### Mangowc
+
+- [Mango WM](https://www.tonybtw.com/community/mango)
+- [Editor | mangowm](https://mangowm.github.io/editor)
+- [Examples · Alexays/Waybar Wiki](https://github.com/Alexays/Waybar/wiki/Examples)
+- [prankstr/vibepanel: GTK4 panel for Wayland with notifications, OSD, and quick settings – between a status bar and a desktop shell.](https://github.com/prankstr/vibepanel?tab=readme-ov-file)
+- [prankstr/vibepanel: GTK4 panel for Wayland with notifications, OSD, and quick settings – between a status bar and a desktop shell.](https://github.com/prankstr/vibepanel)
+
+### Selfhosted
+
+- [Matrix.org](https://matrix.org/)
+- [alam00000/bentopdf: A Privacy First PDF Toolkit](https://github.com/alam00000/bentopdf)
+- [Rainnny7/gitea-github-theme: A theme to make Gitea look and feel like GitHub.](https://github.com/Rainnny7/gitea-github-theme)
+- [maxdorninger/MediaManager: A modern selfhosted media management system for your media library](https://github.com/maxdorninger/MediaManager)
+- [selfh.st - Self-hosted content and software](https://selfh.st/)
+- [Glance - Self-Hosted Feeds Dashboard](https://noted.lol/glance/)
+- [Setup your Domain using Cloudflare Tunnels and Zero Trust](https://noted.lol/cloudflare-tunnel-and-zero-trust/)
+- [GitHub - binwiederhier/ntfy: Send push notifications to your phone or desktop using PUT/POST](https://github.com/binwiederhier/ntfy)
+- [jellyfin/jellyfin-mpv-shim: MPV Cast Client for Jellyfin](https://github.com/jellyfin/jellyfin-mpv-shim)
+- [LACK Odkládací stolek, černohnědá, 55x55 cm - IKEA](https://www.ikea.com/cz/cs/p/lack-odkladaci-stolek-cernohneda-80104268/#content)
+- [distil-labs/distil-gitara: GitAra 🦜🎸: A small function-calling git agent you can run locally](https://github.com/distil-labs/distil-gitara)
+- [Zhoros/SuperBin: Super Bin - Pastebin, File Sharing and URL Shortener with Password, Curl and QR support](https://github.com/Zhoros/SuperBin?tab=readme-ov-file)
+- [Free Dashboard Icons - Download High-Quality UI & App Icons](https://dashboardicons.com/)
+- [bigcode-project/starcoder: Home of StarCoder: fine-tuning & inference!](https://github.com/bigcode-project/starcoder)
+- [Home | Tiny Tiny RSS](https://tt-rss.org/)
+- [GitHub - element-hq/ess-helm: Element Server Suite Community Edition · GitHub](https://github.com/element-hq/ess-helm)
