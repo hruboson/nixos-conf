@@ -9,70 +9,72 @@
     }:
     {
       config = {
-        security.pam.services.swaylock = { };
+		security.pam.services.hyprlock = {};
         security.polkit.enable = true;
-
         home-manager.users.${username} = {
-          programs.swaylock = {
+          programs.hyprlock = {
             enable = true;
-            package = pkgs.swaylock-effects;
-
             settings = {
-              daemonize = true;
-              ignore-empty-password = true;
-              show-failed-attempts = true;
-              submit-on-touch = true;
+              general = {
+                hide_cursor = true;
+                ignore_empty_input = true;
+              };
+              background = [
+                {
+                  path = "screenshot";
+                  blur_passes = 3;
+                  blur_size = 8;
+                  noise = 0.02;
+                  contrast = 1.1;
+                  brightness = 0.8;
+                  vibrancy = 0.2;
+                }
+              ];
 
-              screenshots = true; # capture the current screen
-              effect-blur = "8x3";
-              effect-vignette = "0.35:0.5";
-              effect-greyscale = true;
-			  fade-in = 0.1;
-              #grace = 3;
+              label = [
+                {
+                  # CLOCK
+                  text = ''cmd[update:1000] ${pkgs.coreutils}/bin/date +"%H:%M"'';
+                  color = "rgba(220, 220, 220, 1.0)";
+                  font_size = 96;
+                  font_family = "JetBrainsMono Nerd Font";
+                  position = "0, 80";
+                  halign = "center";
+                  valign = "center";
+                }
 
-              clock = true;
-              timestr = "%H:%M";
-              datestr = "%A, %d %B";
-              font = "JetBrainsMono Nerd Font";
-              font-size = 70;
+                {
+                  # DATE
+                  text = ''cmd[update:1000] ${pkgs.coreutils}/bin/date +"%A, %d %B"'';
+                  color = "rgba(200, 200, 200, 0.8)";
+                  font_size = 22;
+                  font_family = "JetBrainsMono Nerd Font";
+                  position = "0, 10";
+                  halign = "center";
+                  valign = "center";
+                }
+              ];
 
-              # password ring
-              indicator = true;
-              indicator-radius = 150;
-              indicator-thickness = 5;
-              #indicator-idle-visible = true;
+              input-field = [
+                {
+                  size = "280, 50";
+                  outline_thickness = 2;
+                  outer_color = "rgba(120,120,120,0.3)";
+                  inner_color = "rgba(30,30,30,0.6)";
+                  font_color = "rgba(220,220,220,1.0)";
 
-              #TODO take this color from stylix when stylix is implemented
-              key-hl-color = "f3be7cff"; # for now this is the vague-yellow
+                  fade_on_empty = false;
+                  placeholder_text = "Password...";
 
-              inside-color = "1e1e1e99";
-              inside-clear-color = "1e1e1e99";
-              inside-caps-lock-color = "1e1e1e99";
-              inside-ver-color = "1e1e1e99";
-              inside-wrong-color = "40202099";
+                  dots_center = true;
 
-              ring-color = "78787866";
-              ring-clear-color = "dcdcdcff";
-              ring-caps-lock-color = "dcdcdcff";
-              ring-ver-color = "78787866";
-              ring-wrong-color = "aa4444ff";
-
-              line-color = "00000000";
-              line-clear-color = "00000000";
-              line-caps-lock-color = "00000000";
-              line-ver-color = "00000000";
-              line-wrong-color = "00000000";
-
-              text-color = "dcdcdcff";
-              text-clear-color = "dcdcdcff";
-              text-caps-lock-color = "dcdcdcff";
-              text-ver-color = "dcdcdcff";
-              text-wrong-color = "dcdcdcff";
-
-              separator-color = "00000000";
+                  position = "0, -80";
+                  halign = "center";
+                  valign = "center";
+                }
+              ];
             };
           };
-
           services.hypridle = {
             enable = true;
             settings = {
@@ -80,12 +82,12 @@
                 before_sleep_cmd = "loginctl lock-session";
                 after_sleep_cmd = "";
                 ignore_dbus_inhibit = false;
-                lock_cmd = "pidof swaylock || ${pkgs.swaylock-effects}/bin/swaylock";
+                lock_cmd = "pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock";
               };
               listener = [
                 {
                   timeout = 600;
-                  on-timeout = "pidof swaylock || ${pkgs.swaylock-effects}/bin/swaylock";
+                  on-timeout = "pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock";
                 }
                 {
                   timeout = 900;
@@ -96,8 +98,8 @@
           };
 
           wayland.windowManager.mango.autostart_sh = ''
-            hypridle &
-          '';
+            					hypridle &
+            				'';
 
           wayland.windowManager.mango.settings.switchbind = [
             "fold,spawn_shell,systemctl suspend"
