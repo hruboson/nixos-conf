@@ -20,7 +20,7 @@
         hostName = fqdn;
         https = false;
 
-        package = pkgs.nextcloud33;
+        package = pkgs.nextcloud34;
         extraApps = {
           inherit (config.services.nextcloud.package.packages.apps)
             news
