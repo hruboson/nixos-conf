@@ -13,12 +13,21 @@
         self.nixosModules.eliskaSystem
         self.nixosModules.users
 
+        self.nixosModules.desktopOptions
         self.nixosModules.mango
+        self.nixosModules.kde
+
         self.nixosModules.kitty
         self.nixosModules.appPackDev
         self.nixosModules.appPackSysutils
         self.nixosModules.appPackDesktop
-        self.nixosModules.appPackRazer
+        self.nixosModules.appPack3D
+        self.nixosModules.appPackDrawing
+        self.nixosModules.appPackNetworking
+        self.nixosModules.appPackSysutils
+        self.nixosModules.appPackDesktop
+        self.nixosModules.appPackGames
+        self.nixosModules.appPackEducation
 
         self.nixosModules.servicesPackHomeserver
         self.nixosModules.servicesBluetooth
@@ -34,12 +43,23 @@
         enable = true;
         clean.enable = true;
         clean.extraArgs = "--keep-since 4d --keep 3";
-        flake = "/home/${username}/nixos-conf"; # sets NH_OS_FLAKE 
+        flake = "/home/${username}/nixos-conf"; # sets NH_OS_FLAKE
       };
 
       desktops.mango.monitors = ''
         monitorrule=name:eDP-1,width:2880,height:1800,refresh:60,x:0,y:0,scale:1.5
       '';
+      desktops.lockscreen.background = pkgs.fetchurl {
+        name = "ocean_dark_coral.jpg";
+        url = "https://raw.githubusercontent.com/hruboson/wallpapers/refs/heads/main/ocean/ocean_dark_coral.jpg";
+        hash = "sha256-7Am33XEVVREqtK+8eQU0kKSk05i6UmtUkqgYw6IqrZ0=";
+      };
+
+      desktops.lockscreen.profilePicture = pkgs.fetchurl {
+        name = "hruon_logo.jpg";
+        url = "https://raw.githubusercontent.com/hruboson/wallpapers/main/logos/logos_inversion.png";
+        hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
+      };
 
       ## SOUND
       services.pulseaudio.enable = false;

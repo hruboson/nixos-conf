@@ -1,30 +1,49 @@
 { self, inputs, ... }: {
-	flake.nixosModules.eliskaHardware = { config, lib, pkgs, modulesPath, ... }: {
-		imports =
-			[ (modulesPath + "/installer/scan/not-detected.nix")
-			];
+  flake.nixosModules.eliskaHardware =
+    {
+      config,
+      lib,
+      pkgs,
+      modulesPath,
+      ...
+    }:
+    {
+      imports = [
+        (modulesPath + "/installer/scan/not-detected.nix")
+      ];
 
-		boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "vmd" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
-		boot.initrd.kernelModules = [ ];
-		boot.kernelModules = [ "kvm-intel" ];
-		boot.extraModulePackages = [ ];
+      boot.initrd.availableKernelModules = [
+        "xhci_pci"
+        "thunderbolt"
+        "vmd"
+        "nvme"
+        "usb_storage"
+        "sd_mod"
+        "rtsx_pci_sdmmc"
+      ];
+      boot.initrd.kernelModules = [ ];
+      boot.kernelModules = [ "kvm-intel" ];
+      boot.extraModulePackages = [ ];
 
-		fileSystems."/" =
-		{ device = "/dev/disk/by-uuid/f2db29fd-b3b5-4b96-8295-0c40a7633e9e";
-			fsType = "ext4";
-		};
+      fileSystems."/" = {
+        device = "/dev/disk/by-uuid/b97baa4e-bb55-439b-b535-677f0902a4e7";
+        fsType = "ext4";
+      };
 
-		fileSystems."/boot" =
-		{ device = "/dev/disk/by-uuid/2916-0C9F";
-			fsType = "vfat";
-			options = [ "fmask=0077" "dmask=0077" ];
-		};
+      fileSystems."/boot" = {
+        device = "/dev/disk/by-uuid/F43B-BF54";
+        fsType = "vfat";
+        options = [
+          "fmask=0077"
+          "dmask=0077"
+        ];
+      };
 
-		swapDevices =
-			[ { device = "/dev/disk/by-uuid/f7651766-be87-47ef-b583-de634ebcd095"; }
-			];
+      swapDevices = [
+        { device = "/dev/disk/by-uuid/d5c28453-61ed-4b03-9aad-f07df1a02e02"; }
+      ];
 
-			nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-			hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-	};
+      nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+      hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    };
 }
