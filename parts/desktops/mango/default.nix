@@ -136,7 +136,7 @@
             pulseaudio
             playerctl
             wayscriber # screen annotation tool
-            inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww # wallpaper manager
+            awww # wallpaper manager
 
           ]
           ++ lib.optionals config.desktops.waybar.showRotateScript [
