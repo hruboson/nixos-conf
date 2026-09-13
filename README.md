@@ -194,13 +194,15 @@ If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland
 
 #### Using NixOS graphical installer <a name="graphical-installer"></a>
 
-Get your bootable USB drive... Download the current NixOS graphical installer at [nixos.org](https://nixos.org/download/#nixos-iso). On Windows using Rufus or [Etcher](https://etcher.balena.io/) flash the drive with the nixos ISO image. On Linux just use the command `sudo dd if=path/to/nixos-graphical-26.05.9592.21a67dc47014-x86_64-linux.iso of=/dev/sdXYZ bs=4M status=progress conv=sync` where `XYZ` is the mount point of your USB drive (to find out the drives label run `lsblk -f`) and substitute the correct path for your downloaded ISO file.
-
 Installing NixOS using the graphical installer is quite straightforward. I found it to be no harder than installing Fedora or Ubuntu.
 
-Boot up your NixOS graphical installer and just follow the installer. You will be prompted to choose your Location, Keyboard layout, set up your user and root account, choose your desktop environment (choose whichever you like the most, if you want Windows-like choose KDE Plasma, if you want Mac-like choose Gnome), allow unfree software... 
+Get your bootable USB drive... Download the current NixOS graphical installer at [nixos.org](https://nixos.org/download/#nixos-iso). On Windows using Rufus or [Etcher](https://etcher.balena.io/) flash the drive with the nixos ISO image. On Linux just use the command `sudo dd if=path/to/nixos-graphical-26.05.9592.21a67dc47014-x86_64-linux.iso of=/dev/sdXYZ bs=4M status=progress conv=sync` where `XYZ` is the mount point of your USB drive (to find out the drives label run `lsblk -f`) and substitute the correct path for your downloaded ISO file.
 
-Set up partitions - here you will have to select on which drive the system will install and also whether to erase the whole disk or manually partition. If you have a laptop or PC where there will only be one system (NixOS) you can select *Erase disk*. Also select a swap partition to be created, otherwise there is a good chance you might run out of RAM during the installation. If you want to utilize hibernation also select that. Otherwise every other settings should stay default. Click your way through the next buttons and start the installation by clicking the *Install* button. This process can take a while (about 30 minutes or more) depending on your hardware and your internet speed.
+Now plug in the flashed USB drive to your PC and boot into it. This step will wary depending on your motherboard. Usually you go into BIOS by pressing F2 or DEL keys while the PC is booting up. In the BIOS you select to boot into the USB drive. After you select this option save and exit BIOS and you should boot into the graphical installer. In the newer versions it will first ask you which DE you want to boot into (KDE or Gnome). This doesn't really matter as this option only applies to the installer itself. During the installation you will be prompted to choose which DE you want to install.
+
+After getting into the bootable drive just follow the installer. You will be prompted to choose your Location, Keyboard layout, set up your user and root account, choose your desktop environment (choose whichever you like the most, if you want Windows-like choose KDE Plasma, if you want Mac-like choose Gnome), allow unfree software... 
+
+Set up partitions - here you will have to select on which drive the system will install and also whether to erase the whole disk or manually partition. In case you want to dualboot with Windows, follow the [Dualbooting with Windows section](#dualboot-windows). If you have a laptop or PC where there will only be one system (NixOS) you can select *Erase disk*. Also select a swap partition to be created, otherwise there is a good chance you might run out of RAM during the installation. If you want to utilize hibernation also select that. Otherwise every other settings should stay default. Click your way through the next buttons and start the installation by clicking the *Install* button. This process can take a while (about 30 minutes or more) depending on your hardware and your internet speed.
 
 If it gets stuck at **46%** DO NOT PANIC. This is normal and it will take a while (could be up to an hour depending on your internet speed). At this point the NixOS installer is downloading all the necessary packages. You can see what it is downloading by clicking the *Toggle logs* button.
 
@@ -626,8 +628,6 @@ sudo systemctl enable --now libvirtd
 
 ### Dualbooting with Windows <a name="dualboot-windows"></a>
 
-One thing to be aware when dualbooting with Windows is the size of your EFI partition that was created when Windows was installed. In my case the EFI partition was 100 MB in size. When I first installed NixOS alongside Windows using the existing EFI partition, I could not rebuild due to the `OSError: [Errno 28] No space left on device /boot`. This was fixed by reinstalling NixOS (clearing the partition where it was installed) and creating a new EFI boot partition through the NixOS installer.
-
 **If you are using BitLocker and SecureBoot follow these steps first!!!**. On most modern Windows 11 machines these options are turned on automatically when you buy your device. With these on you will have a hard time installing NixOS alongside your Windows. Fortunately there is an easy fix:
 1. Turn off BitLocker in Windows settings - Go to Control Panel -> System and Security -> BitLocker Drive Encryption -> Turn off Bitlocker. This will run for about 30 to 60 minutes (or more on older hardware) depending on the speed and size of your drive. DO NOT TURN OFF YOUR PC WHEN DECRYPTION IS ONGOING!
 2. Turn off SecureBoot in BIOS. To enter BIOS you usually turn down your PC, hold F2 or DELETE (or other keys depending on your machine/motherboard) and press the power button to start the PC while holding the key down. In there navigate to something like Security -> Secure boot (will be different on every machine) and turn it off.
@@ -663,6 +663,8 @@ boot.loader.grub = {
 ```
 6. Now do `nixos-rebuild switch` with the new configuration. On the next reboot you should get a GRUB bootloader with three entries - `NixOS - Default`, `NixOS - All configurations` and `Windows boot manager`. If you forgot to remove the USB drive or if Windows loads by default you might have to change the boot option in the BIOS again (there should now be a NixOS bootloader entry, select that).
 7. Enjoy your new dualboot system (੭˃ᴗ˂)੭
+
+> One thing to be aware when dualbooting with Windows is the size of your EFI partition that was created when Windows was installed. In my case the EFI partition was 100 MB in size. When I first installed NixOS alongside Windows using the existing EFI partition, I could not rebuild due to the `OSError: [Errno 28] No space left on device /boot`. This was fixed by reinstalling NixOS (clearing the partition where it was installed) and creating a new EFI boot partition through the NixOS installer.
 
 ## First login <a name="first-login"></a>
 - when first logging in the NixOS login will be `root` with password you set during the `nixos-install`
