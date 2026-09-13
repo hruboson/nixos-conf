@@ -190,9 +190,11 @@ If you plan on running any **Wayland** compositor such as **Sway** or **Hyprland
 
 ### Manual installation on x86-64 system <a name="installation"></a>
 
-Just recently I found `sudo nix run github:km-clay/nixos-wizard --extra-experimental-features nix-command --extra-experimental-features flakes` command that runs TUI (terminal user interface) installer, maybe give it a try or follow the manual installation.
+<!--Just recently I found `sudo nix run github:km-clay/nixos-wizard --extra-experimental-features nix-command --extra-experimental-features flakes` command that runs TUI (terminal user interface) installer, maybe give it a try or follow the manual installation. -->
 
 #### Using NixOS graphical installer <a name="graphical-installer"></a>
+
+Get your bootable USB drive... Download the current NixOS graphical installer at [nixos.org](https://nixos.org/download/#nixos-iso). On Windows using Rufus or [Etcher](https://etcher.balena.io/) flash the drive with the nixos ISO image. On Linux just use the command `sudo dd if=path/to/nixos-graphical-26.05.9592.21a67dc47014-x86_64-linux.iso of=/dev/sdXYZ bs=4M status=progress conv=sync` where `XYZ` is the mount point of your USB drive (to find out the drives label run `lsblk -f`) and substitute the correct path for your downloaded ISO file.
 
 Installing NixOS using the graphical installer is quite straightforward. I found it to be no harder than installing Fedora or Ubuntu.
 
