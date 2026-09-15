@@ -651,11 +651,15 @@
                 "id:2,monitor_name:Virtual-1,layout_name:scroller"
                 "id:3,monitor_name:Virtual-1,layout_name:grid"
                 #eDP-1
-                "id:1,monitor_name:eDP-1,layout_name:scroller"
-                "id:2,monitor_name:eDP-1,layout_name:scroller"
-                "id:3,monitor_name:eDP-1,layout_name:scroller"
+                "id:1,monitor_name:eDP-1,layout_name:deck"
+                "id:2,monitor_name:eDP-1,layout_name:deck"
+                "id:3,monitor_name:eDP-1,layout_name:deck"
                 "id:4,monitor_name:eDP-1,layout_name:deck"
                 "id:5,monitor_name:eDP-1,layout_name:deck"
+                "id:6,monitor_name:eDP-1,layout_name:deck"
+                "id:7,monitor_name:eDP-1,layout_name:scroller"
+                "id:8,monitor_name:eDP-1,layout_name:scroller"
+                "id:9,monitor_name:eDP-1,layout_name:scroller"
                 # DP-2
                 "id:1,monitor_name:DP-2,layout_name:deck"
                 "id:2,monitor_name:DP-2,layout_name:deck"
