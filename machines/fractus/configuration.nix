@@ -28,6 +28,7 @@
         self.nixosModules.servicesPackHomeserver
         self.nixosModules.servicesBluetooth
         self.nixosModules.servicesDisks
+        self.nixosModules.samsungBuds
       ];
 
       # enable nix commands and flakes
