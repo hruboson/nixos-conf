@@ -15,7 +15,6 @@
 
 		self.nixosModules.desktopOptions
         self.nixosModules.mango
-		self.nixosModules.kde
 
         self.nixosModules.kitty
         self.nixosModules.appPackAndroid
@@ -98,6 +97,14 @@
         LC_TELEPHONE = "cs_CZ.UTF-8";
         LC_TIME = "cs_CZ.UTF-8";
       };
+
+      environment.systemPackages = (
+        with pkgs;
+        [
+		  droidcam
+        ]
+      );
+
 
       # NETWORK
       #networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
