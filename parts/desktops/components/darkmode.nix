@@ -10,12 +10,6 @@
     {
 
       home-manager.users.${username} = {
-        imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
-
-        home.sessionVariables = {
-          QT_QPA_PLATFORMTHEME = "kde";
-        };
-
         # enable dark mode for QT and GTK apps
         dconf.settings = {
           "org/gnome/desktop/interface" = {
@@ -23,7 +17,12 @@
             color-scheme = "prefer-dark";
           };
         };
-
+        qt = {
+          enable = true;
+          platformTheme.name = "gtk";
+          style.name = "adwaita-dark";
+          style.package = pkgs.adwaita-qt;
+        };
         gtk = {
           enable = true;
           gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
@@ -38,14 +37,6 @@
           iconTheme = {
             name = "Papirus-Dark";
             package = pkgs.papirus-icon-theme;
-          };
-        };
-
-        programs.plasma = {
-          enable = true;
-
-          workspace = {
-            colorScheme = "BreezeDark";
           };
         };
       };

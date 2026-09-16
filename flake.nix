@@ -33,11 +33,11 @@
     snappy-switcher.url = "github:OpalAayan/snappy-switcher";
     #awww.url = "git+https://codeberg.org/LGFae/awww?tag=v0.11.2";
     wayland-desktop-icons.url = "github:hruboson/wayland-desktop-icons";
-    plasma-manager = {
+    /*plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
-    };
+    };*/
 
     # ADDITIONAL DOTFILES
 
