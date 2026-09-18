@@ -13,12 +13,19 @@
         inkscape-with-extensions
         gimp-with-plugins
 		scribus
+		krita
       ];
 
       fonts.packages = with pkgs; [
         newcomputermodern
         vista-fonts
       ];
+
+      hardware.opentabletdriver.enable = true;
+
+      # Required by OpenTabletDriver
+      hardware.uinput.enable = true;
+      boot.kernelModules = [ "uinput" ];
 
       # PhotoGIMP: GIMP patch for Photoshop-like layout
       # Declaratively fetches and extracts the official PhotoGIMP zip
