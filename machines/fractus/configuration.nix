@@ -21,6 +21,7 @@
         self.nixosModules.appPackNetworking
         self.nixosModules.appPackSysutils
         self.nixosModules.appPackDesktop
+        self.nixosModules.appPackDrawing
         self.nixosModules.appPackEducation
         self.nixosModules.appPack3D
         self.nixosModules.appPackRazer
