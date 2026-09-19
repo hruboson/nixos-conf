@@ -166,6 +166,40 @@
         "type": "github"
       }
     },
+    "krita-tela": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788275348,
+        "narHash": "sha256-XdqAng+U9g81XVzNesrHPZ1qEITFZh1qs1jC/wEKgU8=",
+        "owner": "EyeOdin",
+        "repo": "Tela",
+        "rev": "33ab8ac901f73554e6f4f3078b9fe22e50d46a83",
+        "type": "github"
+      },
+      "original": {
+        "owner": "EyeOdin",
+        "repo": "Tela",
+        "type": "github"
+      }
+    },
+    "krita-theme-creator": {
+      "flake": false,
+      "locked": {
+        "host": "invent.kde.org",
+        "lastModified": 1780592561,
+        "narHash": "sha256-RpyEDfXbAIi4st9wrCpC+7MxxaZrSLmz6hVwvzgA0ro=",
+        "owner": "freyalupen",
+        "repo": "theme-creator-extension",
+        "rev": "07aabad6d8f832d79fd27b06d28a363927c40b59",
+        "type": "gitlab"
+      },
+      "original": {
+        "host": "invent.kde.org",
+        "owner": "freyalupen",
+        "repo": "theme-creator-extension",
+        "type": "gitlab"
+      }
+    },
     "libtropic": {
       "flake": false,
       "locked": {
@@ -259,6 +293,22 @@
       "original": {
         "owner": "nixos",
         "ref": "nixos-26.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-krita5": {
+      "locked": {
+        "lastModified": 1782847189,
+        "narHash": "sha256-twXPFqFsrrY5r28Zh7Homgcp2gUMBgQ6WDS98Q/3xFI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "b6018f87da91d19d0ab4cf979885689b469cdd41",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-25.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -369,10 +419,13 @@
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
+        "krita-tela": "krita-tela",
+        "krita-theme-creator": "krita-theme-creator",
         "mango": "mango",
         "nix-minecraft": "nix-minecraft",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-krita5": "nixpkgs-krita5",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "secrets": "secrets",

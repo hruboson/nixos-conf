@@ -9,11 +9,13 @@
       ...
     }:
     {
+	  imports = [ self.nixosModules.appPackKrita ];
+
       environment.systemPackages = with pkgs; [
         inkscape-with-extensions
         gimp-with-plugins
 		scribus
-		krita
+		#krita -- included in the appPackKrita
       ];
 
       fonts.packages = with pkgs; [

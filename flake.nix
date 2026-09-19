@@ -20,6 +20,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # APPS
+	nixpkgs-krita5.url = "github:NixOS/nixpkgs/nixos-25.11";
+    krita-tela = {
+      url = "github:EyeOdin/Tela";
+      flake = false;
+    };
+    krita-theme-creator = {
+      url = "gitlab:freyalupen/theme-creator-extension?host=invent.kde.org";
+      flake = false;
+    };
 
     # DESKTOPS
     mango = {
