@@ -143,7 +143,7 @@
             # rotation toggle script
             (pkgs.writeShellScriptBin "hdmi2-rotate-toggle" ''
               MONITOR="HDMI-A-2"
-              LOG_FILE="/tmp/mango-monitor-switch.log"
+              LOG_FILE="/tmp/mango-monitor-switch-hdmi-a-2.log"
               echo "$(date): Starting monitor switch" >> "$LOG_FILE"
 
               CURRENT=$(wlr-randr | awk -v m="$MONITOR" '
@@ -169,6 +169,50 @@
                 --mode 2560x1440 \
                 --pos 0,0 \
                 --transform 90
+              fi
+              echo "$(date): Done" >> "$LOG_FILE"
+            '')
+
+            (pkgs.writeShellScriptBin "tablet-mode" ''
+              case "$1" in
+                portrait)  otd loadsettings ${../../hw/tablets/xp-pen-12/xp-pen-12_portrait.json} ;;
+                landscape) otd loadsettings ${../../hw/tablets/xp-pen-12/xp-pen-12_landscape.json} ;;
+                *) echo "usage: tablet-mode portrait|landscape" >&2; exit 1 ;;
+              esac
+            '')
+            (pkgs.writeShellScriptBin "hdmi1-rotate-toggle" ''
+              MONITOR="HDMI-A-1"
+              TABLET="XP-Pen Artist 12 (2nd Gen)"
+              LOG_FILE="/tmp/mango-monitor-switch-hdmi-a-1.log"
+              echo "$(date): Starting monitor switch" >> "$LOG_FILE"
+
+              CURRENT=$(wlr-randr | awk -v m="$MONITOR" '
+              $1==m {found=1; next}
+              found && /Transform/ {print $2; exit}
+              ')
+
+              echo "$(date): Current transform: $CURRENT" >> "$LOG_FILE"
+              #wlr-randr --output "$MONITOR" --off # if there is a problem when switching uncomment this line
+              #sleep 0.5
+
+              if [ "$CURRENT" = "90" ] || [ "$CURRENT" = "270" ]; then
+              	echo "$(date): Switching to landscape" >> "$LOG_FILE"
+                wlr-randr --output "$MONITOR" \
+                --on \
+                --mode 1920x1080 \
+                --pos 1440,0 \
+                --transform normal
+
+                tablet-mode portrait
+              else
+              	echo "$(date): Switching to portrait" >> "$LOG_FILE"
+                wlr-randr --output "$MONITOR" \
+                --on \
+                --mode 1920x1080 \
+                --pos 4000,600 \
+                --transform 270
+
+                tablet-mode portrait
               fi
               echo "$(date): Done" >> "$LOG_FILE"
             '')
@@ -267,6 +311,7 @@
             	padding-right: 6px;
             	color: white;
             }
+            #custom-hdmi1_rotate, 
             #custom-hdmi2_rotate, 
             #custom-brightness {
             	padding-right: 12px;
@@ -327,7 +372,7 @@
               "wlr/taskbar"
             ];
             modules-center = [ "mpris" ];
-            modules-right = (lib.optional config.desktops.waybar.showRotateScript "custom/hdmi2_rotate") ++ [
+            modules-right =  (lib.optional config.desktops.waybar.showRotateScript "custom/hdmi1_rotate") ++ (lib.optional config.desktops.waybar.showRotateScript "custom/hdmi2_rotate") ++ [
               "custom/brightness"
               "cpu"
               "temperature"
@@ -402,6 +447,13 @@
               tooltip = true;
               tooltip-format = "Toggle HDMI-A-2 rotation";
               on-click = "hdmi2-rotate-toggle";
+            };
+
+            "custom/hdmi1_rotate" = {
+              format = "󰦧";
+              tooltip = true;
+              tooltip-format = "Toggle HDMI-A-1 rotation";
+              on-click = "hdmi1-rotate-toggle";
             };
 
             clock = {
