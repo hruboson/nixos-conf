@@ -71,6 +71,7 @@
 
           # other
           gnome-software
+		  kdePackages.kamoso # camera app
 
           # archive backends for ark
           unrar

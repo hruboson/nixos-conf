@@ -20,6 +20,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # APPS
+	nixpkgs-krita5.url = "github:NixOS/nixpkgs/nixos-25.11";
+    krita-tela = {
+      url = "github:EyeOdin/Tela";
+      flake = false;
+    };
+    krita-theme-creator = {
+      url = "gitlab:freyalupen/theme-creator-extension?host=invent.kde.org";
+      flake = false;
+    };
 
     # DESKTOPS
     mango = {
@@ -31,8 +41,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     snappy-switcher.url = "github:OpalAayan/snappy-switcher";
-    awww.url = "git+https://codeberg.org/LGFae/awww";
-	wayland-desktop-icons.url = "github:hruboson/wayland-desktop-icons";
+    #awww.url = "git+https://codeberg.org/LGFae/awww?tag=v0.11.2";
+    wayland-desktop-icons.url = "github:hruboson/wayland-desktop-icons";
+    /*plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };*/
 
     # ADDITIONAL DOTFILES
 

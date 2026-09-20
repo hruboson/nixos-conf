@@ -9,16 +9,25 @@
       ...
     }:
     {
+	  imports = [ self.nixosModules.appPackKrita ];
+
       environment.systemPackages = with pkgs; [
         inkscape-with-extensions
         gimp-with-plugins
 		scribus
+		#krita -- included in the appPackKrita
       ];
 
       fonts.packages = with pkgs; [
         newcomputermodern
         vista-fonts
       ];
+
+      hardware.opentabletdriver.enable = true;
+
+      # Required by OpenTabletDriver
+      hardware.uinput.enable = true;
+      boot.kernelModules = [ "uinput" ];
 
       # PhotoGIMP: GIMP patch for Photoshop-like layout
       # Declaratively fetches and extracts the official PhotoGIMP zip

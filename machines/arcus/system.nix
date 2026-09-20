@@ -18,6 +18,11 @@
         default = "saved";
       };
       boot.supportedFilesystems = [ "ntfs" ];
+      boot.kernelModules = [ "v4l2loopback" ];
+      boot.extraModprobeConfig = ''
+        options v4l2loopback exclusive_caps=1 card_label="Virtual Webcam"
+      '';
+      boot.extraModulePackages = [ pkgs.linuxPackages.v4l2loopback ];
 
       fileSystems."/mnt/DELTA" = {
         device = "/dev/disk/by-uuid/B8ACE2A5ACE25CFE";

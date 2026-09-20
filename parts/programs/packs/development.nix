@@ -17,6 +17,7 @@
 			poedit
 
 			hydra-check
+			devenv
 		];
 
 		virtualisation.docker.enable = true;

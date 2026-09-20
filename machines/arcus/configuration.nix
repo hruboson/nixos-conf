@@ -13,7 +13,9 @@
         self.nixosModules.arcusSystem
         self.nixosModules.users
 
+		self.nixosModules.desktopOptions
         self.nixosModules.mango
+
         self.nixosModules.kitty
         self.nixosModules.appPackAndroid
         self.nixosModules.appPackDev
@@ -49,6 +51,7 @@
         flake = "/home/${username}/nixos-conf"; # sets NH_OS_FLAKE
       };
 
+      desktops.session = "mango";
       desktops.mango.monitors = ''
         monitorrule=name:DP-2,width:2560,height:1440,refresh:144,x:1440,y:1080,scale:1
         monitorrule=name:HDMI-A-1,width:1920,height:1080,refresh:60,x:1440,y:0,scale:1
@@ -94,6 +97,14 @@
         LC_TELEPHONE = "cs_CZ.UTF-8";
         LC_TIME = "cs_CZ.UTF-8";
       };
+
+      environment.systemPackages = (
+        with pkgs;
+        [
+		  droidcam
+        ]
+      );
+
 
       # NETWORK
       #networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
