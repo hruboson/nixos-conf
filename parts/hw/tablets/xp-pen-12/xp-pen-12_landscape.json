@@ -149,7 +149,16 @@
           }
         ],
         "AuxButtons": [
-          null,
+          {
+            "Path": "OpenTabletDriver.Desktop.Binding.KeyBinding",
+            "Settings": [
+              {
+                "Property": "Key",
+                "Value": "Tab"
+              }
+            ],
+            "Enable": true
+          },
           {
             "Path": "OpenTabletDriver.Desktop.Binding.MultiKeyBinding",
             "Settings": [
