@@ -203,7 +203,7 @@
                 --pos 1440,0 \
                 --transform normal
 
-                tablet-mode portrait
+                tablet-mode landscape
               else
               	echo "$(date): Switching to portrait" >> "$LOG_FILE"
                 wlr-randr --output "$MONITOR" \
