@@ -9,6 +9,7 @@
     {
       environment.systemPackages = [
         inputs.nixpkgs-krita5.legacyPackages.${pkgs.stdenv.hostPlatform.system}.krita
+		pkgs.ffmpeg # for recording
       ];
 
       home-manager.users.${username} =
