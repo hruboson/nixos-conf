@@ -18,8 +18,6 @@
 
 			hydra-check
 			devenv
-
-			unityhub
 		];
 
 		virtualisation.docker.enable = true;
