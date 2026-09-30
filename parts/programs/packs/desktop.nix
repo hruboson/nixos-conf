@@ -51,7 +51,7 @@
           spotify
           quodlibet
 		  (pkgs.wrapOBS {
-      		plugins = with pkgs.obs-studio-plugins; [ ];
+      		plugins = with pkgs.obs-studio-plugins; [ wlrobs ];
 		  })
 
           # emulator
