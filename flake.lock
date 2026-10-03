@@ -414,6 +414,22 @@
         "type": "github"
       }
     },
+    "nvim-unity-sync": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1761761636,
+        "narHash": "sha256-keRm3qvvyLi3otKwKoPF8XULoDehYt3SGIzgUP+vhrk=",
+        "owner": "apyra",
+        "repo": "nvim-unity-sync",
+        "rev": "b556e5adaf05e69626e23025a969a981e4eeaf32",
+        "type": "github"
+      },
+      "original": {
+        "owner": "apyra",
+        "repo": "nvim-unity-sync",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -428,6 +444,7 @@
         "nixpkgs-krita5": "nixpkgs-krita5",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
+        "nvim-unity-sync": "nvim-unity-sync",
         "secrets": "secrets",
         "silentSDDM": "silentSDDM",
         "snappy-switcher": "snappy-switcher",

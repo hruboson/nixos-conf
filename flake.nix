@@ -20,6 +20,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # DEVELOPMENT
+    nvim-unity-sync = {
+      url = "github:apyra/nvim-unity-sync";
+      flake = false;
+    };
+
     # APPS
 	nixpkgs-krita5.url = "github:NixOS/nixpkgs/nixos-25.11";
     krita-tela = {
@@ -58,7 +64,6 @@
     #};
 
     # SERVER
-
     # secret management through local-only repo (until I learn sops-nix)
     secrets = {
       url = "git+file:///home/hruon/nixos-conf/secrets"; # must be an absolute path

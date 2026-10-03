@@ -15,7 +15,7 @@
           ...
         }:
         {
-          imports = [ inputs.nixvim.homeModules.nixvim ];
+          imports = [ inputs.nixvim.homeModules.nixvim self.nixosModules.unity-nvim ];
 
           programs.nixvim = {
             nixpkgs.source = inputs.nixpkgs; # fixes issue with conflicting luajit (most likely caused by gamescope)
