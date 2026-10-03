@@ -15,7 +15,7 @@
           ...
         }:
         {
-          imports = [ inputs.nixvim.homeModules.nixvim self.nixosModules.unity-nvim ];
+          imports = [ inputs.nixvim.homeModules.nixvim ];
 
           programs.nixvim = {
             nixpkgs.source = inputs.nixpkgs; # fixes issue with conflicting luajit (most likely caused by gamescope)
@@ -153,6 +153,12 @@
                       ".venv"
                       "__pycache__"
                       "build"
+                      # unity
+                      "Library"
+                      "Temp"
+                      "Logs"
+                      "obj"
+                      "%.meta$"
                     ];
                   };
                   git.ignore = false;
@@ -288,6 +294,11 @@
                       "node_modules\\.*"
                       ".git/.*"
                       ".git\\.*"
+                      # unity
+                      "Library/.*"
+                      "Temp/.*"
+                      "obj/.*"
+                      "%.meta$"
                     ];
                   };
                 };
@@ -495,12 +506,6 @@
                     ];
                     autostart = true;
                     package = pkgs.omnisharp-roslyn;
-                    cmd = [
-                      "${pkgs.omnisharp-roslyn}/bin/OmniSharp"
-                      "-lsp"
-                      "--hostPID"
-                      "0"
-                    ];
                     rootMarkers = [
                       ".git"
                       ".sln"
@@ -968,6 +973,7 @@
       */
     in
     {
+	  imports = [ self.nixosModules.nvim-unity ];
       home-manager.users.${username} = home;
       #home-manager.users.${username} = home-static;
     };

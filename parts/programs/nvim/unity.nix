@@ -39,37 +39,32 @@
               mono
             ];
 
-            extraPlugins = [ nvim-unity-sync ];
+            extraPlugins = [
+              nvim-unity-sync
+              pkgs.vimPlugins.omnisharp-extended-lsp-nvim
+            ];
+
+            plugins.lsp.servers.omnisharp = {
+              settings = {
+                RoslynExtensionsOptions = {
+                  EnableAnalyzersSupport = true;
+                  EnableImportCompletion = true;
+                  EnableDecompilationSupport = true;
+                };
+              };
+
+              extraOptions.handlers = {
+                "textDocument/definition".__raw = "require('omnisharp_extended').definition_handler";
+                "textDocument/typeDefinition".__raw = "require('omnisharp_extended').type_definition_handler";
+                "textDocument/references".__raw = "require('omnisharp_extended').references_handler";
+                "textDocument/implementation".__raw = "require('omnisharp_extended').implementation_handler";
+              };
+            };
 
             extraConfigLua = /* lua */ ''
               -- ── UNITY ────────────────────────────────────────────────
               require("unity.plugin").setup()
             '';
-
-            plugins = {
-              # hide Unity's generated folders and .meta files
-              nvim-tree.settings.filters.custom = [
-                "Library"
-                "Temp"
-                "Logs"
-                "obj"
-                "%.meta$"
-              ];
-
-              telescope.settings.defaults.file_ignore_patterns = [
-                "Library/.*"
-                "Temp/.*"
-                "obj/.*"
-                "%.meta$"
-              ];
-
-              # C# (OmniSharp)
-              lsp.servers.omnisharp = {
-                rootMarkers = [
-                  ".csproj"
-                ];
-              };
-            };
           };
         };
     };
