@@ -1,7 +1,7 @@
-/**
- * Config based on Ekpap
- * YT video: https://www.youtube.com/watch?v=_8iTs_2mu0w
- */
+/*
+  Config based on Ekpap
+  YT video: https://www.youtube.com/watch?v=_8iTs_2mu0w
+*/
 { self, inputs, ... }:
 {
   flake.nixosModules.appPackKrita =
@@ -9,7 +9,7 @@
     {
       environment.systemPackages = [
         inputs.nixpkgs-krita5.legacyPackages.${pkgs.stdenv.hostPlatform.system}.krita
-		pkgs.ffmpeg # for recording
+        pkgs.ffmpeg # for recording
       ];
 
       home-manager.users.${username} =
@@ -48,6 +48,7 @@
           plugins = [
             "tela"
             "theme_creator"
+            "brush-sizes-docker"
           ];
 
           brushes = [
@@ -76,6 +77,10 @@
             "krita/pykrita/theme_creator".source = "${inputs.krita-theme-creator}/theme_creator";
             "krita/pykrita/theme_creator.desktop".source =
               "${inputs.krita-theme-creator}/theme_creator.desktop";
+
+            "krita/pykrita/brush-sizes-docker".source = "${inputs.krita-brush-sizes-docker}/brush-sizes-docker";
+            "krita/pykrita/brush-sizes-docker.desktop".source =
+              "${inputs.krita-brush-sizes-docker}/brush-sizes-docker.desktop";
           }
           # Themes and workspaces: per-file symlinks, directory stays writable
           # so Theme Creator / "Save Workspace" can still add new files.

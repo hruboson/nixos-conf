@@ -166,6 +166,22 @@
         "type": "github"
       }
     },
+    "krita-brush-sizes-docker": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791145013,
+        "narHash": "sha256-y2AjYE7O009L24ykmrs0hY2wpjbSD/sIzspwF91CIP0=",
+        "owner": "hruboson",
+        "repo": "krita-brush-sizes-docker",
+        "rev": "4f75431496d94ce063effb9bf93c1dc06a54e173",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hruboson",
+        "repo": "krita-brush-sizes-docker",
+        "type": "github"
+      }
+    },
     "krita-tela": {
       "flake": false,
       "locked": {
@@ -435,6 +451,7 @@
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
+        "krita-brush-sizes-docker": "krita-brush-sizes-docker",
         "krita-tela": "krita-tela",
         "krita-theme-creator": "krita-theme-creator",
         "mango": "mango",

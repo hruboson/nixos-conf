@@ -36,6 +36,10 @@
       url = "gitlab:freyalupen/theme-creator-extension?host=invent.kde.org";
       flake = false;
     };
+    krita-brush-sizes-docker = {
+      url = "github:hruboson/krita-brush-sizes-docker";
+      flake = false;
+    };
 
     # DESKTOPS
     mango = {
