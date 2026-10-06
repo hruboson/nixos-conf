@@ -86,6 +86,8 @@
           zstd
           lrzip
           lzop
+
+		  openconnect
         ];
 
       # enable flatpak (for imperative installs -- sure, go for it)
