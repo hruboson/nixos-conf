@@ -82,7 +82,7 @@ Using this configuration requires you to do two main things (see [parts](#parts)
 1. Define your user in `parts/users/`. Set the same username in the `default.nix`. See the example `userDefault` or `"user-hruon"` modules.
 1. *Optional* ... <span style="color: gray"><small>If you are me (and I am you (╭ರ_•́) ), restore the machine's `sops-nix` key before the first rebuild. Run
         `sudo install -D -m 600 -o root -g root /dev/stdin /var/lib/sops-nix/key.txt`
-    This command will wait for input... Paste the private key from the password manager, then press Ctrl-D.</small></span>
+    This command will wait for input... Paste the private key from the password manager, then press Ctrl-D. If you don't do this step and try to use any secrets you will get an error during rebuild (or rather in the Activation phase).</small></span>
 
 1. Rebuild your system by running (while you are inside of the `nixos-conf` directory):
 ```bash
@@ -872,6 +872,13 @@ Parts allow you to make your configuration modular with very little overhead. Th
 
 Parts handle merging definitions for the same option across multiple modules automatically. This means you can split related configuration for a single topic across several files without worrying about manually combining the results yourself.
 
+## sops and sops-nix <a name="sops-nix"></a>
+
+>[!NOTE]
+> Recommended resources: [video series](https://www.youtube.com/watch?v=6EMNHDOY-wo), [video](https://www.youtube.com/watch?v=G5f6GC7SnhU), [video for general sops](https://www.youtube.com/watch?v=V2PRhxphH2w)
+
+SOPS and `sops-nix` module let's you manage your secrets (passwords, ssh keys, etc.) declaratively.
+
 ## Home-manager <a name="home-manager"></a>
 
 > [!NOTE]
@@ -889,13 +896,6 @@ Currently I have configured the following modules with home-manager:
 - [Kitty](parts/programs/kitty/default.nix)
 - [git](parts/users/hruon/default.nix)
 - [default applications (xdg.mimeApps.defaultApplications)](parts/programs/packs/desktop.nix)
-
-## SOPS <a name="sops-nix"></a>
-
->[!NOTE]
-> Recommended resources: [video series](https://www.youtube.com/watch?v=6EMNHDOY-wo), [video](https://www.youtube.com/watch?v=G5f6GC7SnhU)
-
-SOPS and `sops-nix` module let's you manage your secrets (passwords, ssh keys, etc.) declaratively.
 
 ### Nixvim <a name="nixvim"></a>
 
