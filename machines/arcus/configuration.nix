@@ -11,7 +11,7 @@
       imports = [
         self.nixosModules.arcusHardware
         self.nixosModules.arcusSystem
-        self.nixosModules.users
+		self.nixosModules."user-${username}" or self.nixosModules.userDefault
 
 		self.nixosModules.desktopOptions
         self.nixosModules.mango

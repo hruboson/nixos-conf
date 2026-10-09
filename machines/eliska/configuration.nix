@@ -11,7 +11,7 @@
       imports = [
         self.nixosModules.eliskaHardware
         self.nixosModules.eliskaSystem
-        self.nixosModules.users
+        self.nixosModules."user-hruon" # special case where I handle the machine for someone else
 
         self.nixosModules.desktopOptions
         self.nixosModules.mango

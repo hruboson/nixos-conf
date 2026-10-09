@@ -75,16 +75,25 @@ Using this configuration requires you to do two main things (see [parts](#parts)
 
 <a name="parts-tldr"></a>
 1. Define your machine in `machines/` directory or copy one of the already existing machines (e.g. `arcus`). There should be three files: `configuration.nix`, `hardware.nix` and `default.nix`. 
-    - `configuration.nix` - imports all the modules from parts you want to use, e.g. `appPackDev`, `appPackDesktop`, `mango` and so on...
+    - `configuration.nix` - imports all the modules from parts you want to use, e.g. `appPackDev`, `appPackDesktop`, `mango`, your user module and so on...
     - `hardware.nix` - contains only the configuration generated in `hardware-configuration.nix`.
-    - `default.nix` - boilerplate where you connect the main modules and define username and hostname.
+    - `default.nix` - boilerplate where you connect the main modules and **define username** and hostname.
     - (optional) `system.nix` - machine/hardware specific configuration (e.g. bootloader, drives, ...).
-2. Rebuild your system by running (while you are inside of the `nixos-conf` directory):
+1. Define your user in `parts/users/`. Set the same username in the `default.nix`. See the example `userDefault` or `"user-hruon"` modules.
+1. *Optional* ... <span style="color: gray"><small>If you are me (and I am you (╭ರ_•́) ), restore the machine's `sops-nix` key before the first rebuild. Run
+        `sudo install -D -m 600 -o root -g root /dev/stdin /var/lib/sops-nix/key.txt`
+    This command will wait for input... Paste the private key from the password manager, then press Ctrl-D.</small></span>
+
+1. Rebuild your system by running (while you are inside of the `nixos-conf` directory):
 ```bash
 nixos-rebuild switch --flake .#your_machine_name
 ```
-
 ---
+
+> [!WARNING]
+> This section is outdated. I'm currently implementing sops-nix so this section will be retired very soon. This also means the `#cumulus` system is currently not reproducible until I sort out all of the secrets in that config.
+
+[Soon there will be a `sops-nix` manual](#sops-nix)
 
 If you want to use the server configuration you will have to define the secrets flake (until I learn how to use sops-nix):
 
@@ -881,6 +890,12 @@ Currently I have configured the following modules with home-manager:
 - [git](parts/users/hruon/default.nix)
 - [default applications (xdg.mimeApps.defaultApplications)](parts/programs/packs/desktop.nix)
 
+## SOPS <a name="sops-nix"></a>
+
+>[!NOTE]
+> Recommended resources: [video series](https://www.youtube.com/watch?v=6EMNHDOY-wo), [video](https://www.youtube.com/watch?v=G5f6GC7SnhU)
+
+SOPS and `sops-nix` module let's you manage your secrets (passwords, ssh keys, etc.) declaratively.
 
 ### Nixvim <a name="nixvim"></a>
 

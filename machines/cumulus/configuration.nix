@@ -11,7 +11,7 @@
       imports = [
         self.nixosModules.cumulusHardware
         self.nixosModules.cumulusSystem
-        self.nixosModules.users
+        self.nixosModules."user-${username}" or self.nixosModules.userDefault
 
         self.nixosModules.kitty
         self.nixosModules.appPackNetworking
@@ -48,12 +48,12 @@
         enable = true;
         clean.enable = true;
         clean.extraArgs = "--keep-since 4d --keep 3";
-        flake = "/home/${username}/nixos-conf"; # sets NH_OS_FLAKE 
+        flake = "/home/${username}/nixos-conf"; # sets NH_OS_FLAKE
       };
 
       nixpkgs.config.allowUnfree = true;
 
-	  selfhosted.domain = "hrubos.dev";
+      selfhosted.domain = "hrubos.dev";
       selfhosted.lanIp = "192.168.2.192";
       selfhosted.tailscaleIp = "100.70.39.111";
       selfhosted.lanCidr = "192.168.2.0/24";

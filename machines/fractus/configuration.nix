@@ -11,7 +11,7 @@
       imports = [
         self.nixosModules.fractusHardware
         self.nixosModules.fractusSystem
-        self.nixosModules.users
+        self.nixosModules."user-${username}" or self.nixosModules.userDefault
 
         self.nixosModules.desktopOptions
         self.nixosModules.mango

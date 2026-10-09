@@ -19,6 +19,13 @@
       url = "github:nix-community/nixvim/nixos-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+	sops-nix = {
+	  url = "github:mic92/sops-nix";
+	  inputs.nixpkgs.follows = "nixpkgs";
+	};
+    secrets = {
+      url = "git+ssh://forgejo@forgejo.hrubos.dev:2222/hruboson/nixos-secrets.git?ref=main&shallow=1";
+    };
 
     # DEVELOPMENT
     nvim-unity-sync = {
@@ -69,9 +76,9 @@
 
     # SERVER
     # secret management through local-only repo (until I learn sops-nix)
-    secrets = {
+    /*secrets = {
       url = "git+file:///home/hruon/nixos-conf/secrets"; # must be an absolute path
-    };
+    };*/
     nix-minecraft = {
       url = "github:Infinidoge/nix-minecraft";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -1,5 +1,5 @@
 { self, inputs, ... }: {
-  flake.nixosModules.users =
+  flake.nixosModules."user-hruon" =
     {
       pkgs,
       lib,
@@ -10,7 +10,10 @@
     let
       userMail = "hruboson@gmail.com";
       userName = "Ondřej Hruboš";
-      nextcloudUrl = "https://nextcloud.hrubos.dev"; # nextcloud server
+
+	  nextcloudLogin = "hruon";
+	  nextcloudMachine = "nextcloud.hrubos.dev"; # nextcloud server
+      nextcloudUrl = "https://${nextcloudMachine}";
 
       # local dir (relative to $HOME) -> remote dir on Nextcloud
       syncDirs = {
@@ -22,6 +25,11 @@
       };
     in
     {
+      imports = [
+        inputs.sops-nix.nixosModules.sops # sops nix module
+        inputs.secrets.nixosModules.default # sops password database
+      ];
+
       users.groups.media = { }; # group for external drives that need both services and user access
       users.users.${username} = {
         isNormalUser = true;
@@ -42,6 +50,23 @@
 
 	  nix.settings.trusted-users = [ "root" "${username}" ];
 
+	  sops.secrets.nextcloud-sync.owner = username;
+      sops.templates."netrc" = {
+        content = ''
+          machine ${nextcloudMachine}
+          login ${nextcloudLogin}
+          password ${config.sops.placeholder.nextcloud-sync}
+        '';
+        owner = username;
+        mode = "0600";
+		path = "/home/${username}/.netrc";
+      };
+
+      sops.secrets.hruon_priv_ssh_key = {
+        owner = username;
+        mode = "0400";
+      };
+
       home-manager.users.${username} = {
         home.username = username;
         home.stateVersion = "26.05"; # set this to your current nixpkgs version and never change it
@@ -59,6 +84,7 @@
             };
           };
         };
+
         programs.jujutsu = {
           enable = true;
           settings = {
@@ -69,7 +95,18 @@
           };
         };
 
+        programs.ssh = {
+          enable = true;
+          matchBlocks."*" = {
+            identityFile = config.sops.secrets.hruon_priv_ssh_key.path;
+            identitiesOnly = true;
+          };
+        };
+
         home.packages = with pkgs; [
+          age
+          sops
+          ssh-to-age
           nextcloud-client
 
           (pkgs.writeShellApplication {
@@ -137,7 +174,6 @@
           })
         ];
 
-        # TODO declarative .netrc file creation with password through sops-nix
         # 1. In Nextcloud, go to Settings → Security → Devices & sessions and create an app password.
         # 2. Create ~/.netrc with chmod 600:
         #   machine cloud.example.com

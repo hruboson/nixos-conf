@@ -11,7 +11,7 @@
       imports = [
         self.nixosModules.humilisHardware
         self.nixosModules.humilisSystem
-        self.nixosModules.users
+        self.nixosModules."user-${username}" or self.nixosModules.userDefault
 
         #self.nixosModules.vtm
         self.nixosModules.mango
@@ -39,10 +39,10 @@
       nixpkgs.config.allowUnfree = true;
 
       /*
-	   * ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! 
-	   * Change or comment this if you do not provide public ssh key as you will not be able to log in without it. !
-       * ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !
-       */
+      * ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !
+      * Change or comment this if you do not provide public ssh key as you will not be able to log in without it. !
+      * ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !
+      */
       services.getty.autologinUser = lib.mkForce null;
 
       desktops.mango.monitors = ''
