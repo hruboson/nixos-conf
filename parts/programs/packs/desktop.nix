@@ -14,6 +14,10 @@
       };
     in
     {
+      imports = [
+        inputs.nix-flatpak.nixosModules.nix-flatpak
+      ];
+
       nixpkgs.config.allowUnfree = true;
 
       environment.systemPackages =
@@ -45,14 +49,14 @@
           android-file-transfer
 
           # img, video, audio
-		  oculante-wrapped
+          oculante-wrapped
           gthumb
           vlc
           spotify
           quodlibet
-		  (pkgs.wrapOBS {
-      		plugins = with pkgs.obs-studio-plugins; [ wlrobs ];
-		  })
+          (pkgs.wrapOBS {
+            plugins = with pkgs.obs-studio-plugins; [ wlrobs ];
+          })
 
           # emulator
           bottles
@@ -60,7 +64,7 @@
           # communications
           #discord -> now managed through HM
           element-desktop # matrix client
-		  fluffychat # matrix client
+          fluffychat # matrix client
 
           # browser
           firefox
@@ -71,7 +75,7 @@
 
           # other
           gnome-software
-		  kdePackages.kamoso # camera app
+          kdePackages.kamoso # camera app
 
           # archive backends for ark
           unrar
@@ -87,11 +91,17 @@
           lrzip
           lzop
 
-		  openconnect
+          openconnect
         ];
 
-      # enable flatpak (for imperative installs -- sure, go for it)
-      services.flatpak.enable = true;
+      # enable flatpak (for both imperative and declarative installs -- sure, go for it)
+      services.flatpak = {
+        enable = true;
+        packages = [
+          "net.waterfox.waterfox"
+        ];
+      };
+
       systemd.services.flatpak-repo = {
         wantedBy = [ "multi-user.target" ];
         path = [ pkgs.flatpak ];
@@ -115,7 +125,7 @@
         nixpkgs.config.allowUnfree = true;
         programs.discord.enable = true;
 
-		# run apps without confirmation (Dolphin)
+        # run apps without confirmation (Dolphin)
         xdg.configFile."kiorc".text = ''
           [Executable scripts]
           behaviourOnLaunch=execute
