@@ -149,15 +149,15 @@
             "inode/directory" = "org.kde.dolphin.desktop";
 
             # Links
-            "text/html" = "firefox.desktop";
-            "x-scheme-handler/http" = "firefox.desktop";
-            "x-scheme-handler/https" = "firefox.desktop";
-            "x-scheme-handler/about" = "firefox.desktop";
-            "x-scheme-handler/unknown" = "firefox.desktop";
+            "text/html" = "net.waterfox.waterfox.desktop";
+            "x-scheme-handler/http" = "net.waterfox.waterfox.desktop";
+            "x-scheme-handler/https" = "net.waterfox.waterfox.desktop";
+            "x-scheme-handler/about" = "net.waterfox.waterfox.desktop";
+            "x-scheme-handler/unknown" = "net.waterfox.waterfox.desktop";
 
             # Documents
-            "application/pdf" = "firefox.desktop";
-            "text/markdown" = "firefox.desktop";
+            "application/pdf" = "net.waterfox.waterfox.desktop";
+            "text/markdown" = "net.waterfox.waterfox.desktop";
 
             # Archives -> PeaZip
             "application/zip" = "org.kde.ark.desktop";
