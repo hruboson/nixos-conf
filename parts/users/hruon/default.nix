@@ -21,7 +21,11 @@
           local = "Pictures";
           remote = "/Sync/Pictures";
         };
-        # documents = { local = "Documents"; remote = "/Documents"; };
+
+        documents = {
+          local = "Downloads/Documents";
+          remote = "/Sync/Documents";
+        };
       };
     in
     {
