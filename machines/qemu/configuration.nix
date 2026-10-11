@@ -36,8 +36,8 @@
       nixpkgs.config.allowUnfree = true;
 
       desktops.mango.monitors = ''
-        			monitorrule=name:Virtual-1,width:1920,height:1080,refresh:60,x:0,y:0,scale:1
-        		'';
+        monitor_rule=name:Virtual-1,width:1920,height:1080,refresh:60,x:0,y:0,scale:1
+      '';
 
       ## SOUND
       services.pulseaudio.enable = false;

@@ -685,19 +685,18 @@
 
               # Master-Stack Layout
               new_is_master = 0;
-              smartgaps = 0;
-              default_mfact = 0.55;
-              default_nmaster = 1;
+              smart_gaps = 0;
+              default_master_factor = 0.55;
+              default_master_count = 1;
 
               # Overview
               hotarea_size = 10;
               enable_hotarea = 0;
-              ov_tab_mode = 0;
-              overviewgappi = 5;
-              overviewgappo = 30;
+              overview_gap_inner = 5;
+              overview_gap_outer = 30;
 
               #!TODO move this to options
-              tagrule = [
+              tag_rule = [
                 # Virtual
                 "id:1,monitor_name:Virtual-1,layout_name:deck"
                 "id:2,monitor_name:Virtual-1,layout_name:scroller"
@@ -746,7 +745,7 @@
 
               repeat_rate = 25;
               repeat_delay = 600;
-              numlockon = 1;
+              numlock_on = 1;
               xkb_rules_layout = "cz";
               xkb_rules_options = "grp:alt_shift_toggle";
 
@@ -757,9 +756,9 @@
               drag_lock = false;
               mouse_natural_scrolling = 0;
               trackpad_natural_scrolling = 1;
-              disable_while_typing = 1;
-              left_handed = 0;
-              middle_button_emulation = 0;
+              trackpad_disable_while_typing = 1;
+              trackpad_middle_button_emulation = 0;
+              mouse_middle_button_emulation = 0;
               swipe_min_threshold = 1;
 
               mousebind = [
@@ -782,7 +781,8 @@
                 "none,down,4,toggleoverview"
               ];
 
-              bind = [
+			  # bindc allows conflicts
+              bindc = [
                 "SUPER+SHIFT,r,reload_config"
                 "SUPER,Return,spawn,kitty"
                 "SUPER,space,spawn,vicinae toggle"
@@ -806,7 +806,6 @@
                 "SUPER,Right,focusstack,next"
                 "SUPER,Left,focusstack,prev"
                 "SUPER,Up,exchange_client,up"
-                "SUPER,Down,exchange_client,down"
                 "SUPER+SHIFT,Left,exchange_client,left"
                 "SUPER+SHIFT,Right,exchange_client,right"
 
@@ -865,21 +864,21 @@
                 "SUPER,DOWN,focusdir,down"
               ];
 
-              gappih = 5;
-              gappiv = 5;
-              gappoh = 5;
-              gappov = 5;
+              gap_inner_horizontal = 5;
+              gap_inner_vertical = 5;
+              gap_outer_horizontal = 5;
+              gap_outer_vertical = 5;
               scratchpad_width_ratio = 0.8;
               scratchpad_height_ratio = 0.9;
-              borderpx = 0;
-              rootcolor = "0x201b14ff";
-              bordercolor = "0x444444ff";
-              focuscolor = "0x8BAA9Bff";
-              maximizescreencolor = "0xBABD2Cff";
-              urgentcolor = "0xad401fff";
-              scratchpadcolor = "0xc4939dff";
-              globalcolor = "0x8d64cfff";
-              overlaycolor = "0x95C381ff";
+              border_px = 0;
+              root_color = "0x201b14ff";
+              border_color = "0x444444ff";
+              focus_color = "0x8BAA9Bff";
+              maximized_screen_color = "0xBABD2Cff";
+              urgent_color = "0xad401fff";
+              scratchpad_color = "0xc4939dff";
+              global_color = "0x8d64cfff";
+              overlay_color = "0x95C381ff";
 
               # Blur
               blur = 0;
@@ -900,7 +899,7 @@
               shadows_blur = 15;
               shadows_position_x = 0;
               shadows_position_y = 0;
-              shadowscolor = "0x000000ff";
+              shadows_color = "0x000000ff";
 
               # Rounding / opacity
               border_radius = 4;
@@ -920,8 +919,8 @@
               tag_animation_direction = 0;
               zoom_initial_ratio = 0.3;
               zoom_end_ratio = 0.7;
-              fadein_begin_opacity = 0.5;
-              fadeout_begin_opacity = 0.8;
+              fade_in_begin_opacity = 0.5;
+              fade_out_begin_opacity = 0.8;
               animation_duration_move = 500;
               animation_duration_open = 400;
               animation_duration_tag = 350;
@@ -934,12 +933,12 @@
               animation_curve_focus = "0.46,1.0,0.29,1";
 
               xwayland_persistence = 1;
-              syncobj_enable = 0;
+              sync_obj_enable = 0;
               no_border_when_single = 0;
               axis_bind_apply_timeout = 100;
               focus_on_activate = 1;
-              sloppyfocus = 1;
-              warpcursor = 1;
+              sloppy_focus = 1;
+              warp_cursor = 1;
               focus_cross_monitor = 1;
               focus_cross_tag = 1;
               circle_layout = "tile,scroller";
@@ -952,13 +951,13 @@
               single_scratchpad = 1;
 			  
 
-              layerrule = "animation_type_open:fade,animation_type_close:fade,layer_name:vicinae";
-              windowrule = [
+              layer_rule = "animation_type_open:fade,animation_type_close:fade,layer_name:vicinae";
+              window_rule = [
                 # pwvucontrol - system modal
-                "isfloating:1,animation_type_open:slide,width:1000,height:500,offsetx:100,offsety:100,appid:pwvucontrol"
+                "is_floating:1,animation_type_open:slide,width:1000,height:500,offset_x:100,offset_y:100,app_id:pwvucontrol"
 
                 # blueman - system modal
-                "isfloating:1,animation_type_open:slide,width:640,height:324,offsetx:100,offsety:100,appid:\\.blueman-manager-wrapped"
+                "is_floating:1,animation_type_open:slide,width:640,height:324,offset_x:100,offset_y:100,app_id:\\.blueman-manager-wrapped"
               ];
             };
 

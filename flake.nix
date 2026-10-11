@@ -48,6 +48,10 @@
       url = "github:hruboson/krita-brush-sizes-docker";
       flake = false;
     };
+	krita-intermediate-palette = {
+      url = "github:ameradius/improved-intermediate-palette";
+      flake = false;
+    };
 
     # DESKTOPS
     mango = {

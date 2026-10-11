@@ -46,7 +46,7 @@
       services.getty.autologinUser = lib.mkForce null;
 
       desktops.mango.monitors = ''
-        monitorrule=name:HDMI-A-1,width:1920,height:1080,refresh:60,x:0,y:0,scale:1
+        monitor_rule=name:HDMI-A-1,width:1920,height:1080,refresh:60,x:0,y:0,scale:1
       '';
       desktops.lockscreen.background = pkgs.fetchurl {
         name = "moody_blues.webp";

@@ -47,7 +47,7 @@
       };
 
       desktops.mango.monitors = ''
-        monitorrule=name:eDP-1,width:2880,height:1800,refresh:60,x:0,y:0,scale:1.5
+        monitor_rule=name:eDP-1,width:2880,height:1800,refresh:60,x:0,y:0,scale:1.5
       '';
       desktops.lockscreen.background = pkgs.fetchurl {
         name = "ocean_dark_coral.jpg";
