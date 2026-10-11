@@ -49,6 +49,7 @@
             "tela"
             "theme_creator"
             "brush-sizes-docker"
+			"improved_intermediate_palette"
           ];
 
           brushes = [
@@ -81,6 +82,10 @@
             "krita/pykrita/brush-sizes-docker".source = "${inputs.krita-brush-sizes-docker}/brush-sizes-docker";
             "krita/pykrita/brush-sizes-docker.desktop".source =
               "${inputs.krita-brush-sizes-docker}/brush-sizes-docker.desktop";
+
+            "krita/pykrita/improved_intermediate_palette".source = "${inputs.krita-intermediate-palette}/improved_intermediate_palette";
+            "krita/pykrita/improved_intermediate_palette.desktop".source =
+              "${inputs.krita-intermediate-palette}/improved_intermediate_palette.desktop";
           }
           # Themes and workspaces: per-file symlinks, directory stays writable
           # so Theme Creator / "Save Workspace" can still add new files.
