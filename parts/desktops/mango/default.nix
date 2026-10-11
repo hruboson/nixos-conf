@@ -907,6 +907,19 @@
               focused_opacity = 1.0;
               unfocused_opacity = 1.0;
 
+              # Auto Tab Bar
+              tab_bar_height = 20; # Height of the auto tab bar.
+              tab_bar_decorate_fg_color = "0xffffff3f"; # text color.
+              tab_bar_decorate_bg_color = "0x333333ff"; # background color.
+              tab_bar_decorate_focus_fg_color = "0x000000ff"; # text color for focus.
+              tab_bar_decorate_focus_bg_color = "0xddca9eff"; # background color for focus.
+              tab_bar_decorate_border_color = "0xddca9eff"; # border color.
+              tab_bar_decorate_border_width = 0; # border width.
+              tab_bar_decorate_corner_radius = 0; # corner radius.
+              tab_bar_decorate_padding_x = 0; # horizontal padding.
+              tab_bar_decorate_padding_y = 0; # vertical padding.
+              tab_bar_decorate_font_desc = "JetBrainsMono Nerd Font Bold 11"; # font set.
+
               # Animations
               animations = 1;
               layer_animations = 1;
