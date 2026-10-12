@@ -926,7 +926,7 @@
               tab_bar_decorate_font_desc = "JetBrainsMono Nerd Font Bold 11"; # font set.
 
               # Titlebar
-              always_show_group_bar = 1; # true/false doesnt work for now, use 1 and 0
+              always_show_group_bar = 0; # true/false doesnt work for now, use 1 and 0
               group_bar_height = 20;
               group_bar_close_button_enable = 1;
 			  group_bar_button_color = "0xd8647eff";
