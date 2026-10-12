@@ -1,44 +1,56 @@
 { self, inputs, ... }: {
-	flake.nixosModules.appPackDev = { config, lib, pkgs, username, ... }: {
-		imports = [
-			self.nixosModules.nvim
-		];
+  flake.nixosModules.appPackDev =
+    {
+      config,
+      lib,
+      pkgs,
+      username,
+      ...
+    }:
+    {
+      imports = [
+        self.nixosModules.nvim
+      ];
 
-		environment.systemPackages = with pkgs; [
-			gh
-			libgcc
-			neovide
-			filezilla
-			mc
+      environment.systemPackages = with pkgs; [
+        bat
 
-			jujutsu
-			lazyjj
+        gh
+        libgcc
+        neovide
+        filezilla
+        mc
 
-			poedit
+        jujutsu
+        lazyjj
 
-			hydra-check
-			devenv
-		];
+        poedit
 
-		virtualisation.docker.enable = true;
+        hydra-check
+        devenv
+      ];
 
-		home-manager.users.${username} = {
-			programs.lazygit.enable = true;
-			programs.git = {
-				enable = true;
-				/* Add settings in your user module
-				settings = { ... };*/
-			};
+      virtualisation.docker.enable = true;
 
-			# File types -> app associations
-			# mimetype.io/all-types
-			xdg.mimeApps = {
-				enable = true;
-				defaultApplications = {
-					"text/plain" = 	"neovide.desktop";
-					"application/x-zerosize" = "neovide.desktop";
-				};
-			};
-		};
-	};
+      home-manager.users.${username} = {
+        programs.lazygit.enable = true;
+        programs.git = {
+          enable = true;
+          /*
+            Add settings in your user module
+            settings = { ... };
+          */
+        };
+
+        # File types -> app associations
+        # mimetype.io/all-types
+        xdg.mimeApps = {
+          enable = true;
+          defaultApplications = {
+            "text/plain" = "neovide.desktop";
+            "application/x-zerosize" = "neovide.desktop";
+          };
+        };
+      };
+    };
 }
