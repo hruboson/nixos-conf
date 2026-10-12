@@ -897,8 +897,8 @@
               blur_params_saturation = 1.2;
 
               # Shadows
-              shadows = 0;
-              layer_shadows = 0;
+              shadows = 1;
+              layer_shadows = 1;
               shadow_only_floating = 1;
               shadows_size = 12;
               shadows_blur = 15;
@@ -907,14 +907,14 @@
               shadows_color = "0x000000ff";
 
               # Rounding / opacity
-              border_radius = 4;
+              border_radius = 0;
               no_radius_when_single = 0;
               focused_opacity = 1.0;
               unfocused_opacity = 1.0;
 
               # Auto Tab Bar
               tab_bar_height = 20; # Height of the auto tab bar.
-              tab_bar_decorate_fg_color = "0xffffff3f"; # text color.
+              tab_bar_decorate_fg_color = "0xffffff5f"; # text color.
               tab_bar_decorate_bg_color = "0x333333ff"; # background color.
               tab_bar_decorate_focus_fg_color = "0x000000ff"; # text color for focus.
               tab_bar_decorate_focus_bg_color = "0xddca9eff"; # background color for focus.
@@ -924,6 +924,24 @@
               tab_bar_decorate_padding_x = 0; # horizontal padding.
               tab_bar_decorate_padding_y = 0; # vertical padding.
               tab_bar_decorate_font_desc = "JetBrainsMono Nerd Font Bold 11"; # font set.
+
+              # Titlebar
+              always_show_group_bar = 1; # true/false doesnt work for now, use 1 and 0
+              group_bar_height = 20;
+              group_bar_close_button_enable = 1;
+			  group_bar_button_color = "0xd8647eff";
+              group_bar_button_size = 14;
+              group_bar_button_margin = 6;
+              group_bar_decorate_fg_color = "0xffffff3f"; # text color.
+              group_bar_decorate_bg_color = "0x333333ff"; # background color.
+              group_bar_decorate_focus_fg_color = "0x000000ff"; # text color for focus.
+              group_bar_decorate_focus_bg_color = "0xddca9eff"; # background color for focus.
+              group_bar_decorate_border_color = "0xddca9eff"; # border color.
+              group_bar_decorate_border_width = 0; # border width.
+              group_bar_decorate_corner_radius = 0; # corner radius.
+              group_bar_decorate_padding_x = 0; # horizontal padding.
+              group_bar_decorate_padding_y = 0; # vertical padding.
+              group_bar_decorate_font_desc = "JetBrainsMono Nerd Font Bold 11"; # font set.
 
               # Animations
               animations = 1;
