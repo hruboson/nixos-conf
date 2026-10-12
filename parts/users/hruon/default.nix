@@ -11,8 +11,8 @@
       userMail = "hruboson@gmail.com";
       userName = "Ondřej Hruboš";
 
-	  nextcloudLogin = "hruon";
-	  nextcloudMachine = "nextcloud.hrubos.dev"; # nextcloud server
+      nextcloudLogin = "hruon";
+      nextcloudMachine = "nextcloud.hrubos.dev"; # nextcloud server
       nextcloudUrl = "https://${nextcloudMachine}";
 
       # local dir (relative to $HOME) -> remote dir on Nextcloud
@@ -52,9 +52,22 @@
         ];
       };
 
-	  nix.settings.trusted-users = [ "root" "${username}" ];
+      nix.settings.trusted-users = [
+        "root"
+        "${username}"
+      ];
 
-	  sops.secrets.nextcloud-sync.owner = username;
+      # keyring
+      security.pam.services.sddm.kwallet = {
+        enable = true;
+        package = pkgs.kdePackages.kwallet-pam;
+      };
+      environment.systemPackages = with pkgs.kdePackages; [
+        kwallet
+        kwalletmanager
+      ];
+
+      sops.secrets.nextcloud-sync.owner = username;
       sops.templates."netrc" = {
         content = ''
           machine ${nextcloudMachine}
@@ -63,7 +76,7 @@
         '';
         owner = username;
         mode = "0600";
-		path = "/home/${username}/.netrc";
+        path = "/home/${username}/.netrc";
       };
 
       sops.secrets.hruon_priv_ssh_key = {

@@ -28,6 +28,16 @@
         username
       ];
 
+      # keyring
+      security.pam.services.sddm.kwallet = {
+        enable = true;
+        package = pkgs.kdePackages.kwallet-pam;
+      };
+      environment.systemPackages = with pkgs.kdePackages; [
+        kwallet
+        kwalletmanager
+      ];
+
       home-manager.users.${username} = {
         home.username = username;
         # Set this to the NixOS release you first installed with and never change it.
