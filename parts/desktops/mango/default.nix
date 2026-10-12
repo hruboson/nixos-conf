@@ -80,7 +80,12 @@
           };
         };
 
-        services.displayManager.sddm.enable = true;
+        services.displayManager.sddm = {
+			enable = true;
+			wayland.enable = lib.mkForce false;
+		};
+		services.xserver.enable = true; # for X11 sddm
+ 
         programs.silentSDDM = {
           enable = true;
           theme = "default";

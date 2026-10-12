@@ -70,6 +70,13 @@
         hash = "sha256-7oa2vQaWmsQ+evWES1XNVBfI///McOv+J/9urFN1kEM=";
       };
 
+	  # fix sddm multimonitor setup
+      services.xserver.displayManager.setupCommands = ''
+        ${pkgs.xorg.xrandr}/bin/xrandr --output DP-2 --auto --primary
+        ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-A-1 --off
+        ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-A-2 --off
+      '';
+
       ## SOUND
       services.pulseaudio.enable = false;
       security.rtkit.enable = true;
