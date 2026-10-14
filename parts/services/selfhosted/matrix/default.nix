@@ -11,7 +11,14 @@
       fqdn = "${config.networking.hostName}.local";
     in
     {
-	  networking.firewall.allowedTCPPorts = [ 6167 ];
+      networking.firewall.allowedTCPPorts = [ 6167 ];
+
+      sops.secrets.matrixRegistrationSecret = {
+        owner = config.services.matrix-tuwunel.user;
+        group = config.services.matrix-tuwunel.group;
+        restartUnits = [ "tuwunel.service" ];
+      };
+
       services.matrix-tuwunel = {
         enable = true;
 
@@ -27,7 +34,7 @@
             allow_federation = false;
             allow_encryption = true;
             allow_registration = true;
-            registration_token = "${inputs.secrets.matrixRegistrationSecret}";
+            registration_token_file = config.sops.secrets.matrixRegistrationSecret.path;
 
             trusted_servers = [ ];
             max_request_size = 100000000; # 100 MB

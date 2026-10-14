@@ -2,6 +2,7 @@
 
 hardware-configuration.nix
 /secrets
+/nixos-secrets
 /wallpapers
 
 result

@@ -529,10 +529,10 @@
     },
     "secrets": {
       "locked": {
-        "lastModified": 1791545515,
-        "narHash": "sha256-Pp8sZH5Jsu/U0xutOZZzeREJel3RyduE/BVlcdOoNis=",
+        "lastModified": 1791982875,
+        "narHash": "sha256-6reMwqT1f62S7ZPnlNVVCEZrVO9egmHK/0Xc7ZuA6tk=",
         "ref": "main",
-        "rev": "c3f3526fc6ddeba1ecb335839bdfe3b0d67e9260",
+        "rev": "876ade6d122333c22d8ee1b1890d23f175d8b6e6",
         "shallow": true,
         "type": "git",
         "url": "ssh://forgejo@forgejo.hrubos.dev:2222/hruboson/nixos-secrets.git"

@@ -66,7 +66,7 @@
         services.caddy.enable = true;
         services.caddy.package = pkgs.caddy.withPlugins {
           plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
-          hash = "sha256-dQvk6ezY6TQ1J7PjhCXnThF/SqVgPwBO8/RXzHCY+js=";
+          hash = "sha256-xRJ5evsAJ2akg47j3Bt6YDXJOgX88B/rKNP50KSVyNY=";
         };
         services.caddy.globalConfig = ''
           auto_https disable_redirects
@@ -100,7 +100,9 @@
             };
           }
         ) config.selfhosted.services;
-        systemd.services.caddy.environment.CF_API_TOKEN = inputs.secrets.cloudflareAPIToken;
+
+        sops.templates."caddy-env".content = "CF_API_TOKEN=${config.sops.placeholder.cloudflare_api_token}";
+        systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.templates."caddy-env".path;
 
         # DNS: wildcard for *.domain, fall through for apex/www
         services.unbound = {

@@ -1,84 +1,97 @@
 { self, inputs, ... }: {
-	flake.nixosModules.selfhostedMinecraftServer = { config, lib, pkgs, username, ... }: {
-		imports = [ inputs.nix-minecraft.nixosModules.minecraft-servers ];
-		nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
+  flake.nixosModules.selfhostedMinecraftServer =
+    {
+      config,
+      lib,
+      pkgs,
+      username,
+      ...
+    }:
+    {
+      imports = [ inputs.nix-minecraft.nixosModules.minecraft-servers ];
+      nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
 
-		### MINECRAFT SERVER ###
-		services.minecraft-servers = {
-			enable = true;
-			eula = true;
-			openFirewall = true;
+sops.templates."minecraft.env".content = ''
+  RCON_PASSWORD=${config.sops.placeholder.papermc_pass}
+'';
+sops.templates."minecraft.env".restartUnits = [ "minecraft-server-<name>.service" ];
 
-			servers = {
-				vanilla = {
-					enable = true;
+      ### MINECRAFT SERVER ###
+      services.minecraft-servers = {
+        enable = true;
+        eula = true;
+        openFirewall = true;
 
-					# get UUIDs of player at mcuuid.net
-					whitelist = {
-						Shiftoss = "966c4864-da7b-48b9-b904-986d6bd0d117";
-					};
+        servers = {
+          vanilla = {
+            enable = true;
 
-					serverProperties = {
-						server-port = 43000;
-						difficulty = 3;
-						gamemode = 0;
-						max-players = 10;
-						motd = "Vanilla Nix";
-						white-list = true;
-						allow-cheats = true;
-					};
+            # get UUIDs of player at mcuuid.net
+            whitelist = {
+              Shiftoss = "966c4864-da7b-48b9-b904-986d6bd0d117";
+            };
 
-					jvmOpts = "-Xms2048M -Xmx4096M";
-				};
-				papermc = {
-					enable = true;
-					package = pkgs.paperServers.paper-1_21_4;
+            serverProperties = {
+              server-port = 43000;
+              difficulty = 3;
+              gamemode = 0;
+              max-players = 10;
+              motd = "Vanilla Nix";
+              white-list = true;
+              allow-cheats = true;
+            };
 
-					# get UUIDs of player at mcuuid.net
-					operators = {
-						Shiftoss = {
-							uuid = "966c4864-da7b-48b9-b904-986d6bd0d117";
-							level = 3;
-							bypassesPlayerLimit = true;
-						};
-					};
+            jvmOpts = "-Xms2048M -Xmx4096M";
+          };
+          papermc = {
+            enable = true;
+            package = pkgs.paperServers.paper-1_21_4;
 
-					serverProperties = {
-						server-port = 43001;
-						enable-rcon = true;
-						"rcon.password" = "${inputs.secrets.papermcPass}";
+            # get UUIDs of player at mcuuid.net
+            operators = {
+              Shiftoss = {
+                uuid = "966c4864-da7b-48b9-b904-986d6bd0d117";
+                level = 3;
+                bypassesPlayerLimit = true;
+              };
+            };
 
-						difficulty = 3;
-						gamemode = 0;
-						max-players = 10;
-						motd = "Paper Nix";
-						white-list = false;
-						allow-cheats = true;
-					};
+            serverProperties = {
+              server-port = 43001;
+              enable-rcon = true;
+              "rcon.password" = "@RCON_PASSWORD@";
 
-					files = {
-						"plugins/SharedHealth.jar" = pkgs.fetchurl {
-							url = "https://hangarcdn.papermc.io/plugins/ArwenOC/TeamSharedHealth/versions/1.0.0/PAPER/SharedHealth-1.0.0.jar";
-							hash = "sha256-AnvUNc8uQywxKOT/IpuiT2r1pSN+0pF/Bf4xkoBeWD4=";
-						};
+              difficulty = 3;
+              gamemode = 0;
+              max-players = 10;
+              motd = "Paper Nix";
+              white-list = false;
+              allow-cheats = true;
+            };
 
-						"plugins/PluginPortal.jar" = pkgs.fetchurl {
-							url = "https://hangarcdn.papermc.io/plugins/Flyte/PluginPortal/versions/2.2.2/PAPER/PluginPortal-2.2.2.jar";
-							hash = "sha256-byDUeRfSx/WHsCYxXYyCrurj8NVMrvHiZecfQAe8Ea4=";
-						};
-						"plugins/Worlds.jar" = pkgs.fetchurl {
-							url = "https://hangarcdn.papermc.io/plugins/TheNextLvl/Worlds/versions/3.11.0-mc1.21.4/PAPER/worlds-3.11.0-mc1.21.4-all.jar";
-							hash = "sha256-3rfaAAiPBXCTTePQ4a82w1AhvSbR2tgJ6tdVrfF65cc=";
-						};
-						"plugins/Fahare.jar" = pkgs.fetchurl {
-							url = "https://hangarcdn.papermc.io/plugins/qixils/Fahare/versions/1.2.1/PAPER/Fahare-1.2.1.jar";
-							hash = "sha256-fkE+LGG+Z6AcGOCPetsm1/TLyWX7ejkxzZVVay4qkWI=";
-						};
-					};
+            files = {
+              "plugins/SharedHealth.jar" = pkgs.fetchurl {
+                url = "https://hangarcdn.papermc.io/plugins/ArwenOC/TeamSharedHealth/versions/1.0.0/PAPER/SharedHealth-1.0.0.jar";
+                hash = "sha256-AnvUNc8uQywxKOT/IpuiT2r1pSN+0pF/Bf4xkoBeWD4=";
+              };
 
-					jvmOpts = "-Xms2048M -Xmx4096M";
-				};
-			};
-		};
-	};
+              "plugins/PluginPortal.jar" = pkgs.fetchurl {
+                url = "https://hangarcdn.papermc.io/plugins/Flyte/PluginPortal/versions/2.2.2/PAPER/PluginPortal-2.2.2.jar";
+                hash = "sha256-byDUeRfSx/WHsCYxXYyCrurj8NVMrvHiZecfQAe8Ea4=";
+              };
+              "plugins/Worlds.jar" = pkgs.fetchurl {
+                url = "https://hangarcdn.papermc.io/plugins/TheNextLvl/Worlds/versions/3.11.0-mc1.21.4/PAPER/worlds-3.11.0-mc1.21.4-all.jar";
+                hash = "sha256-3rfaAAiPBXCTTePQ4a82w1AhvSbR2tgJ6tdVrfF65cc=";
+              };
+              "plugins/Fahare.jar" = pkgs.fetchurl {
+                url = "https://hangarcdn.papermc.io/plugins/qixils/Fahare/versions/1.2.1/PAPER/Fahare-1.2.1.jar";
+                hash = "sha256-fkE+LGG+Z6AcGOCPetsm1/TLyWX7ejkxzZVVay4qkWI=";
+              };
+            };
+
+            jvmOpts = "-Xms2048M -Xmx4096M";
+          };
+        };
+      };
+    };
 }

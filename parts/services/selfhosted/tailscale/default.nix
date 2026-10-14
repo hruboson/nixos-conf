@@ -28,7 +28,7 @@
 					exit 0
 				fi
 				# otherwise authenticate with tailscale
-				${tailscale}/bin/tailscale up -authkey ${inputs.secrets.tailscaleOneOffAuthKey}
+				${tailscale}/bin/tailscale up --authkey "$(cat ${config.sops.secrets.tailscale_authkey.path})"
 			'';
 		};
 

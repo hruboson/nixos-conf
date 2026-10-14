@@ -9,6 +9,10 @@
     }:
     {
       selfhosted.services.dash.port = 1111;
+      sops.templates."glance.env".content = ''
+        NASA_KEY=${config.sops.placeholder.nasa_api_key}
+      '';
+      services.glance.environmentFile = config.sops.templates."glance.env".path;
 
       services.glance = {
         enable = true;
@@ -31,7 +35,7 @@
                       type = "custom-api";
                       title = "Astronomy Picture of the Day";
                       cache = "1d";
-                      url = "https://api.nasa.gov/planetary/apod?api_key=${inputs.secrets.apiNasaKey}";
+                      url = "https://api.nasa.gov/planetary/apod?api_key=\${NASA_KEY}";
                       headers = {
                         Accept = "application/json";
                       };

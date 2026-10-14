@@ -13,8 +13,6 @@
       externalStorageDir = "/mnt/HUSK/nextcloud-external";
     in
     {
-      environment.etc."nextcloud-admin-pass".text = inputs.secrets.nextCloudPass;
-
       services.nextcloud = {
         enable = true;
         hostName = fqdn;
@@ -39,14 +37,14 @@
           dbuser = "nextcloud";
 
           adminuser = "admin";
-          adminpassFile = "/etc/nextcloud-admin-pass";
+          adminpassFile = config.sops.secrets.nextcloud_admin_pass.path;
         };
 
         settings = {
           overwriteprotocol = "http";
           default_phone_region = "CZ";
           trusted_domains = [
-		    fqdn
+            fqdn
             "servernix.local"
             "servernix.taild0d0db.ts.net"
             "fd7a:115c:a1e0::2701:2777"
