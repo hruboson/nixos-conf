@@ -114,9 +114,19 @@
 
         programs.ssh = {
           enable = true;
-          matchBlocks."*" = {
-            identityFile = config.sops.secrets.hruon_priv_ssh_key.path;
-            identitiesOnly = true;
+          matchBlocks = {
+            "*" = {
+              identityFile = config.sops.secrets.hruon_priv_ssh_key.path;
+              identitiesOnly = true;
+            };
+
+            "servernix.local" = {
+              user = "${username}";
+              identitiesOnly = false;
+              extraOptions = {
+                PKCS11Provider = "${inputs.tropikey.packages.${pkgs.system}.default}/lib/tropikey_pkcs11.so";
+              };
+            };
           };
         };
 
