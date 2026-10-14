@@ -82,7 +82,9 @@ Using this configuration requires you to do two main things (see [parts](#parts)
 1. Define your user in `parts/users/`. Set the same username in the `default.nix`. See the example `userDefault` or `"user-hruon"` modules.
 1. *Optional* ... <span style="color: gray"><small>If you are me (and I am you (╭ರ_•́) ), restore the machine's `sops-nix` key before the first rebuild. Run
         `sudo install -D -m 600 -o root -g root /dev/stdin /var/lib/sops-nix/key.txt`
-    This command will wait for input... Paste the private key from the password manager, then press Ctrl-D. If you don't do this step and try to use any secrets you will get an error during rebuild (or rather in the Activation phase).</small></span>
+    This command will wait for input... Paste the private key from the password manager, then press Ctrl-D. If you don't do this step and try to use any secrets you will get an error during rebuild (or rather in the Activation phase). To edit the secrets copy the sops key to home directory: 
+    ```mkdir -p ~/.config/sops/age; sudo cat /var/lib/sops-nix/key.txt > ~/.config/sops/age/keys.txt; chmod 600 ~/.config/sops/age/keys.txt```</small></span>
+
 
 1. Rebuild your system by running (while you are inside of the `nixos-conf` directory):
 ```bash
