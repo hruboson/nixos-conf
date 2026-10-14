@@ -32,11 +32,12 @@
         self.nixosModules.selfhostedMatrix
         self.nixosModules.selfhostedMinecraftServer
         self.nixosModules.selfhostedNextcloud
+		self.nixosModules.selfhostedPaperless
         self.nixosModules.selfhostedPlikd
+        self.nixosModules.selfhostedPihole
         self.nixosModules.selfhostedTailscale
         self.nixosModules.selfhostedTandoor
         self.nixosModules.selfhostedWordpress
-        self.nixosModules.selfhostedPihole
       ];
 
       # enable nix commands and flakes

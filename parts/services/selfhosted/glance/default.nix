@@ -170,6 +170,13 @@
                           timeout = "10s";
                           allow-insecure = true;
                         }
+						{
+						  title = "Paperless";
+						  url = "https://paperless.${config.selfhosted.domain}";
+						  icon = "di:paperless";
+						  timeout = "10s";
+						  allow-insecure = true;
+						}
                         {
                           title = "Pi-hole";
                           url = "https://pihole.${config.selfhosted.domain}";
