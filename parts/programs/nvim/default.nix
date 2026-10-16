@@ -149,16 +149,16 @@
                   filters = {
                     dotfiles = false;
                     custom = [
-                      "node_modules"
-                      ".venv"
-                      "__pycache__"
-                      "build"
+                      "^node_modules$"
+                      "^\\.venv$"
+                      "^__pycache__$"
+                      "^build$"
                       # unity
-                      "Library"
-                      "Temp"
-                      "Logs"
-                      "obj"
-                      "%.meta$"
+                      "^Library$"
+                      "^Temp$"
+                      "^Logs$"
+                      "^obj$"
+                      "\\.meta$"
                     ];
                   };
                   git.ignore = false;
