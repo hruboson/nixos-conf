@@ -31,6 +31,7 @@
               phpactor
               php83Packages.php-cs-fixer
               stylua
+			  csharpier
             ];
 
             globals = {
@@ -244,6 +245,7 @@
                     go = [ "gofmt" ];
                     cpp = [ "clang-format" ];
                     c = [ "clang-format" ];
+					cs = [ "csharpier" ];
                     php = [ "php_cs_fixer" ];
 
                     # fallback
