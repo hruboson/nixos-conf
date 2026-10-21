@@ -140,15 +140,6 @@
                           timeout = "15s";
                           allow-insecure = true;
                         }
-                        /*
-                          {
-                          	title = "Nextcloud";
-                          	url = "http://${config.networking.hostName}.local";
-                          	icon = "di:nextcloud";
-                          	timeout = "15s";
-                          	allow-insecure = true;
-                          }
-                        */
                         {
                           title = "Plik";
                           url = "https://plik.${config.selfhosted.domain}";
@@ -170,6 +161,13 @@
                           timeout = "10s";
                           allow-insecure = true;
                         }
+						{
+						  title = "Youtarr";
+						  url = "https://youtarr.${config.selfhosted.domain}";
+						  icon = "sh:youtarr.png";
+						  timeout = "10s";
+						  allow-insecure = true;
+						}
 						{
 						  title = "Paperless";
 						  url = "https://paperless.${config.selfhosted.domain}";
@@ -368,33 +366,10 @@
                         }
                       ];
                     }
-
                     {
                       type = "hacker-news";
                       limit = 15;
                       collapse-after = 5;
-                    }
-
-                    {
-                      type = "group";
-                      widgets = [
-                        {
-                          type = "reddit";
-                          subreddit = "nixos";
-                          show-thumbnails = true;
-                        }
-
-                        {
-                          type = "reddit";
-                          subreddit = "selfhosted";
-                          show-thumbnails = true;
-                        }
-                        {
-                          type = "reddit";
-                          subreddit = "datahoarder";
-                          show-thumbnails = true;
-                        }
-                      ];
                     }
                   ];
                 }

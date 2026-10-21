@@ -7,6 +7,9 @@
       username,
       ...
     }:
+	let
+	  externalDir = "/mnt/JARK/Movies/Youtube/";
+	in
     {
       imports = [ inputs.youtarr-flake.nixosModules.default ];
 
@@ -65,10 +68,14 @@
         '';
       };
 
+      systemd.tmpfiles.rules = [
+        "d ${externalDir} 0775 youtarr media - -"
+      ];
+
       services.youtarr = {
         enable = true;
         port = 9078;
-        youtubeOutputDir = "/mnt/JARK/Movies/Youtube/";
+        youtubeOutputDir = externalDir;
 
         auth = {
           enable = true;
@@ -85,7 +92,7 @@
 
         # declaratively manage Youtarr's global preferences
         settings = {
-          preferredResolution = "1080";
+          preferredResolution = "720";
           channelAutoDownload = true;
           channelDownloadFrequency = "0 */6 * * *"; # check every 6 hours
           writeVideoNfoFiles = true;
