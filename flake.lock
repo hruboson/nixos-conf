@@ -73,6 +73,24 @@
         "type": "github"
       }
     },
+    "flake-parts_4": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib_3"
+      },
+      "locked": {
+        "lastModified": 1785627969,
+        "narHash": "sha256-4dtXQk/NMePegK/nWp5NSeuZKLATItOq61lpEvmXqGw=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "427bf4bd9435fdf21321c8cc628c24efc14c0f7a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": [
@@ -391,6 +409,21 @@
         "type": "github"
       }
     },
+    "nixpkgs-lib_3": {
+      "locked": {
+        "lastModified": 1785031560,
+        "narHash": "sha256-OmshNvn2vupOFpYinLUu+1Dnpu4n7Q5N3ggGVNHpkUI=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "0e79af5e3d4dcfcd676ab5ba3f95d2e3352e078c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 1791594108,
@@ -430,6 +463,22 @@
         "owner": "NixOS",
         "repo": "nixpkgs",
         "rev": "2fcb964de67fcf60b43471c55d5d99e61a9ccb5a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1786106723,
+        "narHash": "sha256-zDSUbpoeo/9ZmD2+wXnzxoo1+uhL8vxc0b8yuYMKYq0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "f13ff45afd1bb73e640eaa08a7066dbed07e3238",
         "type": "github"
       },
       "original": {
@@ -501,7 +550,8 @@
         "snappy-switcher": "snappy-switcher",
         "sops-nix": "sops-nix",
         "tropikey": "tropikey",
-        "wayland-desktop-icons": "wayland-desktop-icons"
+        "wayland-desktop-icons": "wayland-desktop-icons",
+        "youtarr-flake": "youtarr-flake"
       }
     },
     "scenefx": {
@@ -529,10 +579,10 @@
     },
     "secrets": {
       "locked": {
-        "lastModified": 1791987647,
-        "narHash": "sha256-kWFJ0Vylrrhj9WKH4kZAm72UFoKut/lEp1dcteQzv3M=",
+        "lastModified": 1792592515,
+        "narHash": "sha256-3LEAqujSkbfkfBXGeuWRkTF5QijveHqq2T8XUpbdZxs=",
         "ref": "main",
-        "rev": "32c728038e4e7be9a9ee835a6444845c17d979c4",
+        "rev": "d156831bccc53043a89da7dd5c5d41c5166f92b0",
         "shallow": true,
         "type": "git",
         "url": "ssh://forgejo@forgejo.hrubos.dev:2222/hruboson/nixos-secrets.git"
@@ -663,6 +713,21 @@
         "type": "github"
       }
     },
+    "systems_5": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "tropikey": {
       "inputs": {
         "ftxui": "ftxui",
@@ -700,6 +765,26 @@
       "original": {
         "owner": "hruboson",
         "repo": "wayland-desktop-icons",
+        "type": "github"
+      }
+    },
+    "youtarr-flake": {
+      "inputs": {
+        "flake-parts": "flake-parts_4",
+        "nixpkgs": "nixpkgs_4",
+        "systems": "systems_5"
+      },
+      "locked": {
+        "lastModified": 1786289191,
+        "narHash": "sha256-W7gt8Iusl2f7pdiEXmXofu0ePsl+C6LIfqLQm8WpnJE=",
+        "owner": "icebluerabbit",
+        "repo": "youtarr-flake",
+        "rev": "1925f08b76ccd641fa34aa91a02bf78e07c37939",
+        "type": "github"
+      },
+      "original": {
+        "owner": "icebluerabbit",
+        "repo": "youtarr-flake",
         "type": "github"
       }
     }

@@ -38,6 +38,7 @@
         self.nixosModules.selfhostedTailscale
         self.nixosModules.selfhostedTandoor
         self.nixosModules.selfhostedWordpress
+        self.nixosModules.selfhostedYoutarr
       ];
 
       # enable nix commands and flakes

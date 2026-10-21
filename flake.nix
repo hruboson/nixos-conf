@@ -88,6 +88,7 @@
       url = "github:Infinidoge/nix-minecraft";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    youtarr-flake.url = "github:icebluerabbit/youtarr-flake";
 
     # PERSONAL PROJECTS
     tropikey = {
