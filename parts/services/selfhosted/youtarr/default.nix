@@ -7,14 +7,14 @@
       username,
       ...
     }:
-	let
-	  externalDir = "/mnt/JARK/Movies/Youtube/";
-	in
+    let
+      externalDir = "/mnt/JARK/Movies/Youtube/";
+    in
     {
       imports = [ inputs.youtarr-flake.nixosModules.default ];
 
       sops = {
-		secrets."youtarr_db_pass".owner = "mysql";
+        secrets."youtarr_db_pass".owner = "mysql";
         templates = {
           "youtarr-auth.env".content = ''
             AUTH_PRESET_PASSWORD=${config.sops.placeholder."youtarr_admin_pass"}
@@ -98,6 +98,9 @@
           writeVideoNfoFiles = true;
           sponsorblockEnabled = true;
           sponsorblockAction = "remove";
+
+          subtitlesEnabled = true;
+          subtitlesLanguage = "en";
         };
       };
 
