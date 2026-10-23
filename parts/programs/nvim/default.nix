@@ -858,6 +858,18 @@
                 key = "gx";
                 action = "\"_gx";
               }
+              {
+                mode = "x";
+                key = "p";
+                action = "P";
+                options.desc = "Paste without yanking replaced text";
+              }
+              {
+                mode = "x";
+                key = "P";
+                action = "p";
+                options.desc = "Paste and yank replaced text";
+              }
 
               # TERMINAL
               {
