@@ -179,8 +179,26 @@
             ],
             "Enable": true
           },
-          null,
-          null,
+          {
+            "Path": "OpenTabletDriver.Desktop.Binding.KeyBinding",
+            "Settings": [
+              {
+                "Property": "Key",
+                "Value": "E"
+              }
+            ],
+            "Enable": true
+          },
+          {
+            "Path": "OpenTabletDriver.Desktop.Binding.KeyBinding",
+            "Settings": [
+              {
+                "Property": "Key",
+                "Value": "X"
+              }
+            ],
+            "Enable": true
+          },
           null,
           null,
           null
