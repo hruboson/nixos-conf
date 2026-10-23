@@ -36,6 +36,7 @@
         programs.lazygit.enable = true;
         programs.git = {
           enable = true;
+          lfs.enable = true;
           /*
             Add settings in your user module
             settings = { ... };
