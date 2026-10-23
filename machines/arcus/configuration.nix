@@ -72,9 +72,9 @@
 
 	  # fix sddm multimonitor setup
       services.xserver.displayManager.setupCommands = ''
-        ${pkgs.xorg.xrandr}/bin/xrandr --output DP-2 --auto --primary
-        ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-A-1 --off
-        ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-A-2 --off
+        ${pkgs.xrandr}/bin/xrandr --output DP-2 --auto --primary
+        ${pkgs.xrandr}/bin/xrandr --output HDMI-A-1 --off
+        ${pkgs.xrandr}/bin/xrandr --output HDMI-A-2 --off
       '';
 
       ## SOUND
@@ -128,9 +128,10 @@
       nix.settings.auto-optimise-store = true; # optimise /nix/store space
 
       # garbage collector
-      nix.gc = {
+	  # --- now handled by nh
+      /*nix.gc = {
         automatic = true;
         options = "--delete-older-than 14d";
-      };
+      };*/
     };
 }

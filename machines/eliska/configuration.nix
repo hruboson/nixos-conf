@@ -110,9 +110,10 @@
       nix.settings.auto-optimise-store = true; # optimise /nix/store space
 
       # garbage collector
-      nix.gc = {
+	  # --- now handled by nh
+      /*nix.gc = {
         automatic = true;
         options = "--delete-older-than 14d";
-      };
+      };*/
     };
 }
