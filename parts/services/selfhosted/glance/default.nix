@@ -27,50 +27,49 @@
               name = "Home";
               columns = [
                 {
-                  # Left column (small)
                   size = "small";
                   widgets = [
                     { type = "calendar"; }
                     {
                       type = "custom-api";
                       title = "Astronomy Picture of the Day";
-                      cache = "1d";
-                      url = "https://api.nasa.gov/planetary/apod?api_key=\${NASA_KEY}";
+                      cache = "6h";
+                      url = "https://science.nasa.gov/wp-json/wp/v2/apod-basic?per_page=1";
                       headers = {
                         Accept = "application/json";
                       };
                       template = ''
-                        {{- if eq (.JSON.String "media_type") "image" -}}
+                        {{- $type  := or (.JSON.String "0.media_type")  (.JSON.String "0.meta.media_type") -}}
+                        {{- $title := or (.JSON.String "0.title")       (.JSON.String "0.meta.title") -}}
+                        {{- $img   := or (.JSON.String "0.hdurl")       (.JSON.String "0.meta.hdurl") -}}
+                        {{- $link  := or (.JSON.String "0.permalink")   (.JSON.String "0.meta.permalink") -}}
+                        {{- $expl  := or (.JSON.String "0.explanation") (.JSON.String "0.meta.explanation") -}}
+                        {{- if and (eq $type "image") $img -}}
                         <div style="display:flex; flex-direction:column; align-items:center; width:100%; padding:8px; box-sizing:border-box;">
-                        	<p class="color-primary" style="margin:0 0 8px; text-align:center;">
-                        	<a 
-                        	href="https://apod.nasa.gov/apod/astropix.html" 
-                        	target="_blank" 
-                        	rel="noopener noreferrer"
-                        	style="color: inherit; text-decoration: none;"
-                        	>
-                        	{{ .JSON.String "title" }}
-                        </a>
-                        	</p>
-                        	<img
-                        	src="{{ .JSON.String "url" }}"
-                        	alt="{{ .JSON.String "title" }}"
-                        	style="max-width:100%; height:auto; display:block; border-radius:4px;"
-                        	/>
-                        	<details style="width:100%; margin-top:12px;">
-                        	<summary class="color-highlight size-h5" style="cursor:pointer;">
-                        	Show Explanation
-                        	</summary>
-                        	<p class="color-highlight size-h5" style="margin-top:8px; text-align:left; line-height:1.4;">
-                        	{{ .JSON.String "explanation" }}
-                        </p>
-                        	</details>
-                        	</div>
-                        	{{- else -}}
+                          <p class="color-primary" style="margin:0 0 8px; text-align:center;">
+                            <a href="{{ $link }}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                              {{ $title }}
+                            </a>
+                          </p>
+                          <img
+                            src="{{ $img }}"
+                            alt="{{ $title }}"
+                            style="max-width:100%; height:auto; display:block; border-radius:4px;"
+                          />
+                          <details style="width:100%; margin-top:12px;">
+                            <summary class="color-highlight size-h5" style="cursor:pointer;">
+                              Show Explanation
+                            </summary>
+                            <p class="color-highlight size-h5" style="margin-top:8px; text-align:left; line-height:1.4;">
+                              {{ $expl | safeHTML }}
+                            </p>
+                          </details>
+                        </div>
+                        {{- else -}}
                         <p class="color-negative" style="text-align:center;">
-                        	No image available today.
-                        	</p>
-                        	{{- end }}
+                          No image available today.
+                        </p>
+                        {{- end }}
                       '';
                     }
                   ];
@@ -161,20 +160,20 @@
                           timeout = "10s";
                           allow-insecure = true;
                         }
-						{
-						  title = "Youtarr";
-						  url = "https://youtarr.${config.selfhosted.domain}";
-						  icon = "sh:youtarr.png";
-						  timeout = "10s";
-						  allow-insecure = true;
-						}
-						{
-						  title = "Paperless";
-						  url = "https://paperless.${config.selfhosted.domain}";
-						  icon = "di:paperless";
-						  timeout = "10s";
-						  allow-insecure = true;
-						}
+                        {
+                          title = "Youtarr";
+                          url = "https://youtarr.${config.selfhosted.domain}";
+                          icon = "sh:youtarr.png";
+                          timeout = "10s";
+                          allow-insecure = true;
+                        }
+                        {
+                          title = "Paperless";
+                          url = "https://paperless.${config.selfhosted.domain}";
+                          icon = "di:paperless";
+                          timeout = "10s";
+                          allow-insecure = true;
+                        }
                         {
                           title = "Pi-hole";
                           url = "https://pihole.${config.selfhosted.domain}";
