@@ -14,7 +14,7 @@
       imports = [
         inputs.mango.nixosModules.mango
         inputs.silentSDDM.nixosModules.default
-		inputs.wayland-desktop-icons.nixosModules.default
+        inputs.wayland-desktop-icons.nixosModules.default
 
         self.nixosModules.waybar
         self.nixosModules.darkmode
@@ -55,8 +55,8 @@
           enable = true;
           showInWaybar = true;
         };
-		
-		programs.dicons.enable = true;
+
+        programs.dicons.enable = true;
         programs.mango.enable = true;
         programs.dconf.enable = true;
         security.polkit.enable = true;
@@ -65,7 +65,11 @@
 
         xdg.portal = {
           enable = true;
-          extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
+          extraPortals = [
+            pkgs.kdePackages.xdg-desktop-portal-kde
+            pkgs.xdg-desktop-portal-gtk
+            pkgs.xdg-desktop-portal-wlr
+          ];
           config = {
             common = {
               default = [ "kde" ];
@@ -74,18 +78,18 @@
             mango = {
               default = lib.mkForce [ "kde" ];
               "org.freedesktop.portal.FileChooser" = lib.mkForce [ "kde" ];
-			  "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "wlr" ];
-			  "org.freedesktop.impl.portal.Screenshot" = lib.mkForce [ "wlr" ];
+              "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "wlr" ];
+              "org.freedesktop.impl.portal.Screenshot" = lib.mkForce [ "wlr" ];
             };
           };
         };
 
         services.displayManager.sddm = {
-			enable = true;
-			wayland.enable = lib.mkForce false;
-		};
-		services.xserver.enable = true; # for X11 sddm
- 
+          enable = true;
+          wayland.enable = lib.mkForce false;
+        };
+        services.xserver.enable = true; # for X11 sddm
+
         programs.silentSDDM = {
           enable = true;
           theme = "default";
@@ -220,6 +224,17 @@
                 tablet-mode portrait
               fi
               echo "$(date): Done" >> "$LOG_FILE"
+            '')
+            (pkgs.writeShellScriptBin "tablet-mode-init" ''
+              # wait for the OpenTabletDriver daemon (up to ~30 s), then apply landscape
+              for _ in $(seq 1 30); do
+                if tablet-mode landscape; then
+                  exit 0
+                fi
+                sleep 1
+              done
+              echo "tablet-mode-init: OpenTabletDriver daemon never became ready" >&2
+              exit 1
             '')
           ];
 
@@ -377,18 +392,21 @@
               "wlr/taskbar"
             ];
             modules-center = [ "mpris" ];
-            modules-right =  (lib.optional config.desktops.waybar.showRotateScript "custom/hdmi1_rotate") ++ (lib.optional config.desktops.waybar.showRotateScript "custom/hdmi2_rotate") ++ [
-              "custom/brightness"
-              "cpu"
-              "temperature"
-              "disk"
-              "tray"
-              "bluetooth"
-              "pulseaudio"
-              "network"
-              "battery"
-              "clock"
-            ];
+            modules-right =
+              (lib.optional config.desktops.waybar.showRotateScript "custom/hdmi1_rotate")
+              ++ (lib.optional config.desktops.waybar.showRotateScript "custom/hdmi2_rotate")
+              ++ [
+                "custom/brightness"
+                "cpu"
+                "temperature"
+                "disk"
+                "tray"
+                "bluetooth"
+                "pulseaudio"
+                "network"
+                "battery"
+                "clock"
+              ];
 
             "ext/workspaces" = {
               format = "{icon}";
@@ -617,9 +635,9 @@
             settings = {
               "$schema" = "https://vicinae.com/schemas/config.json";
 
-			  keybinds = {
-			  	toggle-action-panel = "control+K";
-			  };
+              keybinds = {
+                toggle-action-panel = "control+K";
+              };
 
               theme = {
                 dark = {
@@ -786,7 +804,7 @@
                 "none,down,4,toggleoverview"
               ];
 
-			  # bindc allows conflicts
+              # bindc allows conflicts
               bindc = [
                 "SUPER+SHIFT,r,reload_config"
                 "SUPER,Return,spawn,kitty"
@@ -929,7 +947,7 @@
               always_show_group_bar = 0; # true/false doesnt work for now, use 1 and 0
               group_bar_height = 20;
               group_bar_close_button_enable = 1;
-			  group_bar_button_color = "0xd8647eff";
+              group_bar_button_color = "0xd8647eff";
               group_bar_button_size = 14;
               group_bar_button_margin = 6;
               group_bar_decorate_fg_color = "0xffffff3f"; # text color.
@@ -985,7 +1003,6 @@
               cursor_hide_timeout = 0;
               drag_tile_to_tile = 1;
               single_scratchpad = 1;
-			  
 
               layer_rule = "animation_type_open:fade,animation_type_close:fade,layer_name:vicinae";
               window_rule = [
@@ -1003,6 +1020,8 @@
 			  awww-daemon &
 
 			  dicons &
+
+              ${lib.optionalString nixosConfig.hardware.opentabletdriver.enable "tablet-mode-init &"}
 			";
           };
         };
