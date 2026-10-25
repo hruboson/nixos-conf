@@ -72,7 +72,8 @@
 
           # office
           libreoffice-fresh
-		  foliate # epub reader
+          thorium-reader
+          yacreader
 
           # other
           gnome-software
@@ -159,7 +160,7 @@
             # Documents
             "application/pdf" = "net.waterfox.waterfox.desktop";
             "text/markdown" = "net.waterfox.waterfox.desktop";
-            "application/epub+zip" = "com.github.johnfactotum.Foliate.desktop";
+            "application/epub+zip" = "thorium.desktop";
 
             # Archives -> PeaZip
             "application/zip" = "org.kde.ark.desktop";
@@ -203,6 +204,14 @@
             "application/vnd.visio" = "draw.desktop";
             "application/vnd.oasis.opendocument.formula" = "math.desktop";
             "application/vnd.oasis.opendocument.database" = "base.desktop";
+
+            # Comics
+            "application/vnd.comicbook+zip" = "YACReader.desktop"; # .cbz
+            "application/vnd.comicbook-rar" = "YACReader.desktop"; # .cbr
+            "application/x-cbz" = "YACReader.desktop";
+            "application/x-cbr" = "YACReader.desktop";
+            "application/x-cb7" = "YACReader.desktop"; # .cb7
+            "application/x-cbt" = "YACReader.desktop"; # .cbt
           };
         };
       };

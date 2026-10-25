@@ -27,6 +27,7 @@
           enable = true;
           gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
           gtk4.extraConfig.gtk-application-prefer-dark-theme = true;
+          gtk4.extraConfig.gtk-icon-theme-name = lib.mkForce "Adwaita"; # fix missing icons
 
           theme = {
             name = "Adwaita-dark";
