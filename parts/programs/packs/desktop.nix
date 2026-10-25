@@ -72,6 +72,7 @@
 
           # office
           libreoffice-fresh
+		  foliate # epub reader
 
           # other
           gnome-software
@@ -158,6 +159,7 @@
             # Documents
             "application/pdf" = "net.waterfox.waterfox.desktop";
             "text/markdown" = "net.waterfox.waterfox.desktop";
+            "application/epub+zip" = "com.github.johnfactotum.Foliate.desktop";
 
             # Archives -> PeaZip
             "application/zip" = "org.kde.ark.desktop";
@@ -171,6 +173,36 @@
             "application/x-bzip2" = "org.kde.ark.desktop";
             "application/x-xz" = "org.kde.ark.desktop";
             "application/zstd" = "org.kde.ark.desktop";
+
+            # LibreOffice Writer (text documents)
+            "application/vnd.oasis.opendocument.text" = "writer.desktop";
+            "application/vnd.oasis.opendocument.text-template" = "writer.desktop";
+            "application/msword" = "writer.desktop";
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop";
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.template" = "writer.desktop";
+            "application/rtf" = "writer.desktop";
+            "text/rtf" = "writer.desktop";
+
+            # LibreOffice Calc (spreadsheets)
+            "application/vnd.oasis.opendocument.spreadsheet" = "calc.desktop";
+            "application/vnd.oasis.opendocument.spreadsheet-template" = "calc.desktop";
+            "application/vnd.ms-excel" = "calc.desktop";
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "calc.desktop";
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.template" = "calc.desktop";
+            "text/csv" = "calc.desktop";
+
+            # LibreOffice Impress (presentations)
+            "application/vnd.oasis.opendocument.presentation" = "impress.desktop";
+            "application/vnd.oasis.opendocument.presentation-template" = "impress.desktop";
+            "application/vnd.ms-powerpoint" = "impress.desktop";
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop";
+            "application/vnd.openxmlformats-officedocument.presentationml.slideshow" = "impress.desktop";
+
+            # LibreOffice Draw / Math / Base
+            "application/vnd.oasis.opendocument.graphics" = "draw.desktop";
+            "application/vnd.visio" = "draw.desktop";
+            "application/vnd.oasis.opendocument.formula" = "math.desktop";
+            "application/vnd.oasis.opendocument.database" = "base.desktop";
           };
         };
       };

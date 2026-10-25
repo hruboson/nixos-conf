@@ -128,6 +128,11 @@
         environment.systemPackages =
           with pkgs;
           [
+		    # icons needed to work with some apps
+            adwaita-icon-theme
+            hicolor-icon-theme
+            librsvg
+
             killall
             wev
             wayland

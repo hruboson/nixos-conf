@@ -49,7 +49,7 @@
             "tela"
             "theme_creator"
             "brush-sizes-docker"
-			"improved_intermediate_palette"
+            "improved_intermediate_palette"
           ];
 
           brushes = [
@@ -83,7 +83,8 @@
             "krita/pykrita/brush-sizes-docker.desktop".source =
               "${inputs.krita-brush-sizes-docker}/brush-sizes-docker.desktop";
 
-            "krita/pykrita/improved_intermediate_palette".source = "${inputs.krita-intermediate-palette}/improved_intermediate_palette";
+            "krita/pykrita/improved_intermediate_palette".source =
+              "${inputs.krita-intermediate-palette}/improved_intermediate_palette";
             "krita/pykrita/improved_intermediate_palette.desktop".source =
               "${inputs.krita-intermediate-palette}/improved_intermediate_palette.desktop";
           }
@@ -120,6 +121,19 @@
                 || echo "warning: could not enable Krita plugin ${p}"
             '') plugins}
           '';
+
+          # File types -> app associations
+          # mimetype.io/all-types
+          xdg.mimeApps = {
+            enable = true;
+            defaultApplications = {
+              "application/x-krita" = "org.kde.krita.desktop"; # .kra
+              "image/openraster" = "org.kde.krita.desktop"; # .ora
+              "image/vnd.adobe.photoshop" = "org.kde.krita.desktop"; # .psd
+              "image/x-xcf" = "org.kde.krita.desktop"; # GIMP .xcf
+            };
+          };
+
         };
     };
 }
