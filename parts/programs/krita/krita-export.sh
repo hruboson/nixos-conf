@@ -9,13 +9,18 @@
 #
 # Environment:
 #   DEST            target folder (default: <script dir>/config)
+#   BRUSH_DEST      brush folder  (default: <script dir>/brushes)
+#   BUNDLE_DEST     bundle folder (default: DEST/bundles)
+#   BUNDLES         "a.bundle b.bundle" export only these (default: all found)
+#   BUNDLE_SKIP     bundles to leave out (default: the ones Krita ships);
+#                   BUNDLE_SKIP="" skips nothing
 #   XDG_CONFIG_HOME / XDG_DATA_HOME are respected, so a sandbox run works too:
 #     HOME=/tmp/kh XDG_CONFIG_HOME=/tmp/kh/.config XDG_DATA_HOME=/tmp/kh/.local/share ./krita-export.sh
 #
 # Layout written:
-#   DEST/        kritarc  kritadisplayrc  krita5.xmlgui  color-schemes/  workspaces/
-#   BRUSH_DEST/  *.kpp
-
+#   DEST/          kritarc  kritadisplayrc  krita5.xmlgui  color-schemes/  workspaces/
+#   DEST/bundles/  *.bundle
+#   BRUSH_DEST/    *.kpp
 
 set -euo pipefail
 shopt -s nullglob
@@ -23,8 +28,9 @@ shopt -s nullglob
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="${DEST:-$SCRIPT_DIR/config}"
 BRUSH_DEST="${BRUSH_DEST:-$(dirname "${DEST%/}")/brushes}"
-if [[ "${DEST%/}" == "${BRUSH_DEST%/}" ]]; then
-  echo "error: DEST and BRUSH_DEST must be different folders ($DEST)" >&2
+BUNDLE_DEST="${BUNDLE_DEST:-${DEST%/}/bundles}"
+if [[ "${DEST%/}" == "${BRUSH_DEST%/}" || "${BRUSH_DEST%/}" == "${BUNDLE_DEST%/}" ]]; then
+  echo "error: DEST/BRUSH_DEST and BRUSH_DEST/BUNDLE_DEST must be different folders" >&2
   exit 1
 fi
 CFG="${XDG_CONFIG_HOME:-$HOME/.config}"
@@ -35,12 +41,12 @@ if pgrep -x '(krita|\.krita-wrapped)' >/dev/null 2>&1; then
   echo "         so quit it first for a complete export." >&2
 fi
 
-mkdir -p "$DEST"
-mkdir -p "$BRUSH_DEST"
+mkdir -p "$DEST" "$BRUSH_DEST" "$BUNDLE_DEST"
 echo "Exporting settings to: $DEST"
 echo "Exporting brushes to:  $BRUSH_DEST"
+echo "Exporting bundles to:  $BUNDLE_DEST"
 
-# copy_file <source> <path relative to DEST>
+# copy_file <source> <path relative to base> [base, default DEST]
 # `install` follows symlinks, so files that came from the nix store are copied
 # as real, writable files.
 copy_file() {
@@ -96,8 +102,28 @@ if (( ${#names[@]} > 0 )); then
   done
 fi
 
+# --- Resource bundles -------------------------------------------------------
+# Collects *.bundle from share/krita/bundles/ and share/krita/ (bundles/ wins
+# if the same file name exists in both).
+read -ra bundle_skip <<< "${BUNDLE_SKIP-Krita_3_Default_Resources.bundle Krita_4_Default_Resources.bundle RGBA_brushes.bundle Krita_Artists_SeExpr_examples.bundle}"
+declare -A bundle_done=()
+for dir in "$DATA/krita/bundles" "$DATA/krita"; do
+  for f in "$dir/"*.bundle; do
+    n=$(basename "$f")
+    [[ -n ${bundle_done[$n]:-} ]] && continue
+    bundle_done[$n]=1
+    if [[ -n ${BUNDLES:-} && " $BUNDLES " != *" $n "* ]]; then
+      continue
+    fi
+    if [[ " ${bundle_skip[*]:-} " == *" $n "* ]]; then
+      echo "  skipping $n (in BUNDLE_SKIP)"
+      continue
+    fi
+    copy_file "$f" "$n" "$BUNDLE_DEST"
+  done
+done
 
 echo
 echo "Done. Review the changes (kritarc contains some noise like recent files),"
-echo "then 'git add' the exported files. Only brushes listed in the nix module's"
-echo "\`brushes\` list get installed."
+echo "then 'git add' the exported files. Brushes are only installed if listed in"
+echo "the nix module's \`brushes\` list; everything in config/bundles is installed."
