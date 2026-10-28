@@ -37,6 +37,7 @@
         self.nixosModules.selfhostedPihole
         self.nixosModules.selfhostedTailscale
         self.nixosModules.selfhostedTandoor
+        self.nixosModules.selfhostedThesis
         self.nixosModules.selfhostedWordpress
         self.nixosModules.selfhostedYoutarr
       ];

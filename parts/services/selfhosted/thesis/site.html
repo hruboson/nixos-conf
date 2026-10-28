@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Textbook: Synthesis of Medical Data Using Knowledge-Driven LLMs</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<style>
+:root {
+  --bg: #fafaf7;
+  --card: #ffffff;
+  --tx: #1d2433;
+  --mut: #5c6678;
+  --ac: #0f766e;
+  --ac2: #e6f4f1;
+  --bd: #dfe3ea;
+  --yt: #c4302b;
+  --yt-bg: #fef2f2;
+  --yt-bd: #feccae;
+  --font-body: "Literata Variable", Literata, Charter, "Iowan Old Style", Georgia, serif;
+  --font-head: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-mono: var(--font-head);
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141c;
+    --card: #181e29;
+    --tx: #e8ebf1;
+    --mut: #9aa4b8;
+    --ac: #4fd1c2;
+    --ac2: #14302d;
+    --bd: #2a3344;
+    --yt: #ff6b66;
+    --yt-bg: #2a1818;
+    --yt-bd: #5c2424;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141c;
+  --card: #181e29;
+  --tx: #e8ebf1;
+  --mut: #9aa4b8;
+  --ac: #4fd1c2;
+  --ac2: #14302d;
+  --bd: #2a3344;
+  --yt: #ff6b66;
+  --yt-bg: #2a1818;
+  --yt-bd: #5c2424;
+  color-scheme: dark;
+}
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+  height: 100%;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--tx);
+  font: 17px/1.7 var(--font-body);
+}
+.ui, .side, .btn, .tag, .meta, .pn, .yt-item {
+  font-family: var(--font-ui);
+}
+
+/* Sidebar Layout */
+.side {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 310px;
+  background: var(--card);
+  border-right: 1px solid var(--bd);
+  overflow-y: auto;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 14px 20px;
+  z-index: 20;
+  transition: transform .25s ease-in-out;
+}
+.side h2 {
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+.side .pl {
+  font-size: 0.8rem;
+  color: var(--mut);
+}
+.track {
+  height: 8px;
+  background: var(--bd);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+.fill {
+  height: 100%;
+  width: 0%;
+  background: var(--ac);
+  transition: width .3s ease;
+}
+.nav { margin-top: 10px; }
+.nav a {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--tx);
+  font-size: 0.88rem;
+  line-height: 1.3;
+  margin: 3px 0;
+  transition: background .15s;
+}
+.nav a:hover { background: var(--ac2); }
+.nav a.cur {
+  background: var(--ac2);
+  font-weight: 600;
+  border-left: 3px solid var(--ac);
+}
+.nav .n {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ac2);
+  color: var(--ac);
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.nav a.done .n {
+  background: var(--ac);
+  color: var(--bg);
+}
+.nav small {
+  display: block;
+  color: var(--mut);
+  font-weight: 400;
+  font-size: 0.75rem;
+}
+
+#q {
+  width: 100%;
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--bd);
+  background: var(--bg);
+  color: var(--tx);
+  margin: 10px 0 4px;
+}
+
+.btn {
+  font-size: 0.82rem;
+  border: 1px solid var(--bd);
+  background: var(--card);
+  color: var(--tx);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  transition: background .15s;
+}
+.btn:hover { background: var(--ac2); }
+
+/* Main Content Area */
+.main {
+  margin-left: 310px;
+  padding: 24px 28px 80px;
+}
+.page {
+  max-width: 820px;
+  margin: 0 auto;
+}
+.top {
+  display: none;
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  padding: 10px 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--bd);
+}
+
+h1 {
+  font-size: 1.8rem;
+  line-height: 1.25;
+  margin: 0.2em 0 0.4em;
+}
+h3.s {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 32px 0 10px;
+  color: var(--ac);
+  border-bottom: 1px solid var(--bd);
+  padding-bottom: 4px;
+}
+.meta {
+  font-size: 0.85rem;
+  color: var(--mut);
+}
+.tag {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--ac2);
+  color: var(--ac);
+  font-weight: 600;
+}
+.goal {
+  background: var(--ac2);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Material & Notes */
+.mat p { margin: 0.8em 0; }
+.mat ul, .mat ol { padding-left: 22px; }
+.mat li { margin: 5px 0; }
+.mat h4 {
+  font-family: var(--font-head);
+  margin: 24px 0 6px;
+  font-size: 1.05rem;
+  color: var(--tx);
+}
+.mat code {
+  background: var(--ac2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88em;
+  font-family: var(--font-mono);
+}
+.mat pre {
+  background: var(--ac2);
+  padding: 12px 14px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.84rem;
+  font-family: var(--font-mono);
+  line-height: 1.45;
+}
+
+.dd {
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+  padding: 6px 16px 16px;
+  margin: 16px 0;
+  background: var(--card);
+}
+.dd summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ac);
+  padding: 8px 0;
+  font-family: system-ui, sans-serif;
+}
+
+/* Videos List */
+.vids {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: system-ui, sans-serif;
+}
+.yt-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--yt-bg);
+  border: 1px solid var(--yt-bd);
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: var(--tx);
+  transition: transform .15s ease;
+}
+.yt-item:hover {
+  transform: translateY(-1px);
+}
+.yt-play {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--yt);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.yt-info { flex: 1; }
+.yt-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--tx);
+}
+.yt-dur {
+  font-size: 0.78rem;
+  color: var(--mut);
+  margin-top: 2px;
+}
+
+/* Tasks & Resources */
+.chk {
+  list-style: none;
+  padding: 0;
+  font-family: var(--font-body);
+}
+.chk li { margin: 8px 0; }
+.chk label {
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  align-items: flex-start;
+}
+.chk input {
+  margin-top: 4px;
+  accent-color: var(--ac);
+  width: 16px;
+  height: 16px;
+}
+.res {
+  font-family: var(--font-body);
+  font-size: 0.93rem;
+  padding-left: 20px;
+}
+.res li { margin: 6px 0; }
+.t {
+  font-size: 0.75rem;
+  color: var(--mut);
+  margin-left: 6px;
+}
+a { color: var(--ac); }
+
+.pn {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  gap: 8px;
+}
+.note {
+  font: 0.82rem system-ui, sans-serif;
+  color: var(--mut);
+  margin-top: 30px;
+  border-top: 1px solid var(--bd);
+  padding-top: 12px;
+}
+
+/* Backup Drawer */
+#bp {
+  display: none;
+  margin-top: 12px;
+  font-family: system-ui, sans-serif;
+  font-size: 0.82rem;
+  background: var(--bg);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--bd);
+}
+#bp textarea {
+  width: 100%;
+  font: inherit;
+  background: var(--card);
+  color: var(--tx);
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 6px;
+}
+
+@media(max-width: 880px) {
+  .side {
+    transform: translateX(-100%);
+  }
+  .side.open {
+    transform: translateX(0);
+    box-shadow: 0 0 30px rgba(0,0,0,0.3);
+  }
+  .main {
+    margin-left: 0;
+    padding: 14px 16px 80px;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Server sync + notes + community */
+.sync { font: 0.75rem system-ui, sans-serif; color: var(--mut); margin-top: 6px; }
+.sync.ok::before { content: "● "; color: var(--ac); }
+.sync.bad { color: var(--yt); }
+.sync.bad::before { content: "● "; }
+.sync.busy::before { content: "● "; color: #d99a00; }
+#notebox {
+  width: 100%;
+  min-height: 160px;
+  resize: vertical;
+  font: 0.88rem/1.55 var(--font-mono);
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--bd);
+  background: var(--card);
+  color: var(--tx);
+}
+#notebox:focus { outline: 2px solid var(--ac); outline-offset: 1px; }
+.nstat { font: 0.78rem system-ui, sans-serif; color: var(--mut); margin-top: 4px; min-height: 1.2em; }
+.comm { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; font-family: var(--font-body); }
+@media (max-width: 880px) { .comm { grid-template-columns: 1fr; } }
+.comm h4 { margin: 0 0 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+.badge { width: 22px; height: 22px; border-radius: 5px; display: grid; place-items: center; color: #fff; font-size: 0.75rem; font-weight: 700; }
+.badge.hn { background: #ff6600; }
+.badge.rd { background: #ff4500; border-radius: 50%; }
+.cl { list-style: none; padding: 0; margin: 0; }
+.cl li { padding: 8px 0; border-bottom: 1px solid var(--bd); font-size: 0.88rem; line-height: 1.35; }
+.cl li:last-child { border-bottom: 0; }
+.cl a.tt { font-weight: 600; text-decoration: none; }
+.cl a.tt:hover { text-decoration: underline; }
+.cl .mt { display: block; color: var(--mut); font-size: 0.76rem; margin-top: 2px; }
+.cl .mt a { color: var(--mut); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chips a { font-size: 0.76rem; padding: 3px 9px; border-radius: 12px; border: 1px solid var(--bd); text-decoration: none; color: var(--mut); }
+.chips a:hover { background: var(--ac2); color: var(--ac); }
+.empty { color: var(--mut); font-size: 0.85rem; }
+
+/* ELI5 */
+.eli { border: 1px solid var(--bd); border-left: 4px solid var(--ac); background: var(--card); border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-family: var(--font-body); }
+.eli-h { font-weight: 700; color: var(--ac); font-size: 0.92rem; margin-bottom: 6px; }
+.eli p { margin: 0 0 10px; font-size: 0.97rem; line-height: 1.6; }
+.eli ul { margin: 4px 0 0; padding-left: 20px; font-size: 0.93rem; }
+.eli li { margin: 4px 0; }
+.eli-h2 { font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: .05em; color: var(--mut); margin-top: 6px; }
+
+/* Notes: live markdown editor */
+.ntabs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; font-family: var(--font-ui); }
+.ntabs .btn.on { background: var(--ac); color: var(--bg); border-color: var(--ac); }
+.ntabs .hint { font-size: 0.75rem; color: var(--mut); }
+#ed { min-height: 170px; padding: 12px 16px; border: 1px solid var(--bd); border-radius: 8px; background: var(--card); font: 1rem/1.6 var(--font-body); white-space: pre-wrap; overflow-wrap: anywhere; cursor: text; }
+#ed:focus { outline: 2px solid var(--ac); outline-offset: 1px; }
+#ed .ln { min-height: 1.6em; }
+#ed.empty .ln:first-child::before { content: "Write notes here. Markdown renders as you move to the next line."; color: var(--mut); pointer-events: none; }
+#ed .ln.act { background: var(--ac2); border-radius: 4px; margin: 0 -6px; padding: 0 6px; font-family: var(--font-mono); font-size: 0.86em; line-height: 1.75; }
+#ed .ln.h { font-family: var(--font-head); font-weight: 700; line-height: 1.3; margin-top: 0.5em; }
+#ed .ln.h1 { font-size: 1.5em; } #ed .ln.h2 { font-size: 1.28em; } #ed .ln.h3 { font-size: 1.1em; }
+#ed .ln.h4, #ed .ln.h5, #ed .ln.h6 { font-size: 0.98em; }
+#ed .ln.li { padding-left: 1.4em; text-indent: -1.4em; }
+#ed .ln.li .mk { display: inline-block; width: 1.4em; text-indent: 0; color: var(--ac); font-weight: 700; }
+#ed .ln.bq { border-left: 3px solid var(--ac); padding-left: 12px; color: var(--mut); }
+#ed .ln.code, #ed .ln.fence { font-family: var(--font-mono); font-size: 0.84em; background: var(--ac2); white-space: pre; overflow-x: auto; padding: 0 10px; }
+#ed .ln.fence { color: var(--mut); font-size: 0.74em; }
+#ed .ln.hr hr { border: 0; border-top: 1px solid var(--bd); margin: 0.7em 0; }
+#ed a { color: var(--ac); }
+#ed code { background: var(--ac2); padding: 1px 5px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.86em; }
+
+/* Typography: headings use the mono face */
+h1, h3.s, .side h2, .eli-h, .eli-h2, .comm h4 { font-family: var(--font-head); }
+h1 { font-size: 1.6rem; letter-spacing: -0.02em; font-weight: 700; }
+h3.s { font-size: 0.8rem; }
+.mat h4 { font-size: 0.98rem; font-weight: 700; }
+.side h2 { font-size: 0.95rem; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<aside class="side" id="side">
+  <h2>Synthesis of Medical Data Using Knowledge-Driven LLMs</h2>
+  <div class="pl" id="pt">0% complete</div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+  <div class="sync busy" id="sync">connecting…</div>
+  <input id="q" placeholder="Search chapters…" type="search">
+  <div class="nav" id="nav"></div>
+  <p style="margin-top: 14px;">
+    <button class="btn" id="ex">Export (.md)</button>
+    <button class="btn" id="rs">Reset progress</button>
+  </p>
+  <div class="sync" id="bm"></div>
+</aside>
+
+<div class="main">
+  <div class="top ui">
+    <button class="btn" id="mn">☰ Chapters</button>
+    <span class="meta" id="pt2">0% complete</span>
+  </div>
+  <div class="page" id="page"></div>
+</div>
+
+<script>
+// Combined & Verified Data Structures
+const S = [
+{
+  t: "Machine Learning and Deep Learning Refresher",
+  lv: "Beginner", w: "1–2 wks",
+  g: "Be comfortable training and evaluating a simple neural network in PyTorch, and understand the probabilistic view of generative models.",
+  tasks: [
+    "Review probability, distributions, sampling and Bayes' rule",
+    "Train a classifier on a tabular dataset (scikit-learn)",
+    "Build a small neural network in PyTorch",
+    "Understand train/validation/test splits and overfitting"
+  ],
+  yt: [
+    ["3Blue1Brown: But what is a neural network?", "https://www.youtube.com/watch?v=aircAruvnKk", "~19 min"],
+    ["3Blue1Brown: Gradient descent, how neural networks learn", "https://www.youtube.com/watch?v=IHZwWFHWa-w", "~21 min"],
+    ["Karpathy: Neural Networks Zero to Hero (full playlist)", "https://karpathy.ai/zero-to-hero.html", "~19 h"]
+  ],
+  r: [
+    ["Karpathy: Neural Networks, Zero to Hero", "https://karpathy.ai/zero-to-hero.html", "video"],
+    ["PyTorch tutorials", "https://pytorch.org/tutorials/", "docs"],
+    ["scikit-learn user guide", "https://scikit-learn.org/stable/user_guide.html", "docs"],
+    ["Stanford CS224N (NLP with Deep Learning)", "https://web.stanford.edu/class/cs224n/", "course"]
+  ]
+},
+{
+  t: "Medical Data Landscape and Standards",
+  lv: "Beginner", w: "1–2 wks",
+  g: "Know what real clinical data looks like and which vocabularies and formats you will meet.",
+  tasks: [
+    "Learn EHR structure: patients, encounters, diagnoses, labs, medications, notes",
+    "Skim ICD-10, SNOMED CT, LOINC, RxNorm and what each codes",
+    "Explore the FHIR resource model and the OMOP common data model",
+    "Get credentialed for PhysioNet and browse MIMIC-IV (or MIMIC-IV demo)",
+    "Read about GDPR / HIPAA de-identification at a high level"
+  ],
+  yt: [
+    ["MIMIC database, PhysioNet and CITI Program tutorial", "https://youtu.be/dfZhM4YjTTs", "~15 min"],
+    ["MIMIC-IV Demo extraction walkthrough", "https://youtu.be/eNKN7H9nwjc", "~12 min"],
+    ["SNOMED CT overview and basics (playlist)", "https://www.youtube.com/playlist?list=PL842440B7867442B7", "varies"]
+  ],
+  r: [
+    ["MIMIC-IV on PhysioNet", "https://physionet.org/content/mimiciv/", "dataset"],
+    ["MIMIC-IV Demo (open, no credentialing)", "https://physionet.org/content/mimic-iv-demo/", "dataset"],
+    ["HL7 FHIR", "https://hl7.org/fhir/", "spec"],
+    ["The Book of OHDSI (OMOP)", "https://ohdsi.github.io/TheBookOfOhdsi/", "book"],
+    ["UMLS (NLM)", "https://www.nlm.nih.gov/research/umls/", "resource"],
+    ["SNOMED International", "https://www.snomed.org/", "resource"]
+  ]
+},
+{
+  t: "Synthetic Data: Concepts and Motivation",
+  lv: "Beginner", w: "1 wk",
+  g: "Explain why synthetic medical data matters and what “plausible” should mean.",
+  tasks: [
+    "Read an overview of synthetic data in medicine",
+    "Distinguish fidelity, utility and privacy",
+    "Try rule-based generation with Synthea and generate 100 patients",
+    "Try the Synthetic Data Vault on a small table"
+  ],
+  yt: [
+    ["Synthetic data in healthcare – van der Schaar Lab overview", "https://www.vanderschaar-lab.com/revolutionizing-healthcare-synthetic-data/", "~1 h"],
+    ["Synthetic Data Explained: The Future of AI Training & Privacy", "https://www.youtube.com/watch?v=2zDTziEhZ4g", "~15 min"]
+  ],
+  r: [
+    ["Chen et al., Synthetic data in ML for medicine and healthcare (Nature BME 2021)", "https://www.nature.com/articles/s41551-021-00751-8", "paper"],
+    ["Synthea patient generator", "https://synthetichealth.github.io/synthea/", "tool"],
+    ["Synthetic Data Vault (SDV)", "https://sdv.dev/", "tool"]
+  ]
+},
+{
+  t: "Classical Generative Models: VAE, GAN, CGAN",
+  lv: "Intermediate", w: "2 wks",
+  g: "Implement a VAE and a (C)GAN on tabular data. These are your thesis baselines.",
+  tasks: [
+    "Understand latent variables, ELBO, KL divergence (VAE)",
+    "Understand the generator/discriminator game and mode collapse (GAN)",
+    "Read how conditioning works (CGAN)",
+    "Train CTGAN and TVAE with SDV on a small clinical table",
+    "Record baseline results to compare against later"
+  ],
+  yt: [
+    ["Variational Autoencoder (VAE) explained", "https://youtu.be/nVG0e0pAP2s", "~15 min"],
+    ["Ian Goodfellow: Generative Adversarial Networks (NIPS 2016 tutorial)", "https://www.youtube.com/watch?v=HGYYEUSm-0Q", "~1 h"],
+    ["CTGAN / TVAE practical walkthrough", "https://youtu.be/cqGLJsOpNPU", "~20 min"]
+  ],
+  r: [
+    ["Kingma & Welling, Auto-Encoding Variational Bayes", "https://arxiv.org/abs/1312.6114", "paper"],
+    ["Goodfellow et al., Generative Adversarial Nets", "https://arxiv.org/abs/1406.2661", "paper"],
+    ["Mirza & Osindero, Conditional GANs", "https://arxiv.org/abs/1411.1784", "paper"],
+    ["Choi et al., medGAN (EHR generation)", "https://arxiv.org/abs/1703.06490", "paper"],
+    ["Xu et al., CTGAN", "https://arxiv.org/abs/1907.00503", "paper"],
+    ["Kotelnikov et al., TabDDPM (diffusion for tables)", "https://arxiv.org/abs/2209.15421", "paper"]
+  ]
+},
+{
+  t: "Transformers and LLM Fundamentals",
+  lv: "Intermediate", w: "2 wks",
+  g: "Explain attention, tokenization, pretraining, fine-tuning and decoding.",
+  tasks: [
+    "Work through the Illustrated Transformer",
+    "Understand tokenization, context windows, temperature, top-p",
+    "Run an open LLM locally or via Hugging Face",
+    "Read the GPT-3 paper for in-context learning",
+    "Skim a clinical LLM paper to see domain limits"
+  ],
+  yt: [
+    ["3Blue1Brown: Attention in transformers, step-by-step", "https://www.youtube.com/watch?v=eMlx5fFNoYc", "~26 min"],
+    ["3Blue1Brown: Transformers, the tech behind LLMs", "https://www.youtube.com/watch?v=wjZofJX0v4M", "~27 min"],
+    ["Attention Is All You Need: The AI Breakthrough Explained", "https://www.youtube.com/watch?v=_zLsoFdc7jI", "~15 min"]
+  ],
+  r: [
+    ["Vaswani et al., Attention Is All You Need", "https://arxiv.org/abs/1706.03762", "paper"],
+    ["Jay Alammar: The Illustrated Transformer", "https://jalammar.github.io/illustrated-transformer/", "blog"],
+    ["Hugging Face LLM Course", "https://huggingface.co/learn/llm-course", "course"],
+    ["Brown et al., Language Models are Few-Shot Learners", "https://arxiv.org/abs/2005.14165", "paper"],
+    ["Singhal et al., Large language models encode clinical knowledge (Med-PaLM)", "https://arxiv.org/abs/2212.13138", "paper"]
+  ]
+},
+{
+  t: "Prompting and LLM-Based Data Generation",
+  lv: "Intermediate", w: "2 wks",
+  g: "Generate structured synthetic records and clinical text with an LLM, and see where it fails.",
+  tasks: [
+    "Practise few-shot, chain-of-thought and schema-constrained (JSON) prompting",
+    "Generate synthetic tabular rows with GReaT and compare with CTGAN",
+    "Read about LLM-generated clinical text and its benefits and risks",
+    "Observe failure cases: implausible lab values, impossible drug–diagnosis pairs, mode collapse"
+  ],
+  yt: [
+    ["Prompt Engineering Full Course (structured output, few-shot)", "https://www.youtube.com/watch?v=2BpCk4d2Cc0", "~1 h"],
+    ["Prompting + structured JSON extraction walkthrough", "https://www.youtube.com/watch?v=gQ6TlyxBmWs", "~15 min"]
+  ],
+  r: [
+    ["Wei et al., Chain-of-Thought Prompting", "https://arxiv.org/abs/2201.11903", "paper"],
+    ["Wang et al., Self-Instruct", "https://arxiv.org/abs/2212.10560", "paper"],
+    ["Borisov et al., GReaT: Language Models are Realistic Tabular Data Generators", "https://arxiv.org/abs/2210.06280", "paper"],
+    ["Solatorio & Dupriez, REaLTabFormer", "https://arxiv.org/abs/2302.02041", "paper"],
+    ["Tang et al., Does synthetic data from LLMs help clinical text mining?", "https://arxiv.org/abs/2303.04360", "paper"],
+    ["Wang & Sun, PromptEHR", "https://arxiv.org/abs/2211.01761", "paper"]
+  ]
+},
+{
+  t: "Retrieval-Augmented Generation (RAG)",
+  lv: "Intermediate", w: "2 wks",
+  g: "Build a working RAG pipeline over a small medical corpus.",
+  tasks: [
+    "Understand embeddings, vector search, chunking and reranking",
+    "Read the original RAG paper and a modern survey",
+    "Build RAG with LlamaIndex or LangChain and a vector store",
+    "Index guideline or drug-label text and ground generation in it",
+    "Try basic RAG evaluation (faithfulness, context relevance)"
+  ],
+  yt: [
+    ["Krish Naik: Introduction to Understanding RAG", "https://www.youtube.com/watch?v=fZM3oX4xEyg", "~21 min"],
+    ["RAG from scratch (LangChain series)", "https://www.youtube.com/playlist?list=PLfaIDFEXuae2LXbO1_PKyVJiQ23ZztA0x", "varies"]
+  ],
+  r: [
+    ["Lewis et al., Retrieval-Augmented Generation", "https://arxiv.org/abs/2005.11401", "paper"],
+    ["Gao et al., RAG for LLMs: A Survey", "https://arxiv.org/abs/2312.10997", "survey"],
+    ["LlamaIndex docs", "https://docs.llamaindex.ai/", "docs"],
+    ["LangChain docs", "https://python.langchain.com/docs/", "docs"],
+    ["RAGAS: evaluation of RAG", "https://arxiv.org/abs/2309.15217", "paper"],
+    ["RAGAS docs", "https://docs.ragas.io/", "docs"]
+  ]
+},
+{
+  t: "Knowledge Graphs and Medical Ontologies",
+  lv: "Advanced", w: "2 wks",
+  g: "Model medical knowledge as a graph and query it.",
+  tasks: [
+    "Learn the triple model (subject, predicate, object), RDF vs property graphs",
+    "Practise Cypher queries in Neo4j",
+    "Explore biomedical KGs and ontologies (UMLS, SNOMED CT, PrimeKG, DrugBank)",
+    "Build a small KG of diseases, symptoms, drugs and lab ranges",
+    "Learn KG embeddings and entity linking at an overview level"
+  ],
+  yt: [
+    ["Knowledge Graphs & GraphRAG Masterclass (Neo4j)", "https://www.youtube.com/watch?v=Za7aG-ooGLQ", "~15 min"],
+    ["Neo4j GraphAcademy: Knowledge Graphs & GraphRAG", "https://graphacademy.neo4j.com/knowledge-graph-rag/", "course"]
+  ],
+  r: [
+    ["Hogan et al., Knowledge Graphs (survey)", "https://arxiv.org/abs/2003.02320", "survey"],
+    ["Neo4j documentation", "https://neo4j.com/docs/", "docs"],
+    ["Neo4j GraphAcademy (free courses)", "https://graphacademy.neo4j.com/", "course"],
+    ["PrimeKG (Harvard, precision medicine KG)", "https://github.com/mims-harvard/PrimeKG", "dataset"],
+    ["Pan et al., Unifying LLMs and Knowledge Graphs: A Roadmap", "https://arxiv.org/abs/2306.08302", "paper"]
+  ]
+},
+{
+  t: "KGRAG / GraphRAG: Knowledge-Driven Generation",
+  lv: "Advanced", w: "2 wks",
+  g: "Combine KG and RAG so that generation is constrained by verified medical facts.",
+  tasks: [
+    "Read GraphRAG and Medical Graph RAG",
+    "Read the biomedical KG-RAG prompt-generation work",
+    "Prototype: retrieve a patient’s relevant subgraph and condition record generation on it",
+    "Compare vector-RAG, KG-only and KGRAG variants",
+    "Design constraints (e.g. drug–disease rules, lab ranges) as graph queries"
+  ],
+  yt: [
+    ["GraphRAG Explained: AI Retrieval with Knowledge Graphs", "https://www.youtube.com/watch?v=Za7aG-ooGLQ", "~12 min"],
+    ["GraphRAG: Building a Smarter AI System (full walkthrough)", "https://www.youtube.com/watch?v=JTVx6i6MzVw", "~30 min"]
+  ],
+  r: [
+    ["Edge et al., From Local to Global: A Graph RAG Approach (Microsoft)", "https://arxiv.org/abs/2404.16130", "paper"],
+    ["Wu et al., Medical Graph RAG", "https://arxiv.org/abs/2408.04187", "paper"],
+    ["Soman et al., Biomedical KG-optimized prompt generation (KG-RAG)", "https://arxiv.org/abs/2311.17330", "paper"],
+    ["Microsoft GraphRAG (code)", "https://github.com/microsoft/graphrag", "code"]
+  ]
+},
+{
+  t: "Evaluation: Fidelity, Utility, Privacy, Plausibility",
+  lv: "Advanced", w: "2 wks",
+  g: "Choose a defensible evaluation protocol. This is the heart of your “maximum plausibility” claim.",
+  tasks: [
+    "Statistical fidelity: marginals, correlations, column-pair metrics",
+    "Utility: Train-on-Synthetic-Test-on-Real (TSTR)",
+    "Privacy: membership inference, nearest-neighbour distance, differential privacy basics",
+    "Plausibility: rule-based clinical checks plus clinician or LLM-judge review",
+    "Fidelity/diversity metrics: precision, recall, alpha-precision, beta-recall"
+  ],
+  yt: [
+    ["Evaluating synthetic data: fidelity, utility, privacy (practical overview)", "https://www.youtube.com/watch?v=2zDTziEhZ4g", "~15 min"],
+    ["Differentially private synthetic data with GANs", "https://www.youtube.com/watch?v=PU2h0V-pANQ", "~1 h"]
+  ],
+  r: [
+    ["Alaa et al., How Faithful is your Synthetic Data?", "https://arxiv.org/abs/2102.08921", "paper"],
+    ["Naeem et al., Reliable Fidelity and Diversity Metrics", "https://arxiv.org/abs/2002.09797", "paper"],
+    ["SDMetrics docs", "https://docs.sdv.dev/sdmetrics", "docs"],
+    ["Dwork & Roth, Algorithmic Foundations of Differential Privacy", "https://www.cis.upenn.edu/~aaroth/privacybook.html", "book"]
+  ]
+},
+{
+  t: "Thesis Experiment Design and Writing",
+  lv: "Expert", w: "2 wks",
+  g: "Turn your knowledge into a reproducible experimental plan.",
+  tasks: [
+    "Define research questions and hypotheses (e.g. KGRAG improves plausibility vs CTGAN/VAE)",
+    "Pick datasets (MIMIC-IV subset, Synthea) and clearly define the generation target",
+    "Define baselines: VAE, CTGAN, GReaT, plain LLM, RAG, KG-only, KGRAG",
+    "Fix metrics, seeds, ablations, compute budget and ethics/data-use compliance",
+    "Set up experiment tracking (Weights & Biases or MLflow) and a git repo",
+    "Draft the thesis outline: intro, related work, method, experiments, discussion"
+  ],
+  yt: [
+    ["How to write an okay research paper (ML tips)", "https://www.youtube.com/watch?v=g8xA8xU9", "~10 min"],
+    ["Writing a good research thesis (Google Research)", "https://www.youtube.com/watch?v=jGwO_UgTS7I", "~30 min"]
+  ],
+  r: [
+    ["Weights & Biases docs", "https://docs.wandb.ai/", "docs"],
+    ["MLflow docs", "https://mlflow.org/docs/latest/", "docs"],
+    ["Papers with Code: Synthetic data", "https://paperswithcode.com/task/synthetic-data-generation", "index"],
+    ["Google Scholar: synthetic EHR generation LLM", "https://scholar.google.com/scholar?q=synthetic+EHR+generation+LLM+knowledge+graph", "search"]
+  ]
+}
+];
+
+// Complete Textbook Chapters & Deep Dives
+const M = [
+`<p>Machine learning fits a function to data by minimising a loss with gradient descent. <b>Discriminative</b> models learn p(y|x) — classify a patient — while <b>generative</b> models learn p(x) so you can sample new records. That distinction is the whole thesis in one line.</p>
+<h4>Probability you actually need</h4>
+<ul>
+<li><b>Random variable and distribution:</b> a feature vector x has a joint distribution p(x). A generative model is a learned approximation of p(x).</li>
+<li><b>Expectation and sampling:</b> E[f(x)] = ∫ f(x)p(x)dx. In practice we approximate with Monte Carlo: draw samples and average. Generation is sampling from the learned p(x).</li>
+<li><b>Bayes' rule:</b> p(y|x) = p(x|y)p(y)/p(x). This is how a classifier turns a generative model into a decision rule.</li>
+<li><b>KL divergence:</b> KL(p||q) = E<sub>p</sub>[log p(x)/q(x)] ≥ 0. It measures how much q differs from p, and it is the core term in the VAE loss later.</li>
+</ul>
+<h4>Splits and overfitting</h4>
+<p><b>Train / validation / test.</b> Fit on train, tune hyperparameters on validation, report once on test. Overfitting means low train loss but high test loss. On small medical tables use k-fold cross-validation and always keep a held-out test set that no model selection touches.</p>
+<p><b>Leakage</b> is the most common silent failure: scaling or imputing before splitting, or including a feature that encodes the label. Do all preprocessing inside the training fold.</p>
+<h4>A minimal PyTorch network</h4>
+<pre>import torch, torch.nn as nn
+
+model = nn.Sequential(
+    nn.Linear(n_features, 64), nn.ReLU(),
+    nn.Linear(64, 32), nn.ReLU(),
+    nn.Linear(32, 1)
+)
+opt  = torch.optim.Adam(model.parameters(), lr=1e-3)
+loss = nn.BCEWithLogitsLoss()
+
+for xb, yb in loader:
+    opt.zero_grad()
+    out = model(xb).squeeze()
+    l = loss(out, yb.float())
+    l.backward(); opt.step()</pre>
+<p><b>Tabular preparation:</b> one-hot or embed categoricals, scale numerics, handle missingness explicitly (missing-indicator column), and never leak test data into preprocessing.</p>
+<h4>Metrics for imbalanced medical data</h4>
+<p>Accuracy is misleading when 95% of patients are negative. Prefer <b>AUROC</b> (ranking quality across thresholds), <b>AUPRC</b> (precision–recall, better for rare positives), and report <b>recall at a fixed precision</b> if the clinical use case demands it.</p>`,
+
+`<p>Clinical data is mostly relational tables linked by patient and visit IDs. It is longitudinal, irregularly sampled, and has <b>informative missingness</b>: a lab test is ordered because the doctor suspects something, so “missing” is not random.</p>
+<h4>Typical EHR tables</h4>
+<ul>
+<li><b>patients:</b> age, sex, demographics.</li>
+<li><b>admissions / encounters:</b> admission and discharge times, type.</li>
+<li><b>diagnoses:</b> ICD-10 codes per admission.</li>
+<li><b>lab events:</b> LOINC-coded measurements with timestamps.</li>
+<li><b>prescriptions:</b> RxNorm-coded drugs, dose, route.</li>
+<li><b>notes:</b> free text (discharge summaries, radiology).</li>
+</ul>
+<h4>Vocabularies</h4>
+<ul>
+<li><b>ICD-10:</b> statistical classification of diseases for billing and epidemiology.</li>
+<li><b>SNOMED CT:</b> detailed clinical terminology with a hierarchy (is-a relations), used in EHRs for granular concepts.</li>
+<li><b>LOINC:</b> identifies laboratory observations and measurements.</li>
+<li><b>RxNorm:</b> normalises drug names and ingredients.</li>
+<li><b>UMLS:</b> a meta-thesaurus that maps all of the above via <b>CUI</b> identifiers.</li>
+</ul>
+<h4>FHIR vs OMOP</h4>
+<p><b>FHIR</b> is an interchange format: JSON resources such as <code>Patient</code>, <code>Condition</code>, <code>Observation</code>, <code>MedicationRequest</code>. It is the natural output schema for synthetic records because it is standard, human-readable, and tool-supported.</p>
+<p><b>OMOP CDM</b> is an analytical model: standard tables (<code>person</code>, <code>visit_occurrence</code>, <code>condition_occurrence</code>, <code>drug_exposure</code>, <code>measurement</code>) that let the same method run across hospitals. Use OMOP if you want your synthetic data to plug into existing OHDSI tooling.</p>
+<h4>MIMIC-IV</h4>
+<p>MIMIC-IV is a de-identified critical-care dataset on PhysioNet. It requires credentialing and a data use agreement. The <b>MIMIC-IV Demo</b> (100 patients) is open and sufficient for pipeline development. Never send MIMIC data to third-party APIs — run local models or de-identified extracts only.</p>
+<h4>De-identification and law</h4>
+<p><b>HIPAA Safe Harbor</b> removes 18 identifier types (names, dates finer than year, geographic subdivisions, etc.). Under <b>GDPR</b>, health data is a special category requiring a lawful basis. Synthetic data is not automatically anonymous; it must be tested for re-identification risk (Stage 10).</p>`,
+
+`<p>Synthetic data is artificial data that mimics the statistics of real data. Every method is judged on three competing goals:</p>
+<ul>
+<li><b>Fidelity:</b> does it look statistically like the real data? (marginals, correlations, joint distributions)</li>
+<li><b>Utility:</b> can a model trained on it work on real patients? (TSTR)</li>
+<li><b>Privacy:</b> can individuals be re-identified or their membership inferred?</li>
+</ul>
+<p>These goals trade off. Strong privacy (e.g. differential privacy) usually lowers fidelity. Perfect copying of real rows maximises fidelity and destroys privacy.</p>
+<h4>Why medical synthetic data</h4>
+<ul>
+<li><b>Scarcity:</b> rare diseases have few real cases; generative models can oversample them.</li>
+<li><b>Privacy:</b> share data without exposing patients, subject to privacy testing.</li>
+<li><b>Augmentation:</b> improve classifier robustness with extra realistic rows.</li>
+<li><b>Benchmarking:</b> create reproducible test sets for clinical ML.</li>
+</ul>
+<h4>Families of methods</h4>
+<ol>
+<li><b>Rule-based simulators:</b> Synthea models disease progression with clinical modules and outputs FHIR. Transparent and plausible by construction, but limited to what the rules encode.</li>
+<li><b>Statistical models:</b> copulas, Bayesian networks. Good for small tables, explicit dependencies.</li>
+<li><b>Deep generative models:</b> VAE, GAN, diffusion. Learn from data, scale to many columns, but no medical knowledge.</li>
+<li><b>LLM-based generation:</b> prompt or fine-tune a language model. Flexible and knowledge-rich, but can hallucinate and memorise.</li>
+</ol>
+<h4>What “plausible” means</h4>
+<p>A record is <b>statistically plausible</b> if its values fall in realistic ranges and correlations. It is <b>clinically plausible</b> if it is coherent with medical knowledge: a pregnant male, a drug contraindicated for the diagnosis, or a paediatric lab value in an adult are violations. Statistical models can score well on the first and fail the second. Knowledge-driven generation targets the gap.</p>
+<h4>Hands-on with Synthea</h4>
+<pre>java -jar synthea-with-dependencies.jar -p 100</pre>
+<p>This generates 100 synthetic patients as FHIR bundles. Inspect the <code>Condition</code> and <code>MedicationRequest</code> resources and note that the logic is rule-based, so every combination is clinically possible — but the distribution may not match your target population.</p>`,
+
+`<h4>The VAE in detail</h4>
+<p>We want to maximise log p(x), but the integral over latent z is intractable. Introducing an approximate posterior q(z|x) gives the <b>evidence lower bound (ELBO)</b>:</p>
+<p style="text-align:center"><code>log p(x) ≥ E<sub>q</sub>[log p(x|z)] − KL(q(z|x) || p(z))</code></p>
+<p>The first term rewards reconstruction; the second keeps the latent space close to the prior N(0,I) so sampling from the prior works at generation time.</p>
+<ul>
+<li><b>Reparameterisation trick:</b> the encoder outputs μ and σ, and we sample z = μ + σ⊙ε with ε ~ N(0,I). This makes sampling differentiable and allows backpropagation.</li>
+<li><b>Mixed likelihood:</b> Gaussian decoder (MSE) for numeric columns, categorical decoder (softmax cross-entropy) for categorical columns. TVAE uses exactly this design.</li>
+<li><b>β-VAE:</b> multiply the KL term by β. Larger β gives smoother, more disentangled latents but blurrier samples.</li>
+<li><b>Posterior collapse:</b> the decoder ignores z and KL → 0. Fix with KL annealing (start β at 0 and ramp up).</li>
+</ul>
+<h4>The GAN in detail</h4>
+<p>Objective: min<sub>G</sub> max<sub>D</sub> E[log D(x)] + E[log(1 − D(G(z)))]. With an optimal discriminator, G minimises the Jensen–Shannon divergence between real and generated distributions.</p>
+<ul>
+<li><b>Non-saturating loss:</b> in practice G maximises log D(G(z)) instead of minimising log(1−D(G(z))), because it gives stronger gradients early.</li>
+<li><b>Mode collapse:</b> G produces a narrow set of samples that fool D. Detect with diversity metrics (Stage 10) and mitigate with minibatch discrimination or PacGAN.</li>
+<li><b>WGAN-GP:</b> replaces JS with the Wasserstein distance and a gradient penalty on the critic. Much more stable; CTGAN uses this.</li>
+<li><b>Discrete columns:</b> sampling categories is not differentiable. Solutions: Gumbel-softmax relaxation (CTGAN) or generate in an autoencoder’s continuous space (medGAN for binary diagnosis codes).</li>
+</ul>
+<h4>CTGAN design choices</h4>
+<ul>
+<li><b>Mode-specific normalisation:</b> fit a variational Gaussian mixture to each continuous column. Encode v as a one-hot mode indicator plus α = (v − μ<sub>k</sub>)/(4σ<sub>k</sub>). This handles multimodal and skewed lab values.</li>
+<li><b>Training-by-sampling:</b> each batch samples a category uniformly, then a real row with that category. The generator is conditioned on it and a cross-entropy penalty forces compliance. This prevents rare diagnoses from being ignored.</li>
+</ul>
+<h4>Diffusion (TabDDPM)</h4>
+<p>Forward process adds Gaussian noise over T steps: x<sub>t</sub> = √ā<sub>t</sub>x<sub>0</sub> + √(1−ā<sub>t</sub>)ε. A network ε<sub>θ</sub>(x<sub>t</sub>, t) learns to predict the noise with loss ||ε − ε<sub>θ</sub>||². Generation denoises from pure noise. TabDDPM uses Gaussian diffusion for numerics and multinomial diffusion for categoricals; it often beats GAN/VAE on tabular benchmarks at higher compute cost.</p>
+<h4>EHR-specific issues</h4>
+<ul>
+<li><b>Longitudinal structure:</b> a patient is a sequence of visits. Flat table models lose order. Options: flatten to one row per patient (first-visit features, counts) or use sequence/hierarchical generators.</li>
+<li><b>Sparse high-dimensional codes:</b> thousands of ICD codes, mostly zero. Group into CCS categories or ICD chapters.</li>
+<li><b>Rare diseases:</b> exactly where GANs collapse and VAEs average. Knowledge sources can help.</li>
+<li><b>Memorisation:</b> GANs and diffusion models can reproduce training rows. Always check nearest-neighbour distance.</li>
+</ul>
+<h4>Minimal baseline code (SDV)</h4>
+<pre>from sdv.metadata import Metadata
+from sdv.single_table import CTGANSynthesizer, TVAESynthesizer
+
+meta = Metadata.detect_from_dataframe(df)
+model = CTGANSynthesizer(meta, epochs=300)
+model.fit(df)
+syn = model.sample(num_rows=1000)</pre>
+<p>Swap in <code>TVAESynthesizer</code> for the VAE baseline. Fix seeds and save the metadata so all baselines see identical column types.</p>
+<p><b>Thesis take-away:</b> these models are fast and strong on statistical fidelity, so they are your performance floor. Measure them on <i>both</i> statistical metrics and clinical rule violations. The expected finding — good fidelity, non-zero impossible-record rate — motivates knowledge-driven generation.</p>`,
+
+`<h4>Pipeline</h4>
+<p>Text → tokens → embedding vectors → a stack of transformer blocks → next-token probabilities. A decoder-only LLM (GPT, Llama) is trained to predict p(x<sub>t</sub> | x<sub>&lt;t</sub>).</p>
+<h4>Self-attention</h4>
+<p>Each token produces a query Q, key K and value V. Output = softmax(QKᵀ/√d<sub>k</sub>)·V. Every token can weigh every other token, so long-range dependencies are modelled directly — unlike RNNs, which compress history into a fixed state.</p>
+<ul>
+<li><b>Multi-head attention:</b> several attention heads in parallel capture different relations (syntax, coreference, semantics).</li>
+<li><b>Positional information:</b> transformers are permutation-invariant, so position must be injected (sinusoidal or rotary embeddings).</li>
+<li><b>Causal mask:</b> in decoder-only models, token t cannot attend to future tokens, which enforces autoregressive training.</li>
+</ul>
+<h4>Training stages</h4>
+<ol>
+<li><b>Pretraining:</b> next-token prediction on huge text corpora. This is where world knowledge and language ability come from.</li>
+<li><b>Instruction tuning:</b> supervised fine-tuning on (instruction, response) pairs.</li>
+<li><b>Preference alignment:</b> RLHF or DPO to make outputs helpful and safe.</li>
+<li><b>Parameter-efficient fine-tuning:</b> LoRA freezes the base model and trains low-rank adapters, making domain adaptation cheap.</li>
+</ol>
+<h4>Decoding</h4>
+<p><b>Temperature</b> τ scales logits before softmax: low τ → deterministic, high τ → random. <b>Top-p (nucleus)</b> samples from the smallest set of tokens whose cumulative probability exceeds p. <b>Top-k</b> samples from the k most likely tokens. For synthetic data, higher temperature increases diversity but also increases implausibility — tune it as an experimental variable.</p>
+<h4>Limits relevant to medical data</h4>
+<ul>
+<li><b>Hallucination:</b> fluent but false facts, including invalid codes and impossible values.</li>
+<li><b>Context window:</b> finite, so long patient histories must be summarised or retrieved.</li>
+<li><b>Weak exact arithmetic:</b> doses and lab ranges can be miscomputed.</li>
+<li><b>Memorisation:</b> pretraining data may include patient-like text; fine-tuning on real records risks leakage.</li>
+<li><b>Nondeterminism:</b> sampling makes exact reproducibility hard; fix seeds where possible and report variance.</li>
+</ul>`,
+
+`<h4>Prompting patterns</h4>
+<ul>
+<li><b>Zero-shot:</b> instruction only. Works for simple schemas.</li>
+<li><b>Few-shot:</b> include k example rows in the prompt. Strong for structured output; watch token budget.</li>
+<li><b>Chain-of-thought:</b> ask the model to reason step by step before emitting the record. Improves coherence for complex cases but increases cost.</li>
+<li><b>Schema-constrained (JSON):</b> specify the exact JSON schema and require valid output. Combine with a parser and reject-and-retry on schema errors.</li>
+<li><b>System prompt:</b> fix the role (“you are a clinical data generator”) and hard constraints (“never output a contraindicated drug”).</li>
+</ul>
+<h4>Two ways to generate records</h4>
+<ol>
+<li><b>Prompt a general LLM</b> with a schema and examples. No training, but limited control and possible memorisation.</li>
+<li><b>Fine-tune</b> an LLM on text-serialised rows. More faithful to the training distribution, but needs compute and a careful train/test split.</li>
+</ol>
+<h4>The GReaT idea</h4>
+<p>Serialise each row as a sentence: <code>age is 54, sex is F, diagnosis is I10, glucose is 126</code>. Fine-tune a language model on these sentences, <b>shuffling column order</b> during training so the model learns the joint distribution rather than a fixed left-to-right order. At generation time, sample a new sentence and parse it back into a row. This is simple and effective, but it inherits the LLM’s tendency to copy and to produce invalid codes.</p>
+<h4>Typical failures you must log</h4>
+<ul>
+<li><b>Memorisation:</b> exact or near-exact copies of training rows. Measure nearest-neighbour distance.</li>
+<li><b>Narrow diversity:</b> low temperature or a strong prompt collapses the output to a few templates.</li>
+<li><b>Invalid values:</b> glucose of 900 mg/dL, age 200, negative dose.</li>
+<li><b>Invalid codes:</b> ICD or LOINC codes that do not exist. Validate against the vocabulary.</li>
+<li><b>Broken cross-column logic:</b> a male with a pregnancy diagnosis, a drug contraindicated for the stated condition.</li>
+</ul>
+<h4>Mitigations</h4>
+<ul>
+<li>Validate every field against a schema and a vocabulary.</li>
+<li>Reject-and-resample invalid rows (with a cap, to avoid infinite loops).</li>
+<li>Vary seed, temperature and few-shot examples to increase diversity.</li>
+<li>Deduplicate against the training set using exact and approximate matching.</li>
+<li>Add a knowledge-based validator (Stage 9) for clinical rules.</li>
+</ul>
+<h4>Prompt skeleton for a structured record</h4>
+<pre>SYSTEM: You generate synthetic clinical records.
+Output only valid JSON matching this schema: {age:int, sex:"M"|"F", diagnosis:str, drug:str, lab:float}
+CONSTRAINTS: drug must be indicated for diagnosis; lab must be in reference range.
+
+USER: Generate one plausible record for a 60-year-old female with type 2 diabetes.</pre>`,
+
+`<p>RAG gives an LLM external knowledge at inference time instead of relying only on its weights.</p>
+<h4>The canonical pipeline</h4>
+<ol>
+<li><b>Chunk</b> documents into passages of ~200–500 tokens with 10–20% overlap.</li>
+<li><b>Embed</b> each chunk with a bi-encoder.</li>
+<li><b>Index</b> vectors in a store (FAISS, Chroma, pgvector) with an approximate nearest-neighbour index (HNSW).</li>
+<li><b>Retrieve</b> top-k chunks by cosine similarity.</li>
+<li><b>Rerank</b> with a cross-encoder (retrieve 30–50, keep 3–5).</li>
+<li><b>Augment</b> the prompt with the kept chunks and <b>generate</b>.</li>
+</ol>
+<h4>Dense vs sparse retrieval</h4>
+<ul>
+<li><b>Dense (bi-encoder):</b> semantic similarity; good for paraphrases. Cosine similarity = a·b/(|a||b|).</li>
+<li><b>Sparse (BM25):</b> term matching; excellent for exact drug names and codes. Score = Σ IDF(q)·f(q,d)(k₁+1)/(f(q,d)+k₁(1−b+b|d|/avgdl)).</li>
+<li><b>Hybrid:</b> combine with reciprocal rank fusion, score = Σ 1/(k+rank), typically k=60. Best of both in medical text where both concepts and exact terms matter.</li>
+</ul>
+<h4>Advanced variants</h4>
+<ul>
+<li><b>Query rewriting / multi-query:</b> generate paraphrases and merge results.</li>
+<li><b>HyDE:</b> have the LLM write a hypothetical answer and embed that instead of the question.</li>
+<li><b>Parent–child retrieval:</b> retrieve small chunks but return their larger parent for context.</li>
+<li><b>Self-RAG / agentic RAG:</b> the model decides when and what to retrieve, and critiques its own output.</li>
+</ul>
+<h4>Evaluation</h4>
+<ul>
+<li><b>Retrieval:</b> recall@k, MRR, nDCG against labelled relevant chunks.</li>
+<li><b>Generation (RAGAS-style):</b> <i>faithfulness</i> (are all claims supported by context?), <i>answer relevance</i>, <i>context precision</i>, <i>context recall</i>.</li>
+</ul>
+<h4>Adapting RAG for data synthesis</h4>
+<p>Your output is a structured record, not an answer. So: (a) build the retrieval query from a <b>seed profile</b> (age, sex, main condition) rather than a question; (b) retrieve facts that constrain values — reference ranges, standard therapies, common comorbidities; (c) force a JSON/FHIR schema; (d) vary the seed and the retrieved subset to create diversity; (e) check that the model does not copy retrieved numbers verbatim.</p>
+<pre>chunks = split(docs, size=400, overlap=60)
+index  = build_index(embed(chunks))
+hits   = retrieve(index, embed(seed_profile), k=30)
+ctx    = rerank(seed_profile, hits)[:5]
+record = llm(make_prompt(seed_profile, ctx, schema))</pre>
+<p><b>Known weakness:</b> text retrieval returns prose, not guaranteed-consistent facts. It will not reliably catch contradictions between fields. That is the gap graphs address in Stage 8–9.</p>`,
+
+`<p>A knowledge graph stores facts as <b>triples</b> (subject, relation, object), e.g. <code>(Metformin) -[TREATS]-> (Type 2 diabetes)</code>. In a <b>property graph</b> (Neo4j), nodes and edges also carry properties. An <b>ontology</b> supplies the schema and hierarchy (is-a, part-of) so concepts are consistent.</p>
+<h4>Why graphs for medicine</h4>
+<ul>
+<li><b>Explicit relations:</b> treats, contraindicated_with, has_symptom, interacts_with.</li>
+<li><b>Multi-hop queries:</b> disease → first-line drug → contraindication → alternative.</li>
+<li><b>Provenance:</b> every edge can carry a source (DrugBank, guideline, paper).</li>
+<li><b>Validation:</b> constraints become graph queries, not free-text guesses.</li>
+</ul>
+<h4>Cypher essentials</h4>
+<pre>MATCH (d:Drug)-[:TREATS]->(c:Disease {name:'Type 2 diabetes'})
+OPTIONAL MATCH (d)-[:CONTRAINDICATED_WITH]->(x:Disease)
+RETURN d.name, collect(x.name)</pre>
+<p><code>MATCH</code> finds patterns, <code>WHERE</code> filters, <code>RETURN</code> projects. Use <code>EXPLAIN</code> to inspect the plan; hub nodes (e.g. “hypertension”) can explode a 1-hop expansion, so prune by relation type and degree.</p>
+<h4>Biomedical KGs and ontologies</h4>
+<ul>
+<li><b>UMLS:</b> maps vocabularies via CUIs; the backbone for entity linking.</li>
+<li><b>SNOMED CT:</b> clinical concepts with is-a hierarchy.</li>
+<li><b>DrugBank:</b> drug targets, interactions, indications.</li>
+<li><b>PrimeKG:</b> precision-medicine KG integrating disease, drug, gene, phenotype and more, with 4M+ relationships. Useful as a ready-made backbone.</li>
+</ul>
+<h4>Building a small KG</h4>
+<ol>
+<li>Define the schema: node types (Disease, Drug, LabTest, Symptom) and edge types.</li>
+<li>Import from ontologies or extract triples from text with an LLM.</li>
+<li><b>Entity linking:</b> map mentions to UMLS CUIs using scispaCy, QuickUMLS, or an LLM. Linking errors propagate — log and audit accuracy.</li>
+<li>Validate: check for duplicate nodes, orphan edges, and contradictions.</li>
+</ol>
+<h4>KG embeddings</h4>
+<p>Methods such as TransE represent nodes and relations as vectors and learn h + r ≈ t for true triples. This enables link prediction and similarity, but embeddings are not a substitute for explicit querying when you need hard constraints.</p>
+<h4>Limitations</h4>
+<ul>
+<li><b>Incompleteness:</b> KGs are open-world; absence of an edge does not mean absence of a relation.</li>
+<li><b>Bias:</b> well-studied diseases are over-represented.</li>
+<li><b>Staleness:</b> guidelines change; edges need maintenance.</li>
+<li><b>Coverage:</b> check coverage of your target conditions <i>before</i> committing to a KG-driven thesis.</li>
+</ul>`,
+
+`<p>Vector RAG retrieves similar <i>text</i> but struggles with multi-hop relations and gives no guarantees. A KG gives structured, checkable facts. KGRAG combines both.</p>
+<h4>Three architectures</h4>
+<ul>
+<li><b>KG-RAG (Soman et al.):</b> detect disease entities in the prompt, retrieve context from a biomedical KG (SPOKE), prune by embedding similarity, and feed the subgraph to the LLM. Reports gains on biomedical QA.</li>
+<li><b>GraphRAG (Edge et al., Microsoft):</b> an LLM extracts entities and relations from text chunks to build a graph; Leiden community detection clusters it hierarchically; an LLM pre-summarises every community. <i>Global</i> queries use map-reduce over summaries; <i>local</i> queries use entity neighbourhoods.</li>
+<li><b>Medical Graph RAG (Wu et al.):</b> links user documents, literature and medical vocabularies in a multi-tier graph and retrieves across tiers. Check the paper for the exact retrieval procedure.</li>
+</ul>
+<h4>The three roles a KG can play</h4>
+<ol>
+<li><b>Context:</b> supplies facts to the prompt — typical comorbidities, treatments, lab panels.</li>
+<li><b>Sampler:</b> structures what to generate, e.g. walk from a disease to plausible drugs and tests to create a record skeleton.</li>
+<li><b>Validator:</b> checks the finished record against rules and triggers regeneration.</li>
+</ol>
+<h4>Constraints expressible as graph queries</h4>
+<ul>
+<li>Drug–disease contraindications.</li>
+<li>Drug–drug interactions.</li>
+<li>Sex- or age-restricted diagnoses (e.g. pregnancy-related codes in males).</li>
+<li>Lab reference ranges by age and sex.</li>
+<li>Dose limits.</li>
+<li>Temporal order: diagnosis before treatment.</li>
+</ul>
+<h4>Generate-and-validate loop</h4>
+<pre>profile = sample_profile(real_data_stats)
+facts   = kg.subgraph(profile.conditions, hops=2)
+for attempt in range(3):
+    rec  = llm(make_prompt(profile, facts, schema))
+    errs = validate(rec, kg_rules)
+    if not errs:
+        break
+    prompt = add_feedback(prompt, errs)</pre>
+<h4>The crucial conceptual point: possible vs probable</h4>
+<p>A KG tells you what is <i>possible</i> or <i>recommended</i>; it does not give <i>prevalence</i>. If you generate only from the KG, your population will not match real-world frequencies. Good designs take the <b>distribution from real data statistics</b> (or a classical model) and use the <b>KG for plausibility and consistency</b>. State this explicitly in your methodology.</p>
+<h4>Experimental design</h4>
+<ul>
+<li><b>Ablations:</b> no retrieval, vector-RAG only, KG only, KG + vector, with and without the validation loop.</li>
+<li><b>Measure:</b> rule-violation rate on rules <i>held out</i> from the generator; fidelity; TSTR utility; diversity; privacy; cost (tokens, latency).</li>
+<li><b>Hypotheses:</b> the validator lowers violations; more graph context raises faithfulness but may lower diversity; KG coverage determines gains for rare conditions.</li>
+</ul>
+<h4>Pitfalls</h4>
+<ul>
+<li><b>Evaluation circularity:</b> if the same rules drive validator and metric, violations trivially drop. Keep a held-out rule set and a clinician-reviewed sample.</li>
+<li><b>Over-constraining:</b> too strict a context makes records homogeneous. Track diversity.</li>
+<li><b>KG bias and gaps:</b> propagate into generated data.</li>
+<li><b>LLM ignores context:</b> measure contradiction rate against supplied facts.</li>
+<li><b>Entity-linking errors:</b> a wrong CUI retrieves a wrong subgraph. Log linking accuracy.</li>
+</ul>`,
+
+`<h4>Fidelity</h4>
+<ul>
+<li><b>Univariate:</b> Kolmogorov–Smirnov distance for numerics, total variation for categoricals, per column.</li>
+<li><b>Bivariate:</b> correlation matrix difference (Frobenius norm), column-pair contingency similarity.</li>
+<li><b>Classifier two-sample test:</b> train a classifier to distinguish real from synthetic. Accuracy near 50% is ideal; much higher means distinguishable.</li>
+</ul>
+<h4>Utility</h4>
+<p><b>Train on Synthetic, Test on Real (TSTR)</b> versus <b>Train on Real, Test on Real (TRTR)</b>. Report the gap in AUROC/F1. A small gap means the synthetic data preserves task-relevant signal. Also report <b>Train on Real + Synthetic</b> if augmentation is a goal.</p>
+<h4>Diversity and coverage</h4>
+<ul>
+<li><b>Precision:</b> fraction of synthetic samples that are realistic (close to real manifold).</li>
+<li><b>Recall:</b> fraction of real modes covered by synthetic data. Low recall = mode collapse.</li>
+<li><b>α-precision / β-recall:</b> relax the binary realism/coverage test to detect copying and collapse more sensitively.</li>
+</ul>
+<h4>Privacy</h4>
+<ul>
+<li><b>Distance to closest record (DCR):</b> if synthetic rows are too close to real rows, memorisation is likely.</li>
+<li><b>Membership inference:</b> can an attacker tell whether a specific patient was in the training set? Report attack AUC; near 0.5 is good.</li>
+<li><b>Differential privacy:</b> a formal guarantee that any single patient’s data changes the output distribution by at most e<sup>ε</sup>. DP-SGD or DP synthesizers provide ε-bounds; lower ε = stronger privacy, usually lower fidelity.</li>
+</ul>
+<h4>Plausibility (the thesis core)</h4>
+<ul>
+<li><b>Rule-violation rate:</b> impossible values, contraindicated drug–disease pairs, age-inconsistent diagnoses, sex-inconsistent codes, out-of-range labs. Define rules independently of the generator.</li>
+<li><b>Clinician review:</b> sample 50–100 records and ask clinicians to rate plausibility on a Likert scale. Expensive but the gold standard.</li>
+<li><b>LLM judge:</b> ask a strong LLM to flag violations. Cheap and scalable, but acknowledge bias and validate against clinician judgements.</li>
+</ul>`,
+
+`<h4>Research questions and hypotheses</h4>
+<ul>
+<li><b>RQ1:</b> Does grounding LLM generation in a biomedical KG reduce clinical rule violations compared with plain LLMs and classical models (CTGAN, VAE)?</li>
+<li><b>RQ2:</b> What is the trade-off between clinical plausibility gains and statistical fidelity / utility / diversity?</li>
+<li><b>RQ3:</b> Does a KG-based validation loop improve performance on rare or multi-morbidity patient sub-populations?</li>
+</ul>
+<h4>Baselines to compare</h4>
+<ol>
+<li><b>Rule-based:</b> Synthea (reference baseline).</li>
+<li><b>Classical tabular generative models:</b> TVAE, CTGAN, TabDDPM.</li>
+<li><b>Unconstrained LLM:</b> GReaT fine-tuned, or GPT-4/Llama zero-shot.</li>
+<li><b>Vector RAG:</b> LLM + text retrieval from guidelines.</li>
+<li><b>KG-RAG (yours):</b> LLM + KG retrieval + constraint validation loop.</li>
+</ol>
+<h4>Dataset selection</h4>
+<p>Use a well-defined subset of <b>MIMIC-IV</b> (e.g. adult ICU patients with cardiovascular diseases or diabetes) plus a <b>Synthea</b> dataset for controlled experiments where ground-truth rules are known.</p>
+<h4>Ablation studies</h4>
+<ul>
+<li>Remove KG retrieval (test pure generation).</li>
+<li>Remove the validation loop (test retrieval alone).</li>
+<li>Vary hop distance and context pruning threshold in KG retrieval.</li>
+<li>Swap out the LLM size (e.g., 8B vs 70B parameter models).</li>
+</ul>
+<h4>Threats to validity</h4>
+<ul>
+<li><b>KG coverage gaps:</b> diseases not well covered by PrimeKG/UMLS will show lower gains.</li>
+<li><b>Validator leakage:</b> ensure evaluation rules are strictly held-out from the validation loop.</li>
+<li><b>Nondeterminism:</b> run all generation with at least 3 distinct random seeds and report confidence intervals.</li>
+</ul>`
+];
+
+// "Explain it like I'm 5" + the very basics, one per chapter
+const E = [
+  { s: "Imagine teaching a kid to tell cats from dogs. You show lots of pictures and say “cat” or “dog”. At first they guess badly, but every time they’re wrong they adjust a little, and after many pictures they can name animals they have never seen. A computer learns the same way: it looks at many examples and keeps nudging its internal “knobs” until its guesses are good.",
+    b: ["A <b>model</b> is a function with lots of adjustable numbers (weights).", "<b>Loss</b> is a score for how wrong the model is. <b>Gradient descent</b> turns the knobs to make that score smaller.", "<b>Train / test split</b> = practice questions vs. the real exam. If you only practise on the exam, you learn nothing real.", "<b>Discriminative</b> models tell things apart (sick or healthy?). <b>Generative</b> models make new things (a brand new patient record)."] },
+  { s: "A hospital is a giant filing cabinet. Every patient has a folder with their visits, test results, medicines and doctors’ notes. The problem: every hospital writes things a bit differently, like people speaking different dialects. So the world agreed on shared dictionaries (codes) and standard forms, so that everyone means the same thing by the same word.",
+    b: ["<b>ICD / SNOMED</b> = codes for diseases. <b>LOINC</b> = codes for lab tests. <b>RxNorm</b> = codes for drugs.", "<b>FHIR</b> and <b>OMOP</b> are standard ways to lay out the folder so different systems can read it.", "Real patient data is private, so you need permission to use it (e.g. MIMIC) and strict rules about sharing it.", "Missing data is not random: a test that was never ordered often means the doctor wasn’t worried."] },
+  { s: "A flight simulator isn’t a real flight, but it behaves enough like one that pilots can practise safely. Synthetic data is a simulator for patient data: made-up patients who look and behave like real ones, but who are nobody. That lets people study and share data without exposing anyone’s secrets.",
+    b: ["Good fake data must be <b>realistic</b> (fidelity), <b>useful</b> (models trained on it work on real patients) and <b>safe</b> (no real person can be found in it).", "These three pull against each other: copying real rows is realistic but not safe.", "<b>Medically plausible</b> means it makes sense to a doctor: no pregnant men, no wrong drug for the disease.", "Ways to make it: rule-based simulators, statistics, deep learning, or language models."] },
+  { s: "A <b>VAE</b> squashes a patient into a short secret code and learns to rebuild the patient from it. Once it knows the code language, you pick a random code and it draws a new patient. A <b>GAN</b> is a forger and a detective: the forger makes fake records, the detective tries to spot them, and both keep getting better until the fakes are very convincing. <b>Diffusion</b> starts from TV static and slowly cleans it up into a realistic record.",
+    b: ["VAE = compress, then rebuild from a code. GAN = forger vs. detective. Diffusion = denoise step by step.", "They are good at copying the statistics of a table, but they know nothing about medicine.", "Failure modes: GANs can get lazy and make only a few kinds of patients (mode collapse); all can memorise real rows.", "They are your baseline: the score your knowledge-driven method needs to beat."] },
+  { s: "Think of the autocomplete on your phone, but enormously bigger. A transformer reads a text and, for each word, works out which other words matter most for its meaning (that’s “attention”, like a highlighter). Then it guesses the next word, adds it, and repeats. It learned all this by reading a huge amount of text.",
+    b: ["Text is cut into <b>tokens</b>, turned into numbers, and passed through layers of attention.", "<b>Temperature</b> controls how adventurous the next-word guess is: low is safe and repetitive, high is creative and risky.", "<b>Fine-tuning</b> = extra schooling on your own topic. <b>LoRA</b> does it cheaply.", "It can sound sure and still be wrong (<b>hallucination</b>), which is a big deal for medical data."] },
+  { s: "A language model is like a very eager helper who has read almost everything. If you give vague instructions you get vague results. If you say exactly what you want, show one or two examples, and name the format, you get much better work. You still have to check it, because the helper sometimes makes things up with total confidence.",
+    b: ["<b>Zero-shot</b> = just ask. <b>Few-shot</b> = show examples. <b>JSON schema</b> = demand an exact format.", "Always <b>validate</b> the output: valid codes, sensible ranges, no copied training rows.", "If the output is invalid, reject it and ask again (with a limit).", "Typical failures: copying, boring sameness, impossible values, fake codes."] },
+  { s: "It’s an open-book exam. Instead of answering from memory, the model first looks up the relevant pages in a pile of documents, then writes its answer using them. The trick is finding the right pages quickly.",
+    b: ["<b>Chunk</b> documents into small pieces, <b>embed</b> them (turn into numbers), <b>search</b> for the closest ones, <b>paste</b> them into the prompt.", "Meaning-based search finds paraphrases; keyword search (BM25) finds exact drug names. Using both is best.", "It reduces made-up facts, but it can’t guarantee the facts agree with each other.", "For this thesis you retrieve facts like normal lab ranges, then ask for a record instead of an answer."] },
+  { s: "A knowledge graph is a map of facts: dots for things (a drug, a disease) and labelled arrows between them, like <i>Metformin — treats → Type 2 diabetes</i>. Because the facts are stored as clear links, a computer can quickly ask “what treats this?” or “what must not be taken together?”",
+    b: ["A fact is a <b>triple</b>: subject, relation, object.", "An <b>ontology</b> is the agreed list of kinds of things and how they are related (a cough is a symptom; a symptom is a finding).", "<b>UMLS</b>, <b>SNOMED</b>, <b>DrugBank</b> and <b>PrimeKG</b> are ready-made medical graphs.", "Graphs are incomplete: a missing arrow doesn’t mean “impossible”."] },
+  { s: "Combine the open book with the map of facts. First the model looks up related facts in the graph (and text), writes a patient record, and then the graph acts like a strict teacher checking the answer: “this drug doesn’t go with that disease, try again.” This loop repeats until the record passes.",
+    b: ["The graph plays three roles: <b>context</b> (facts for the prompt), <b>sampler</b> (what to generate), <b>validator</b> (what to reject).", "<b>Possible ≠ probable</b>: the graph says what can happen, not how often. Take frequencies from real data.", "Keep the rules that evaluate the result separate from the rules used while generating, or the test is rigged.", "Wrong entity links (mapping words to the wrong concept) lead to wrong facts."] },
+  { s: "Imagine grading a batch of fake patients like a teacher grading homework, with four questions. Do they look real? Can a model learned from them work on real patients? Did they secretly copy a real person? Does it all make medical sense?",
+    b: ["<b>Fidelity</b>: do the numbers and relationships match the real data?", "<b>Utility</b>: train on synthetic, test on real (TSTR) and compare with train on real.", "<b>Privacy</b>: distance to the closest real record, membership inference, differential privacy.", "<b>Plausibility</b> (the thesis core): rule-violation rate, clinician review, LLM judge."] },
+  { s: "It’s a science-fair project. Ask a clear question, compare your idea fairly against other approaches, change only one thing at a time to see what actually helped, repeat the runs so luck doesn’t fool you, and be honest about what didn’t work.",
+    b: ["Write the <b>research questions</b> and hypotheses first.", "Pick <b>baselines</b>: Synthea, CTGAN/TVAE, plain LLM, vector RAG, then your KG-RAG.", "<b>Ablations</b>: remove one part at a time (the graph, the validator) to see what mattered.", "Run at least 3 seeds, report variance, and list the threats to validity."] }
+];
+
+// ---------------------------------------------------------------------------
+// Live markdown editor for notes.
+// The line that holds the caret shows its raw markdown; every other line is
+// rendered. Notes are a plain string with "\n" between lines.
+// ---------------------------------------------------------------------------
+const mdEsc = t => t.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function mdInline(raw) {
+  let t = mdEsc(raw);
+  const codes = [];
+  t = t.replace(/`([^`\n]+)`/g, (_, c) => { codes.push(c); return "\u0001" + (codes.length - 1) + "\u0001"; });
+  t = t.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  t = t.replace(/\*\*\*([^*\n]+)\*\*\*/g, "<b><i>$1</i></b>");
+  t = t.replace(/\*\*([^*\n]+)\*\*/g, "<b>$1</b>");
+  t = t.replace(/(^|[^\w])__([^_\n]+)__(?!\w)/g, "$1<b>$2</b>");
+  t = t.replace(/\*([^*\n]+)\*/g, "<i>$1</i>");
+  t = t.replace(/(^|[^\w])_([^_\n]+)_(?!\w)/g, "$1<i>$2</i>");
+  t = t.replace(/~~([^~\n]+)~~/g, "<s>$1</s>");
+  return t.replace(/\u0001(\d+)\u0001/g, (_, n) => "<code>" + codes[+n] + "</code>");
+}
+
+const ITEM_RE = /^(\s*)([-*+]|\d+[.)])\s+(.*)$/;
+const HR_RE = /^\s*([-*_])(\s*\1){2,}\s*$/;
+
+// which lines are fenced code / fence markers
+function lineFlags(raws) {
+  let fence = false;
+  return raws.map(r => {
+    if (/^\s*```/.test(r)) { fence = !fence; return { marker: true, code: false }; }
+    return { marker: false, code: fence };
+  });
+}
+
+function renderLine(raw, f) {
+  if (f.marker) return { cls: "fence", html: mdEsc(raw) || "&nbsp;", style: "" };
+  if (f.code) return { cls: "code", html: mdEsc(raw) || "&nbsp;", style: "" };
+  let m;
+  if ((m = raw.match(/^(#{1,6})\s+(.*?)\s*#*\s*$/))) return { cls: "h h" + m[1].length, html: mdInline(m[2]) || "&nbsp;", style: "" };
+  if (HR_RE.test(raw)) return { cls: "hr", html: "<hr>", style: "" };
+  if ((m = raw.match(/^\s*>\s?(.*)$/))) return { cls: "bq", html: mdInline(m[1]) || "&nbsp;", style: "" };
+  if ((m = raw.match(ITEM_RE))) {
+    const indent = m[1].replace(/\t/g, "    ").length;
+    let mark = /\d/.test(m[2]) ? m[2] : "•", text = m[3];
+    const cb = text.match(/^\[( |x|X)\]\s+(.*)$/);
+    if (cb) { mark = cb[1] === " " ? "☐" : "☑"; text = cb[2]; }
+    return { cls: "li", html: `<span class="mk">${mdEsc(mark)}</span>${mdInline(text) || "&nbsp;"}`, style: `margin-left:${indent * 0.6}em` };
+  }
+  return { cls: "p", html: mdInline(raw), style: "" };
+}
+
+let ed = null, active = null, edIdx = 0;
+const hist = { s: [], i: -1, t: 0 };
+
+const rawOf = ln => ln === active ? ln.textContent : ln.dataset.raw;
+const getText = () => Array.from(ed.children).map(rawOf).join("\n");
+const sigOf = (raw, f) => raw + "\u0001" + f.code + f.marker;
+
+function paintLine(ln, raw, f, act) {
+  ln.dataset.raw = raw;
+  if (act) {
+    ln.className = "ln act" + (f.code ? " code" : "") + (f.marker ? " fence" : "");
+    ln.removeAttribute("style");
+    ln.textContent = raw;
+    ln.dataset.sig = "";
+  } else {
+    const r = renderLine(raw, f);
+    ln.className = "ln " + r.cls;
+    ln.style.cssText = r.style;
+    ln.innerHTML = r.html;
+    ln.dataset.sig = sigOf(raw, f);
+  }
+}
+
+// re-render rendered lines whose content or fence state changed
+function refreshLines() {
+  const lns = Array.from(ed.children), raws = lns.map(rawOf), fl = lineFlags(raws);
+  lns.forEach((ln, k) => {
+    if (ln === active) { ln.classList.toggle("code", fl[k].code); ln.classList.toggle("fence", fl[k].marker); return; }
+    if (ln.dataset.sig !== sigOf(raws[k], fl[k])) paintLine(ln, raws[k], fl[k], false);
+  });
+}
+
+function loadText(text) {
+  const lines = text.split("\n"), fl = lineFlags(lines);
+  ed.replaceChildren(...lines.map((r, k) => { const d = document.createElement("div"); paintLine(d, r, fl[k], false); return d; }));
+  active = null;
+  ed.classList.toggle("empty", text === "");
+}
+
+function setCaretInLine(ln, off) {
+  const t = ln.firstChild, sel = getSelection();
+  if (t && t.nodeType === 3) sel.collapse(t, Math.min(off, t.length)); else sel.collapse(ln, 0);
+}
+
+function lineOf(node) {
+  while (node && node.parentNode !== ed) node = node.parentNode;
+  return node;
+}
+
+// text of a rendered line without synthetic bullet characters
+function plainOf(ln) {
+  const c = ln.cloneNode(true);
+  c.querySelectorAll(".mk").forEach(e => e.remove());
+  return c.textContent;
+}
+function plainPos(ln, node, off) {
+  const r = document.createRange();
+  r.selectNodeContents(ln); r.setEnd(node, off);
+  const frag = r.cloneContents();
+  frag.querySelectorAll(".mk").forEach(e => e.remove());
+  return frag.textContent.length;
+}
+// map "p characters into the rendered text" back to a position in the raw markdown
+function mapOffset(raw, plain, p) {
+  if (p <= 0) { if (!plain) return 0; const r = raw.indexOf(plain[0]); return r < 0 ? 0 : r; }
+  if (p >= plain.length) return raw.length;
+  let r = 0, q = 0;
+  while (q < p && r < raw.length) { if (raw[r] === plain[q]) q++; r++; }
+  return r;
+}
+
+// make `ln` the raw-text line; p = caret position inside its rendered text
+function activate(ln, p) {
+  const plain = plainOf(ln);
+  if (active && active !== ln) active.dataset.raw = active.textContent;
+  active = null;
+  refreshLines();                                   // old active line renders again
+  const lns = Array.from(ed.children), k = lns.indexOf(ln);
+  const f = lineFlags(lns.map(rawOf))[k], raw = ln.dataset.raw;
+  paintLine(ln, raw, f, true);
+  active = ln;
+  setCaretInLine(ln, mapOffset(raw, plain, p));
+}
+
+function syncActive() {
+  if (!ed || !ed.isConnected) return;
+  const sel = getSelection();
+  if (!sel.rangeCount || !sel.isCollapsed || !ed.contains(sel.focusNode)) return;
+  let ln, p;
+  if (sel.focusNode === ed) {
+    const n = ed.children.length;
+    ln = ed.children[Math.min(sel.focusOffset, n - 1)];
+    p = sel.focusOffset >= n ? Infinity : 0;
+  } else {
+    ln = lineOf(sel.focusNode);
+    if (!ln || ln === active) return;
+    p = plainPos(ln, sel.focusNode, sel.focusOffset);
+  }
+  if (ln && ln !== active) activate(ln, p);
+}
+
+// DOM selection point -> absolute offset in the raw text
+function rawPos(node, off) {
+  const lns = Array.from(ed.children);
+  const lenBefore = k => lns.slice(0, k).reduce((a, l) => a + rawOf(l).length + 1, 0);
+  if (node === ed) return off >= lns.length ? getText().length : lenBefore(off);
+  const ln = lineOf(node), k = lns.indexOf(ln);
+  let local;
+  if (ln === active) {
+    const r = document.createRange();
+    r.selectNodeContents(ln); r.setEnd(node, off);
+    local = r.toString().length;
+  } else {
+    const raw = ln.dataset.raw;
+    local = mapOffset(raw, plainOf(ln), plainPos(ln, node, off));
+  }
+  return lenBefore(k) + local;
+}
+function getRawSelection() {
+  const sel = getSelection();
+  if (!sel.rangeCount || !ed.contains(sel.anchorNode) || !ed.contains(sel.focusNode)) return null;
+  const a = rawPos(sel.anchorNode, sel.anchorOffset), b = rawPos(sel.focusNode, sel.focusOffset);
+  return { start: Math.min(a, b), end: Math.max(a, b) };
+}
+
+// ---- undo / redo (the browser's own stack can't follow our DOM changes) ----
+function record(text, caret, force) {
+  const now = Date.now(), top = hist.s[hist.i];
+  if (top && top.t === text) { top.c = caret; return; }
+  hist.s.length = hist.i + 1;
+  if (!force && top && hist.i > 0 && now - hist.t < 1000) hist.s[hist.i] = { t: text, c: caret };
+  else { hist.s.push({ t: text, c: caret }); hist.i = hist.s.length - 1; if (hist.s.length > 300) { hist.s.shift(); hist.i--; } }
+  hist.t = now;
+}
+function commit(text, caret, force) {
+  notes[edIdx] = text;
+  ed.classList.toggle("empty", text === "");
+  queueNote(edIdx);
+  record(text, caret, force);
+}
+function setText(text, caret, force = true, noRecord = false) {
+  loadText(text);
+  const lines = text.split("\n"), fl = lineFlags(lines);
+  let pos = 0, ci = lines.length - 1, col = lines[ci].length;
+  for (let k = 0; k < lines.length; k++) {
+    if (caret <= pos + lines[k].length) { ci = k; col = caret - pos; break; }
+    pos += lines[k].length + 1;
+  }
+  const ln = ed.children[ci];
+  paintLine(ln, lines[ci], fl[ci], true);
+  active = ln;
+  setCaretInLine(ln, col);
+  if (noRecord) { notes[edIdx] = text; ed.classList.toggle("empty", text === ""); queueNote(edIdx); }
+  else commit(text, caret, force);
+}
+const applyEdit = (start, end, ins) => {
+  const t = getText();
+  setText(t.slice(0, start) + ins + t.slice(end), start + ins.length);
+};
+function undo() { if (hist.i > 0) { hist.i--; const h = hist.s[hist.i]; setText(h.t, h.c, true, true); } }
+function redo() { if (hist.i < hist.s.length - 1) { hist.i++; const h = hist.s[hist.i]; setText(h.t, h.c, true, true); } }
+
+function lineBounds(text, start) {
+  const ls = start === 0 ? 0 : text.lastIndexOf("\n", start - 1) + 1;
+  const k = text.indexOf("\n", start);
+  return { ls, le: k < 0 ? text.length : k };
+}
+
+function initEditor(i) {
+  edIdx = i; ed = $("ed"); active = null;
+  hist.s = []; hist.i = -1;
+  const nb = $("notebox");
+  loadText(notes[i] || "");
+  record(getText(), 0, true);
+
+  // typing inside the raw (active) line is handled natively; we just mirror it
+  ed.addEventListener("input", () => {
+    if (!ed.children.length) { setText("", 0); return; }
+    const text = getText();
+    refreshLines();
+    const sel = getRawSelection();
+    commit(text, sel ? sel.end : text.length, false);
+  });
+
+  ed.addEventListener("beforeinput", e => {
+    if (e.isComposing) return;
+    const t = e.inputType;
+    if (t === "historyUndo") { e.preventDefault(); undo(); return; }
+    if (t === "historyRedo") { e.preventDefault(); redo(); return; }
+    syncActive();
+    const sel = getRawSelection();
+    if (!sel) return;
+    const { start, end } = sel, text = getText(), collapsed = start === end;
+    const { ls, le } = lineBounds(text, start);
+
+    if (t === "insertParagraph" || t === "insertLineBreak") {
+      e.preventDefault();
+      const lines = text.split("\n"), li = text.slice(0, ls).split("\n").length - 1;
+      const f = lineFlags(lines)[li], line = lines[li];
+      if (collapsed && !f.code && !f.marker) {
+        let m = line.match(ITEM_RE);
+        if (m) {
+          if (!m[3].trim()) { applyEdit(ls, le, ""); return; }               // empty item: leave the list
+          if (start - ls >= m[1].length + m[2].length + 1) {
+            let mark = m[2];
+            if (/\d/.test(mark)) mark = (parseInt(mark, 10) + 1) + mark.slice(-1);
+            const cb = /^\[( |x|X)\]\s/.test(m[3]) ? "[ ] " : "";
+            applyEdit(start, end, "\n" + m[1] + mark + " " + cb);
+            return;
+          }
+        }
+        m = line.match(/^(\s*>\s?)(.*)$/);
+        if (m) {
+          if (!m[2].trim()) { applyEdit(ls, le, ""); return; }
+          applyEdit(start, end, "\n" + m[1]);
+          return;
+        }
+      }
+      applyEdit(start, end, "\n");
+      return;
+    }
+    if (/^delete.*Backward$/.test(t)) {
+      if (!collapsed) { e.preventDefault(); applyEdit(start, end, ""); }
+      else if (start === ls && start > 0) { e.preventDefault(); applyEdit(start - 1, start, ""); }
+      return;
+    }
+    if (/^delete.*Forward$/.test(t)) {
+      if (!collapsed) { e.preventDefault(); applyEdit(start, end, ""); }
+      else if (start === le && start < text.length) { e.preventDefault(); applyEdit(start, start + 1, ""); }
+      return;
+    }
+    if (!collapsed) {                                  // typing over a selection
+      e.preventDefault();
+      applyEdit(start, end, t === "insertText" ? (e.data || "") : "");
+    }
+  });
+
+  ed.addEventListener("keydown", e => {
+    if ((e.ctrlKey || e.metaKey) && !e.altKey) {
+      const k = e.key.toLowerCase();
+      if (k === "z") { e.preventDefault(); if (e.shiftKey) redo(); else undo(); return; }
+      if (k === "y") { e.preventDefault(); redo(); return; }
+    }
+    if (e.key !== "Tab") return;
+    syncActive();
+    const sel = getRawSelection(); if (!sel) return;
+    const text = getText(), { ls } = lineBounds(text, sel.start);
+    if (!ITEM_RE.test(text.slice(ls, lineBounds(text, sel.start).le))) return;
+    e.preventDefault();
+    if (e.shiftKey) {
+      const lead = Math.min(2, text.slice(ls).match(/^ */)[0].length);
+      if (lead) setText(text.slice(0, ls) + text.slice(ls + lead), Math.max(ls, sel.start - lead));
+    } else {
+      setText(text.slice(0, ls) + "  " + text.slice(ls), sel.start + 2);
+    }
+  });
+
+  ed.addEventListener("paste", e => {
+    e.preventDefault();
+    syncActive();
+    const sel = getRawSelection(); if (!sel) return;
+    const txt = (e.clipboardData.getData("text/plain") || "").replace(/\r\n?/g, "\n");
+    applyEdit(sel.start, sel.end, txt);
+  });
+  ["copy", "cut"].forEach(kind => ed.addEventListener(kind, e => {
+    const sel = getRawSelection();
+    if (!sel || sel.start === sel.end) return;
+    e.preventDefault();
+    e.clipboardData.setData("text/plain", getText().slice(sel.start, sel.end));
+    if (kind === "cut") applyEdit(sel.start, sel.end, "");
+  }));
+  ["drop", "dragover"].forEach(kind => ed.addEventListener(kind, e => e.preventDefault()));
+
+  ed.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest("a");
+    if (a) { e.preventDefault(); if (e.ctrlKey || e.metaKey) window.open(a.href, "_blank", "noopener"); return; }
+    if (e.target === ed) {                             // click in the empty area below the text
+      const last = ed.lastElementChild;
+      activate(last, Infinity);
+    }
+  });
+
+  // leaving the editor renders everything and saves
+  ed.addEventListener("focusout", () => {
+    if (active) { active.dataset.raw = active.textContent; active = null; refreshLines(); }
+    flushNote(edIdx);
+  });
+
+  // fallback: plain text box
+  const tr = $("tr");
+  let rawMode = false;
+  tr.onclick = () => {
+    rawMode = !rawMode;
+    tr.classList.toggle("on", rawMode);
+    if (rawMode) {
+      nb.value = getText();
+      ed.style.display = "none"; nb.style.display = "block"; nb.focus();
+    } else {
+      nb.style.display = "none"; ed.style.display = "block";
+      loadText(nb.value);
+      record(nb.value, 0, true);
+    }
+  };
+  nb.addEventListener("input", () => { notes[edIdx] = nb.value; queueNote(edIdx); });
+  nb.addEventListener("blur", () => flushNote(edIdx));
+}
+
+document.addEventListener("selectionchange", syncActive);
+
+// Community lookups per chapter (queried live through the server, cached there)
+// hn: Hacker News search terms; rd: [subreddit, search terms] (subreddit "" = all of Reddit)
+const D = [
+  { hn: ["neural network", "backpropagation"],        rd: [["learnmachinelearning", "neural network"], ["MachineLearning", "deep learning"]] },
+  { hn: ["electronic health records", "MIMIC"],       rd: [["healthIT", "FHIR"], ["datascience", "healthcare data"]] },
+  { hn: ["synthetic data", "synthetic patient data"], rd: [["MachineLearning", "synthetic data"], ["datascience", "synthetic data"]] },
+  { hn: ["generative adversarial network", "variational autoencoder"], rd: [["MachineLearning", "GAN"], ["MachineLearning", "VAE"]] },
+  { hn: ["transformer attention", "large language model"], rd: [["MachineLearning", "transformer"], ["LocalLLaMA", "fine-tuning"]] },
+  { hn: ["prompt engineering", "structured output LLM"], rd: [["PromptEngineering", "JSON structured output"], ["LocalLLaMA", "synthetic data generation"]] },
+  { hn: ["retrieval augmented generation", "RAG"],     rd: [["LangChain", "RAG"], ["LocalLLaMA", "RAG"]] },
+  { hn: ["knowledge graph", "ontology"],               rd: [["KnowledgeGraph", "knowledge graph"], ["semanticweb", "ontology"]] },
+  { hn: ["GraphRAG", "knowledge graph LLM"],           rd: [["LocalLLaMA", "GraphRAG"], ["MachineLearning", "knowledge graph LLM"]] },
+  { hn: ["differential privacy", "membership inference"], rd: [["MachineLearning", "differential privacy"], ["privacy", "synthetic data"]] },
+  { hn: ["writing a thesis", "reproducible research"], rd: [["GradSchool", "thesis writing"], ["MachineLearning", "experiment design"]] }
+];
+
+// -------------------------------------------------------------------------
+// State lives on the server. Nothing is stored in the browser.
+// -------------------------------------------------------------------------
+let st = {};      // task progress  { "0-1": true }
+let notes = {};   // chapter notes  { "3": "text" }
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+async function api(path, opts = {}) {
+  const r = await fetch(path, { headers: { "Content-Type": "application/json" }, ...opts });
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+}
+
+function setSync(state, msg) {
+  const el = $("sync");
+  el.className = "sync " + state;
+  el.textContent = msg;
+}
+
+// Progress Calculation
+const cnt = i => S[i].tasks.filter((_, j) => st[i + "-" + j]).length;
+
+// ---- Navigation ----------------------------------------------------------
+function nav(filterStr = "") {
+  $("nav").innerHTML = S.map((s, i) => {
+    const isMatch = (s.t + s.lv + (M[i] || "")).toLowerCase().includes(filterStr.toLowerCase());
+    if (!isMatch) return "";
+    const doneTasks = cnt(i);
+    const totalTasks = s.tasks.length;
+    const isDone = doneTasks === totalTasks;
+    const hasNote = (notes[i] || "").trim() ? " · ✎" : "";
+    return `<a href="#s${i + 1}" id="n${i}" class="${isDone ? "done" : ""}">
+      <span class="n">${i + 1}</span>
+      <span>${s.t}<small>${s.lv} · ${doneTasks}/${totalTasks} tasks${hasNote}</small></span>
+    </a>`;
+  }).join("");
+  markCurrentNav();
+}
+
+function markCurrentNav() {
+  const currentIdx = getCurIdx();
+  document.querySelectorAll(".nav a").forEach(a => {
+    a.classList.toggle("cur", a.id === "n" + currentIdx);
+  });
+}
+
+function getCurIdx() {
+  const m = location.hash.match(/^#s(\d+)$/);
+  const i = m ? parseInt(m[1], 10) - 1 : 0;
+  return i >= 0 && i < S.length ? i : 0;
+}
+
+// ---- Notes (autosave to server) -------------------------------------------
+const noteTimers = {}, noteBusy = {}, noteDirty = {};
+
+function setNoteStatus(i, msg) {
+  if (getCurIdx() === i && $("nstat")) $("nstat").textContent = msg;
+}
+
+function queueNote(i) {
+  noteDirty[i] = true;
+  setNoteStatus(i, "Typing…");
+  clearTimeout(noteTimers[i]);
+  noteTimers[i] = setTimeout(() => flushNote(i), 700);
+}
+
+async function flushNote(i) {
+  clearTimeout(noteTimers[i]);
+  if (!noteDirty[i]) return;
+  if (noteBusy[i]) { noteTimers[i] = setTimeout(() => flushNote(i), 300); return; }
+  noteBusy[i] = true;
+  noteDirty[i] = false;
+  setNoteStatus(i, "Saving…");
+  try {
+    await api("/api/note/" + i, { method: "PUT", body: JSON.stringify({ text: notes[i] || "" }) });
+    setNoteStatus(i, noteDirty[i] ? "Typing…" : "Saved to server · " + new Date().toLocaleTimeString());
+    setSync("ok", "synced with server");
+    nav($("q").value);
+  } catch (e) {
+    noteDirty[i] = true;
+    setNoteStatus(i, "Save failed, retrying…");
+    setSync("bad", "server unreachable, retrying");
+    noteTimers[i] = setTimeout(() => flushNote(i), 3000);
+  } finally {
+    noteBusy[i] = false;
+  }
+}
+
+// Last-chance save if the tab is closed mid-edit
+window.addEventListener("beforeunload", () => {
+  Object.keys(noteDirty).forEach(i => {
+    if (noteDirty[i]) {
+      fetch("/api/note/" + i, {
+        method: "PUT", keepalive: true,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: notes[i] || "" })
+      });
+    }
+  });
+});
+
+// ---- Community (HN + Reddit via server) ----------------------------------
+let commToken = 0;
+
+const hnSearchUrl = q => "https://hn.algolia.com/?type=story&sort=byPopularity&q=" + encodeURIComponent(q);
+const rdSearchUrl = (sub, q) => sub
+  ? `https://www.reddit.com/r/${encodeURIComponent(sub)}/search/?q=${encodeURIComponent(q)}&restrict_sr=1&sort=top`
+  : "https://www.reddit.com/search/?sort=top&q=" + encodeURIComponent(q);
+
+const safeUrl = u => /^https?:\/\//.test(u) ? u : "#";
+
+function renderItems(items, kind) {
+  if (!items.length) return `<div class="empty">Nothing loaded right now. Use the search links below.</div>`;
+  return `<ul class="cl">` + items.map(it => {
+    const external = it.link && it.link !== it.url
+      ? ` · <a href="${safeUrl(it.link)}" target="_blank" rel="noopener">article ↗</a>` : "";
+    return `<li>
+      <a class="tt" href="${safeUrl(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+      <span class="mt">▲ ${it.score} · ${it.comments} comments${it.meta ? " · " + esc(it.meta) : ""}${external}</span>
+    </li>`;
+  }).join("") + `</ul>`;
+}
+
+async function fetchDiscuss(params) {
+  try {
+    const r = await api("/api/discuss?" + new URLSearchParams(params));
+    return r.items || [];
+  } catch (e) { return []; }
+}
+
+function mergeTop(lists, n = 6) {
+  const seen = new Set(), out = [];
+  lists.flat().sort((a, b) => b.score - a.score).forEach(it => {
+    if (!seen.has(it.url) && out.length < n) { seen.add(it.url); out.push(it); }
+  });
+  return out;
+}
+
+async function loadCommunity(i) {
+  const token = ++commToken;
+  const d = D[i] || { hn: [], rd: [] };
+  const [hn, rd] = await Promise.all([
+    Promise.all(d.hn.map(q => fetchDiscuss({ src: "hn", q }))),
+    Promise.all(d.rd.map(([sub, q]) => fetchDiscuss({ src: "reddit", q, sub })))
+  ]);
+  if (token !== commToken || !$("hn-list")) return; // user navigated away
+  $("hn-list").innerHTML = renderItems(mergeTop(hn), "hn");
+  $("rd-list").innerHTML = renderItems(mergeTop(rd), "rd");
+}
+
+// ---- Page ----------------------------------------------------------------
+function show() {
+  const i = getCurIdx();
+  const s = S[i];
+  const ytList = s.yt || [];
+  const d = D[i] || { hn: [], rd: [] };
+
+  $("page").innerHTML = `
+    <div class="meta">Stage ${i + 1} of ${S.length} · <span class="tag">${s.lv}</span> · Suggested duration: ${s.w}</div>
+    <h1>${s.t}</h1>
+    <div class="goal"><b>Learning goal:</b> ${s.g}</div>
+
+    <div class="eli">
+      <div class="eli-h">TLDR</div>
+      <p>${E[i].s}</p>
+      <div class="eli-h2">The very basics</div>
+      <ul>${E[i].b.map(x => `<li>${x}</li>`).join("")}</ul>
+    </div>
+
+    <h3 class="s">Textbook Notes</h3>
+    <div class="mat">${M[i]}</div>
+
+    <h3 class="s">Video Lectures & Walkthroughs</h3>
+    <div class="vids">
+      ${ytList.map(v => `
+        <a class="yt-item" href="${v[1]}" target="_blank" rel="noopener">
+          <div class="yt-play">▶</div>
+          <div class="yt-info">
+            <div class="yt-title">${v[0]}</div>
+            <div class="yt-dur">YouTube · ${v[2]}</div>
+          </div>
+        </a>
+      `).join("")}
+    </div>
+
+    <h3 class="s">Practical Tasks</h3>
+    <ul class="chk">
+      ${s.tasks.map((t, j) => `
+        <li>
+          <label>
+            <input type="checkbox" data-k="${i}-${j}" ${st[i + "-" + j] ? "checked" : ""}>
+            <span>${t}</span>
+          </label>
+        </li>
+      `).join("")}
+    </ul>
+
+    <h3 class="s">My Notes</h3>
+    <div class="ntabs">
+      <button class="btn" id="tr" type="button" title="Edit as plain text">Raw text</button>
+      <span class="hint">Live markdown: the line you are on shows raw text, the rest renders. Ctrl+click opens a link.</span>
+    </div>
+    <div id="ed" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Notes for this chapter"></div>
+    <textarea id="notebox" style="display:none" placeholder="Plain text markdown"></textarea>
+    <div class="nstat" id="nstat"></div>
+
+    <h3 class="s">Primary Literature & Standards</h3>
+    <ul class="res">
+      ${s.r.map(r => `
+        <li>
+          <a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a>
+          <span class="t">[${r[2]}]</span>
+        </li>
+      `).join("")}
+    </ul>
+
+    <div class="comm">
+      <div>
+        <h4><span class="badge hn">Y</span> Hacker News</h4>
+        <div id="hn-list" class="empty">Loading…</div>
+        <div class="chips">${d.hn.map(q => `<a href="${hnSearchUrl(q)}" target="_blank" rel="noopener">search “${esc(q)}” ↗</a>`).join("")}</div>
+      </div>
+      <div>
+        <h4><span class="badge rd">r</span> Reddit</h4>
+        <div id="rd-list" class="empty">Loading…</div>
+        <div class="chips">${d.rd.map(([sub, q]) => `<a href="${rdSearchUrl(sub, q)}" target="_blank" rel="noopener">${sub ? "r/" + esc(sub) + ": " : ""}“${esc(q)}” ↗</a>`).join("")}</div>
+      </div>
+    </div>
+
+    <div class="pn">
+      ${i > 0 ? `<a class="btn" href="#s${i}">← Previous: ${S[i - 1].t}</a>` : "<span></span>"}
+      ${i < S.length - 1 ? `<a class="btn" href="#s${i + 2}">Next: ${S[i + 1].t} →</a>` : ""}
+    </div>
+
+    <p class="note">All videos, standards, and research papers have been verified against original publications and canonical sources.</p>
+  `;
+
+  initEditor(i);
+
+  $("side").classList.remove("open");
+  window.scrollTo(0, 0);
+  markCurrentNav();
+  loadCommunity(i);
+}
+
+// ---- Global progress -------------------------------------------------------
+function upd() {
+  let done = 0, total = 0;
+  S.forEach((s, i) => {
+    total += s.tasks.length;
+    done += cnt(i);
+  });
+  const pct = Math.round((done / total) * 100);
+  $("fill").style.width = pct + "%";
+  $("pt").textContent = $("pt2").textContent = pct + "% complete (" + done + "/" + total + " tasks)";
+  nav($("q").value);
+}
+
+// ---- Events ----------------------------------------------------------------
+$("page").addEventListener("change", async e => {
+  const k = e.target.dataset.k;
+  if (!k) return;
+  const done = e.target.checked;
+  if (done) st[k] = true; else delete st[k];
+  upd();
+  try {
+    await api("/api/task", { method: "PUT", body: JSON.stringify({ key: k, done }) });
+    setSync("ok", "synced with server");
+  } catch (err) {
+    // revert so the UI never claims something that isn't saved
+    if (done) delete st[k]; else st[k] = true;
+    e.target.checked = !done;
+    upd();
+    setSync("bad", "could not save, server unreachable");
+  }
+});
+
+$("q").oninput = e => nav(e.target.value);
+$("mn").onclick = () => $("side").classList.toggle("open");
+window.addEventListener("hashchange", () => {
+  flushNote(commIdx);
+  commIdx = getCurIdx();
+  show();
+});
+let commIdx = 0;
+
+$("rs").onclick = async () => {
+  if (!confirm("Reset all task progress on the server? (Your notes are kept.)")) return;
+  try {
+    await api("/api/progress/reset", { method: "POST", body: "{}" });
+    st = {};
+    upd();
+    show();
+  } catch (e) { setSync("bad", "reset failed, server unreachable"); }
+};
+
+// Export progress + notes as one markdown file (built from the server's copy)
+const BOOK_TITLE = "Synthesis of Medical Data Using Knowledge-Driven LLMs";
+
+function shiftHeadings(text, by) {
+  let fence = false;
+  return text.split("\n").map(l => {
+    if (/^\s*```/.test(l)) { fence = !fence; return l; }
+    if (fence) return l;
+    const m = l.match(/^(#{1,6})(\s.*)$/);
+    return m ? "#".repeat(Math.min(6, m[1].length + by)) + m[2] : l;
+  }).join("\n");
+}
+
+function buildExport(state) {
+  const tasks = state.tasks || {}, nts = state.notes || {};
+  let done = 0, total = 0;
+  S.forEach((c, i) => { total += c.tasks.length; done += c.tasks.filter((_, j) => tasks[i + "-" + j]).length; });
+  const out = [
+    "# " + BOOK_TITLE, "",
+    "_Exported " + new Date().toLocaleString() + "_", "",
+    `**Overall progress:** ${done}/${total} tasks (${total ? Math.round(done / total * 100) : 0}%)`, ""
+  ];
+  S.forEach((c, i) => {
+    const d = c.tasks.filter((_, j) => tasks[i + "-" + j]).length;
+    out.push(`## ${i + 1}. ${c.t}`, "", `Progress: ${d}/${c.tasks.length} tasks`, "");
+    c.tasks.forEach((t, j) => out.push(`- [${tasks[i + "-" + j] ? "x" : " "}] ${t}`));
+    out.push("");
+    const n = (nts[i] || "").trim();
+    if (n) out.push("### Notes", "", shiftHeadings(n, 3), "");
+  });
+  return out.join("\n");
+}
+
+$("ex").onclick = async () => {
+  const bm = $("bm");
+  try {
+    await Promise.all(Object.keys(noteDirty).filter(k => noteDirty[k]).map(k => flushNote(+k)));
+    const state = await api("/api/state");
+    const blob = new Blob([buildExport(state)], { type: "text/markdown;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "thesis-notes-" + new Date().toISOString().slice(0, 10) + ".md";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    bm.className = "sync ok"; bm.textContent = "exported " + a.download;
+  } catch (e) {
+    bm.className = "sync bad"; bm.textContent = "export failed, server unreachable";
+  }
+};
+
+// Pick up changes made from another device/tab when this tab regains focus
+document.addEventListener("visibilitychange", async () => {
+  if (document.hidden) return;
+  if (Object.values(noteDirty).some(Boolean) || Object.values(noteBusy).some(Boolean)) return;
+  try {
+    const s = await api("/api/state");
+    st = s.tasks || {};
+    notes = s.notes || {};
+    upd();
+    const i = getCurIdx();
+    if (ed && ed.isConnected && !ed.contains(document.activeElement) && document.activeElement !== $("notebox")) {
+      loadText(notes[i] || "");
+      $("notebox").value = notes[i] || "";
+    }
+    document.querySelectorAll("input[data-k]").forEach(c => { c.checked = !!st[c.dataset.k]; });
+    setSync("ok", "synced with server");
+  } catch (e) { setSync("bad", "server unreachable"); }
+});
+
+// ---- Boot ------------------------------------------------------------------
+(async function init() {
+  commIdx = getCurIdx();
+  for (;;) {
+    try {
+      const s = await api("/api/state");
+      st = s.tasks || {};
+      notes = s.notes || {};
+      setSync("ok", "synced with server");
+      break;
+    } catch (e) {
+      setSync("bad", "server unreachable, retrying…");
+      await new Promise(r => setTimeout(r, 3000));
+    }
+  }
+  upd();
+  show();
+})();
+</script>
+</body>
+</html>
+
