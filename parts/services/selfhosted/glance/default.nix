@@ -118,6 +118,12 @@
                           timeout = "15s";
                           allow-insecure = true;
                         }
+						{
+						  title = "Thesis";
+						  url = "https://thesis.${config.selfhosted.domain}";
+						  icon = "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/ksuite-docs-light.svg";
+						  timeout = "15s";
+						}
                         {
                           title = "Komga";
                           url = "https://komga.${config.selfhosted.domain}";
