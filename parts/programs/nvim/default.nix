@@ -19,6 +19,8 @@
 
           programs.nixvim = {
             nixpkgs.source = inputs.nixpkgs; # fixes issue with conflicting luajit (most likely caused by gamescope)
+            nixpkgs.config.allowUnfree = true;
+
             enable = true;
             defaultEditor = true;
             viAlias = true;
@@ -305,6 +307,20 @@
                   };
                 };
               };
+              git-conflict = {
+                enable = true;
+                settings = {
+                  default_mappings = false;
+                  default_commands = true;
+                  disable_diagnostics = false; # plugin uses removed diagnostic API
+                  list_opener = "copen";
+                  highlights = {
+                    incoming = "DiffAdd";
+                    current = "DiffText";
+                  };
+                };
+              };
+              diffview.enable = true;
               aerial = {
                 enable = true;
                 settings = {
@@ -795,6 +811,56 @@
                 key = "fF";
                 action = "<cmd>lua require('ufo').closeAllFolds()<CR>";
                 options.desc = "Close all folds (UFO)";
+              }
+
+              # NORMAL - git conflicts
+              {
+                mode = "n";
+                key = "<leader>gl";
+                action = "<cmd>GitConflictListQf<CR>";
+                options.desc = "List git conflicts (quickfix)";
+              }
+              {
+                mode = "n";
+                key = "<leader>gc";
+                action = "<cmd>GitConflictChooseOurs<CR>";
+                options.desc = "Accept current (ours)";
+              }
+              {
+                mode = "n";
+                key = "<leader>gi";
+                action = "<cmd>GitConflictChooseTheirs<CR>";
+                options.desc = "Accept incoming (theirs)";
+              }
+              {
+                mode = "n";
+                key = "<leader>gb";
+                action = "<cmd>GitConflictChooseBoth<CR>";
+                options.desc = "Accept both";
+              }
+              {
+                mode = "n";
+                key = "<leader>gn";
+                action = "<cmd>GitConflictChooseNone<CR>";
+                options.desc = "Reject both";
+              }
+              {
+                mode = "n";
+                key = "]x";
+                action = "<cmd>GitConflictNextConflict<CR>";
+                options.desc = "Next conflict";
+              }
+              {
+                mode = "n";
+                key = "[x";
+                action = "<cmd>GitConflictPrevConflict<CR>";
+                options.desc = "Prev conflict";
+              }
+              {
+                mode = "n";
+                key = "<leader>gd";
+                action = "<cmd>DiffviewOpen<CR>";
+                options.desc = "Diffview (3-way merge)";
               }
 
               # VISUAL - indentation
