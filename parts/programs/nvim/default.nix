@@ -320,7 +320,6 @@
                   };
                 };
               };
-              diffview.enable = true;
               aerial = {
                 enable = true;
                 settings = {
