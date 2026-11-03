@@ -15,15 +15,15 @@
 
         self.nixosModules.desktopOptions
         self.nixosModules.mango
-        self.nixosModules.kitty
 
+        self.nixosModules.kitty
+		self.nixosModules.appPackAndroid
         self.nixosModules.appPackDev
-        self.nixosModules.appPackNetworking
-        self.nixosModules.appPackSysutils
         self.nixosModules.appPackDesktop
         self.nixosModules.appPackDrawing
+        self.nixosModules.appPackNetworking
+        self.nixosModules.appPackSysutils
         self.nixosModules.appPackEducation
-        self.nixosModules.appPack3D
         self.nixosModules.appPackRazer
 
         self.nixosModules.servicesPackHomeserver

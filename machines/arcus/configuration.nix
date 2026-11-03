@@ -17,13 +17,13 @@
         self.nixosModules.mango
 
         self.nixosModules.kitty
+        self.nixosModules.appPack3D
         self.nixosModules.appPackAndroid
         self.nixosModules.appPackDev
-        self.nixosModules.appPack3D
+        self.nixosModules.appPackDesktop
         self.nixosModules.appPackDrawing
         self.nixosModules.appPackNetworking
         self.nixosModules.appPackSysutils
-        self.nixosModules.appPackDesktop
         self.nixosModules.appPackGames
         self.nixosModules.appPackEducation
         self.nixosModules.appPackRazer
