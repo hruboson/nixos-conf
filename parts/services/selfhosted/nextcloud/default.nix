@@ -26,6 +26,7 @@
             calendar
             music
             tasks
+            spreed
             ;
         };
         extraAppsEnable = true;
