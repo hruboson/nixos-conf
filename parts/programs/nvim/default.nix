@@ -335,7 +335,6 @@
               };
               lazygit.enable = true;
               visual-multi.enable = true;
-              hex.enable = true;
 
               # PRETTY
               statuscol = {

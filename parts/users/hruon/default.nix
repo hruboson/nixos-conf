@@ -99,6 +99,10 @@
               init.defaultBranch = "main";
               pull.rebase = true;
             };
+
+            # fixes error ref lock
+            core.filesRefLockTimeout = 1000;
+            maintenance.autoDetach = false;
           };
         };
 
