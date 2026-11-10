@@ -606,12 +606,12 @@
                 action = "<C-r>";
                 options.desc = "Redo";
               }
-              {
+              /*{
                 mode = "n";
-                key = "<leader>f";
+                key = "<leader>format";
                 action = "<cmd>lua require('conform').format()<CR>";
                 options.desc = "Format buffer";
-              }
+              } -- I honestly never use this binding */
               {
                 mode = "n";
                 key = "=";
@@ -646,7 +646,7 @@
               }
               {
                 mode = "n";
-                key = "qf";
+                key = "<leader>f";
                 action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
                 options.desc = "Quick fix";
               }
@@ -939,6 +939,28 @@
               MD = {
                 bar = false;
                 command = "RenderMarkdown toggle";
+              };
+              LspRestart = {
+                bar = false;
+                command = /* lua */ ''
+                  lua << EOF
+                  local bufnr = vim.api.nvim_get_current_buf()
+                  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+                  if #clients == 0 then
+                    vim.notify("No LSP clients attached to this buffer", vim.log.levels.WARN)
+                    return
+                  end
+                  for _, client in ipairs(clients) do
+                    local name = client.name
+                    local config = client.config
+                    vim.lsp.stop_client(client.id, true)
+                    vim.defer_fn(function()
+                      vim.lsp.start(config, { bufnr = bufnr })
+                      vim.notify("Restarted LSP: " .. name, vim.log.levels.INFO)
+                    end, 200)
+                  end
+                  EOF
+                '';
               };
             };
 
