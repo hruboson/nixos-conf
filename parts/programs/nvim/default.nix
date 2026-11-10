@@ -163,12 +163,16 @@
                       "^\\.venv$"
                       "^__pycache__$"
                       "^build$"
-                      # unity
+                      # Unity
                       "^Library$"
                       "^Temp$"
                       "^Logs$"
                       "^obj$"
                       "\\.meta$"
+
+                      # .NET / C#
+                      "\\.csproj$"
+                      "\\.csproj\\.user$"
                     ];
                   };
                   git.ignore = false;
