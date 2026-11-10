@@ -33,7 +33,14 @@
               phpactor
               php83Packages.php-cs-fixer
               stylua
-			  csharpier
+
+              # formatters
+              nixfmt # may be nixfmt-rfc-style on older nixpkgs
+              prettier # may be nodePackages.prettier on older nixpkgs
+              black
+              isort
+              go # provides gofmt
+              clang-tools # provides clang-format
             ];
 
             globals = {
@@ -228,7 +235,6 @@
               };
               conform-nvim = {
                 enable = true;
-                autoInstall.enable = true;
                 settings = {
                   formatters_by_ft = {
                     nix = [
@@ -247,7 +253,7 @@
                     go = [ "gofmt" ];
                     cpp = [ "clang-format" ];
                     c = [ "clang-format" ];
-					cs = [ "csharpier" ];
+					cs.__raw = "{ lsp_format = 'prefer' }";
                     php = [ "php_cs_fixer" ];
 
                     # fallback
@@ -513,30 +519,6 @@
                     ];
                   };
 
-                  # C# (OmniSharp)
-                  omnisharp = {
-                    enable = true;
-                    filetypes = [
-                      "cs"
-                      "cshtml"
-                    ];
-                    autostart = true;
-                    package = pkgs.omnisharp-roslyn;
-                    rootMarkers = [
-                      ".git"
-                      ".sln"
-                      ".csproj"
-                    ];
-                    /*
-                      settings = {
-                        organizeImportsOnFormat = false;
-                        enableEditorConfigSupport = true;
-                        enableMsBuildLoadProjectsOnDemand = false;
-                        enableRoslynAnalyzers = true;
-                      };
-                    */
-                  };
-
                   # PHP
                   phpactor = {
                     enable = true;
@@ -555,6 +537,15 @@
               lsp-lines.enable = true;
               #lsp-format.enable = true; !this is autoformatting on save, not for me
               #lspsaga.enable = true;
+
+              fidget.enable = true;
+              roslyn = {
+                enable = true;
+                settings = {
+                  # optional; roslyn.nvim defaults are fine to start with
+                  silent = true;
+                };
+              };
             };
 
             extraPlugins = with pkgs.vimPlugins; [
@@ -1034,6 +1025,17 @@
 
               vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
               	border = "rounded",
+              })
+              vim.lsp.config("roslyn", {
+              	settings = {
+              		["csharp|completion"] = {
+              			dotnet_show_completion_items_from_unimported_namespaces = true,
+              		},
+              		["csharp|background_analysis"] = {
+              			dotnet_analyzer_diagnostics_scope = "openFiles",
+              			dotnet_compiler_diagnostics_scope = "openFiles",
+              		},
+              	},
               })
             '';
           };

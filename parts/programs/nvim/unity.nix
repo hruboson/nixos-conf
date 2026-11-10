@@ -41,29 +41,76 @@
 
             extraPlugins = [
               nvim-unity-sync
-              pkgs.vimPlugins.omnisharp-extended-lsp-nvim
             ];
-
-            plugins.lsp.servers.omnisharp = {
-              settings = {
-                RoslynExtensionsOptions = {
-                  EnableAnalyzersSupport = true;
-                  EnableImportCompletion = true;
-                  EnableDecompilationSupport = true;
-                };
-              };
-
-              extraOptions.handlers = {
-                "textDocument/definition".__raw = "require('omnisharp_extended').definition_handler";
-                "textDocument/typeDefinition".__raw = "require('omnisharp_extended').type_definition_handler";
-                "textDocument/references".__raw = "require('omnisharp_extended').references_handler";
-                "textDocument/implementation".__raw = "require('omnisharp_extended').implementation_handler";
-              };
-            };
 
             extraConfigLua = /* lua */ ''
               -- ── UNITY ────────────────────────────────────────────────
               require("unity.plugin").setup()
+
+              -- ── ROSLYN LOADING (fidget) ──────────────────────────────
+              local roslyn = { handle = nil, initialized = false }
+
+              local function roslyn_finish()
+              	roslyn.initialized = true
+              	if roslyn.handle then
+              		roslyn.handle:finish()
+              		roslyn.handle = nil
+              	end
+              end
+
+              -- as soon as a C# file opens and Roslyn isn't ready yet, show a message
+              vim.api.nvim_create_autocmd("FileType", {
+              	pattern = "cs",
+              	callback = function()
+              		if roslyn.initialized or roslyn.handle then
+              			return
+              		end
+              		roslyn.handle = require("fidget.progress").handle.create({
+              			title = "Roslyn",
+              			message = "Starting server…",
+              			lsp_client = { name = "roslyn" },
+              		})
+              	end,
+              })
+
+              vim.api.nvim_create_autocmd("LspAttach", {
+              	callback = function(ev)
+              		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+              		if not client or client.name ~= "roslyn" or client._fidget_wrapped then
+              			return
+              		end
+              		client._fidget_wrapped = true
+
+              		if roslyn.handle then
+              			roslyn.handle:report({ message = "Loading projects…" })
+              		end
+
+              		-- Roslyn sends this once all projects have loaded.
+              		-- Wrap the existing handler instead of replacing it.
+              		local method = "workspace/projectInitializationComplete"
+              		local orig = client.handlers[method]
+              		client.handlers[method] = function(...)
+              			roslyn_finish()
+              			if orig then
+              				return orig(...)
+              			end
+              		end
+              	end,
+              })
+
+              -- server stopped (e.g. you restarted it): reset so the message shows again
+              vim.api.nvim_create_autocmd("LspDetach", {
+              	callback = function(ev)
+              		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+              		if client and client.name == "roslyn" and #vim.lsp.get_clients({ name = "roslyn" }) <= 1 then
+              			roslyn.initialized = false
+              			if roslyn.handle then
+              				roslyn.handle:cancel()
+              				roslyn.handle = nil
+              			end
+              		end
+              	end,
+              })
             '';
           };
         };
