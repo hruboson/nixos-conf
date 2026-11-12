@@ -9,6 +9,11 @@
       ...
     }:
     {
+      imports = [
+        inputs.bootvine.nixosModules.default
+      ];
+      services.bootvine.enable = true;
+
       boot.loader.efi.canTouchEfiVariables = true;
       boot.loader.grub = {
         enable = true;
