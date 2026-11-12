@@ -180,52 +180,61 @@
                   on_attach = {
                     __raw = /* lua */ ''
                       function(bufnr)
-                      	local api = require("nvim-tree.api")
-                      	api.config.mappings.default_on_attach(bufnr)
+                        local api = require("nvim-tree.api")
+                        api.config.mappings.default_on_attach(bufnr)
 
-                      	-- Rebind change-root from C to <leader>cc
-                      	vim.keymap.del("n", "C", { buffer = bufnr })
-                      	vim.keymap.set("n", "<leader>cc", api.tree.change_root_to_node,
-                      			{ desc = "Change NvimTree root", buffer = bufnr, noremap = true, silent = true })
+                        local opts = { buffer = bufnr, noremap = true, silent = true, nowait = true }
 
-                      -- Multi-move extension
-                      	local marked_files = {}
+                        -- Rebind change-root from C to <leader>cc
+                        vim.keymap.del("n", "C", { buffer = bufnr })
+                        vim.keymap.set("n", "<leader>cc", api.tree.change_root_to_node, vim.tbl_extend("force", opts, {
+                          desc = "Change NvimTree root",
+                        }))
 
-                      local function toggle_mark()
-                      	local node = api.tree.get_node_under_cursor()
-                      	if not node or node.type ~= "file" then return end
-                      		if marked_files[node.absolute_path] then
-                      			marked_files[node.absolute_path] = nil
-                      				vim.notify("Unmarked: " .. node.name)
-                      		else
-                      			marked_files[node.absolute_path] = true
-                      				vim.notify("Marked: " .. node.name)
-                      				end
-                      				end
+                        -- Multi-move extension
+                        local marked_files = {}
 
-                      				local function move_marked()
-                      				local node = api.tree.get_node_under_cursor()
-                      				if not node or node.type ~= "directory" then
-                      					vim.notify("Cursor must be on a folder!", vim.log.levels.ERROR)
-                      						return
-                      						end
-                      						local target_dir = node.absolute_path
-                      						for path, _ in pairs(marked_files) do
-                      							local filename = vim.fn.fnamemodify(path, ":t")
-                      								local new_path = target_dir .. "/" .. filename
-                      								vim.fn.rename(path, new_path)
-                      								vim.notify("Moved " .. filename .. " → " .. target_dir)
-                      								end
-                      								marked_files = {}
-                      api.tree.reload()
-                      	end
+                        local function toggle_mark()
+                          local node = api.tree.get_node_under_cursor()
+                          if not node or node.type ~= "file" then
+                            return
+                          end
 
-                      	local opts = { buffer = bufnr, noremap = true, silent = true, nowait = true }
-                      vim.keymap.set("n", "mm", toggle_mark,
-                      		vim.tbl_extend("force", opts, { desc = "Mark/unmark file for move" }))
-                      	vim.keymap.set("n", "mM", move_marked,
-                      		vim.tbl_extend("force", opts, { desc = "Move marked files here" }))
-                      	end
+                          if marked_files[node.absolute_path] then
+                            marked_files[node.absolute_path] = nil
+                            vim.notify("Unmarked: " .. node.name)
+                          else
+                            marked_files[node.absolute_path] = true
+                            vim.notify("Marked: " .. node.name)
+                          end
+                        end
+
+                        local function move_marked()
+                          local node = api.tree.get_node_under_cursor()
+                          if not node or node.type ~= "directory" then
+                            vim.notify("Cursor must be on a folder!", vim.log.levels.ERROR)
+                            return
+                          end
+
+                          local target_dir = node.absolute_path
+                          for path, _ in pairs(marked_files) do
+                            local filename = vim.fn.fnamemodify(path, ":t")
+                            local new_path = target_dir .. "/" .. filename
+                            vim.fn.rename(path, new_path)
+                            vim.notify("Moved " .. filename .. " → " .. target_dir)
+                          end
+
+                          marked_files = {}
+                          api.tree.reload()
+                        end
+
+                        vim.keymap.set("n", "mm", toggle_mark, vim.tbl_extend("force", opts, {
+                          desc = "Mark/unmark file for move",
+                        }))
+                        vim.keymap.set("n", "mM", move_marked, vim.tbl_extend("force", opts, {
+                          desc = "Move marked files here",
+                        }))
+                      end
                     '';
                   };
                 };
@@ -257,7 +266,7 @@
                     go = [ "gofmt" ];
                     cpp = [ "clang-format" ];
                     c = [ "clang-format" ];
-					cs.__raw = "{ lsp_format = 'prefer' }";
+                    cs.__raw = "{ lsp_format = 'prefer' }";
                     php = [ "php_cs_fixer" ];
 
                     # fallback
@@ -384,7 +393,7 @@
                 settings = {
                   max_lines = 5;
                   mode = "topline";
-				  line_numbers = false;
+                  line_numbers = false;
                 };
               };
               render-markdown.enable = true;
@@ -610,12 +619,14 @@
                 action = "<C-r>";
                 options.desc = "Redo";
               }
-              /*{
-                mode = "n";
-                key = "<leader>format";
-                action = "<cmd>lua require('conform').format()<CR>";
-                options.desc = "Format buffer";
-              } -- I honestly never use this binding */
+              /*
+                {
+                  mode = "n";
+                  key = "<leader>format";
+                  action = "<cmd>lua require('conform').format()<CR>";
+                  options.desc = "Format buffer";
+                } -- I honestly never use this binding
+              */
               {
                 mode = "n";
                 key = "=";
@@ -1079,7 +1090,7 @@
       */
     in
     {
-	  imports = [ self.nixosModules.nvim-unity ];
+      imports = [ self.nixosModules.nvim-unity ];
       home-manager.users.${username} = home;
       #home-manager.users.${username} = home-static;
     };
