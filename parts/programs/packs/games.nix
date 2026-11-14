@@ -35,7 +35,8 @@
           (retroarch.withCores (
             cores: with cores; [
               beetle-psx-hw # PS1 emulator
-              dosbox-pure	# DOS emulator
+              dosbox-pure # DOS emulator
+              dolphin # Gamecube emulator
             ]
           ))
         ];
