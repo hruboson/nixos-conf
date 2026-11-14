@@ -29,6 +29,8 @@
             colorschemes.vague.enable = true;
 
             extraPackages = with pkgs; [
+			  curl
+
               php
               phpactor
               php83Packages.php-cs-fixer
@@ -402,7 +404,7 @@
               neocord.enable = true;
               zen-mode.enable = true;
 
-              # IDE (AUTOCOMPLETE, LSP, ...)
+              # IDE (AUTOCOMPLETE, LSP, AGENTS, ...)
               lsp = {
                 enable = true;
 
@@ -559,7 +561,7 @@
                   silent = true;
                 };
               };
-            };
+           };
 
             extraPlugins = with pkgs.vimPlugins; [
               nvim-cokeline
@@ -1090,7 +1092,11 @@
       */
     in
     {
-      imports = [ self.nixosModules.nvim-unity ];
+      imports = [
+        self.nixosModules.nvim-unity
+        self.nixosModules.nvim-agents
+      ];
+
       home-manager.users.${username} = home;
       #home-manager.users.${username} = home-static;
     };

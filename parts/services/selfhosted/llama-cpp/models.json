@@ -1,0 +1,10 @@
+{
+  "default": "qwen3.8-27B-IQ3_XXS",
+  "models": {
+    "qwen3.8-27B-IQ3_XXS": {
+		"path": "/srv/models/Qwen3.8-27B-UD-IQ3_XXS.gguf",
+		"contextSize": 32768,
+		"extraArgs": ["--cache-type-k", "q8_0"]
+	}
+  }
+}
