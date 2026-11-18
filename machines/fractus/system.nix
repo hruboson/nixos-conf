@@ -22,8 +22,11 @@
         useOSProber = true;
         default = "saved";
       };
-
       boot.supportedFilesystems = [ "ntfs" ];
+      boot.kernel.sysctl = {
+        "fs.inotify.max_user_watches" = 524288;
+        "fs.inotify.max_user_instances" = 1024;
+      };
 
       networking.networkmanager.enable = true;
       networking.hostName = hostname;
