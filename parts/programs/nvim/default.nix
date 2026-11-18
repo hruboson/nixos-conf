@@ -399,6 +399,12 @@
                 };
               };
               render-markdown.enable = true;
+              image = {
+                enable = true;
+                settings = {
+                  backend = "kitty";
+                };
+              };
 
               # MISC
               neocord.enable = true;
