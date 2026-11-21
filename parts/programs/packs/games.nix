@@ -39,6 +39,8 @@
               dolphin # Gamecube emulator
             ]
           ))
+
+          wayvr # VR
         ];
 
       programs.gamemode.enable = true;
@@ -50,19 +52,68 @@
         extraCompatPackages = with pkgs; [
           proton-ge-bin
         ];
+
+        # VR settings
+        package = lib.mkDefault (
+          pkgs.steam.override (prev: {
+            extraEnv = {
+              PRESSURE_VESSEL_FILESYSTEMS_RW = "$XDG_RUNTIME_DIR/wivrn/comp_ipc";
+            }
+            // (prev.extraEnv or { });
+          })
+        );
       };
       hardware.steam-hardware.enable = true;
       hardware.xone.enable = true;
 
-      home-manager.users.${username} = {
-        # File types -> app associations
-        # mimetype.io/all-types
-        xdg.mimeApps = {
-          enable = true;
-          defaultApplications = {
-
-          };
-        };
+      # VR
+      services.wivrn = {
+        enable = true;
+        openFirewall = true; # Required for wireless streaming
+        autoStart = true;
+        highPriority = true;
+        steam.enable = true;
       };
+
+      home-manager.users.${username} =
+        {
+          config,
+          osConfig,
+          pkgs,
+          ...
+        }:
+        {
+          # File types -> app associations
+          # mimetype.io/all-types
+          xdg.mimeApps = {
+            enable = true;
+            defaultApplications = {
+
+            };
+          };
+
+          xdg.configFile."openxr/1/active_runtime.json".source =
+            "${osConfig.services.wivrn.package}/share/openxr/1/openxr_wivrn.json";
+
+          xdg.configFile."openvr/openvrpaths.vrpath".text = ''
+             {
+              "config" :
+              [
+                "${config.xdg.dataHome}/Steam/config"
+              ],
+              "external_drivers" : null,
+              "jsonid" : "vrpathreg",
+              "log" :
+              [
+                "${config.xdg.dataHome}/Steam/logs"
+              ],
+              "runtime" :
+              [
+                "${pkgs.opencomposite}/lib/opencomposite"
+              ],
+              "version" : 1
+            }
+          '';
+        };
     };
 }
