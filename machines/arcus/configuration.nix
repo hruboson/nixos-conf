@@ -35,6 +35,8 @@
         self.nixosModules.servicesDisks
         self.nixosModules.servicesTropikey
         self.nixosModules.servicesSSH
+
+		self.nixosModules.selfhostedLlamaLocal
       ];
 
       # enable nix commands and flakes

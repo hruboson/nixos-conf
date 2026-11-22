@@ -22,6 +22,7 @@
         self.nixosModules.screenlock
 
         self.nixosModules.brightnessWidget
+        self.nixosModules.waitingCatWidget
       ];
 
       options.desktops.mango = {
@@ -54,6 +55,11 @@
         desktops.components.brightnessWidget = {
           enable = true;
           showInWaybar = true;
+        };
+        desktops.components.waitingCatWidget = {
+          enable = true;
+          source = ../components/waiting-cat/waiting-4x.gif;
+          output = "HDMI-A-2";
         };
 
         programs.dicons.enable = true;
@@ -128,7 +134,7 @@
         environment.systemPackages =
           with pkgs;
           [
-		    # icons needed to work with some apps
+            # icons needed to work with some apps
             adwaita-icon-theme
             hicolor-icon-theme
             librsvg

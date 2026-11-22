@@ -29,11 +29,20 @@
             colorschemes.vague.enable = true;
 
             extraPackages = with pkgs; [
+			  curl
+
               php
               phpactor
               php83Packages.php-cs-fixer
               stylua
-			  csharpier
+
+              # formatters
+              nixfmt # may be nixfmt-rfc-style on older nixpkgs
+              prettier # may be nodePackages.prettier on older nixpkgs
+              black
+              isort
+              go # provides gofmt
+              clang-tools # provides clang-format
             ];
 
             globals = {
@@ -156,12 +165,16 @@
                       "^\\.venv$"
                       "^__pycache__$"
                       "^build$"
-                      # unity
+                      # Unity
                       "^Library$"
                       "^Temp$"
                       "^Logs$"
                       "^obj$"
                       "\\.meta$"
+
+                      # .NET / C#
+                      "\\.csproj$"
+                      "\\.csproj\\.user$"
                     ];
                   };
                   git.ignore = false;
@@ -169,52 +182,61 @@
                   on_attach = {
                     __raw = /* lua */ ''
                       function(bufnr)
-                      	local api = require("nvim-tree.api")
-                      	api.config.mappings.default_on_attach(bufnr)
+                        local api = require("nvim-tree.api")
+                        api.config.mappings.default_on_attach(bufnr)
 
-                      	-- Rebind change-root from C to <leader>cc
-                      	vim.keymap.del("n", "C", { buffer = bufnr })
-                      	vim.keymap.set("n", "<leader>cc", api.tree.change_root_to_node,
-                      			{ desc = "Change NvimTree root", buffer = bufnr, noremap = true, silent = true })
+                        local opts = { buffer = bufnr, noremap = true, silent = true, nowait = true }
 
-                      -- Multi-move extension
-                      	local marked_files = {}
+                        -- Rebind change-root from C to <leader>cc
+                        vim.keymap.del("n", "C", { buffer = bufnr })
+                        vim.keymap.set("n", "<leader>cc", api.tree.change_root_to_node, vim.tbl_extend("force", opts, {
+                          desc = "Change NvimTree root",
+                        }))
 
-                      local function toggle_mark()
-                      	local node = api.tree.get_node_under_cursor()
-                      	if not node or node.type ~= "file" then return end
-                      		if marked_files[node.absolute_path] then
-                      			marked_files[node.absolute_path] = nil
-                      				vim.notify("Unmarked: " .. node.name)
-                      		else
-                      			marked_files[node.absolute_path] = true
-                      				vim.notify("Marked: " .. node.name)
-                      				end
-                      				end
+                        -- Multi-move extension
+                        local marked_files = {}
 
-                      				local function move_marked()
-                      				local node = api.tree.get_node_under_cursor()
-                      				if not node or node.type ~= "directory" then
-                      					vim.notify("Cursor must be on a folder!", vim.log.levels.ERROR)
-                      						return
-                      						end
-                      						local target_dir = node.absolute_path
-                      						for path, _ in pairs(marked_files) do
-                      							local filename = vim.fn.fnamemodify(path, ":t")
-                      								local new_path = target_dir .. "/" .. filename
-                      								vim.fn.rename(path, new_path)
-                      								vim.notify("Moved " .. filename .. " → " .. target_dir)
-                      								end
-                      								marked_files = {}
-                      api.tree.reload()
-                      	end
+                        local function toggle_mark()
+                          local node = api.tree.get_node_under_cursor()
+                          if not node or node.type ~= "file" then
+                            return
+                          end
 
-                      	local opts = { buffer = bufnr, noremap = true, silent = true, nowait = true }
-                      vim.keymap.set("n", "mm", toggle_mark,
-                      		vim.tbl_extend("force", opts, { desc = "Mark/unmark file for move" }))
-                      	vim.keymap.set("n", "mM", move_marked,
-                      		vim.tbl_extend("force", opts, { desc = "Move marked files here" }))
-                      	end
+                          if marked_files[node.absolute_path] then
+                            marked_files[node.absolute_path] = nil
+                            vim.notify("Unmarked: " .. node.name)
+                          else
+                            marked_files[node.absolute_path] = true
+                            vim.notify("Marked: " .. node.name)
+                          end
+                        end
+
+                        local function move_marked()
+                          local node = api.tree.get_node_under_cursor()
+                          if not node or node.type ~= "directory" then
+                            vim.notify("Cursor must be on a folder!", vim.log.levels.ERROR)
+                            return
+                          end
+
+                          local target_dir = node.absolute_path
+                          for path, _ in pairs(marked_files) do
+                            local filename = vim.fn.fnamemodify(path, ":t")
+                            local new_path = target_dir .. "/" .. filename
+                            vim.fn.rename(path, new_path)
+                            vim.notify("Moved " .. filename .. " → " .. target_dir)
+                          end
+
+                          marked_files = {}
+                          api.tree.reload()
+                        end
+
+                        vim.keymap.set("n", "mm", toggle_mark, vim.tbl_extend("force", opts, {
+                          desc = "Mark/unmark file for move",
+                        }))
+                        vim.keymap.set("n", "mM", move_marked, vim.tbl_extend("force", opts, {
+                          desc = "Move marked files here",
+                        }))
+                      end
                     '';
                   };
                 };
@@ -228,7 +250,6 @@
               };
               conform-nvim = {
                 enable = true;
-                autoInstall.enable = true;
                 settings = {
                   formatters_by_ft = {
                     nix = [
@@ -247,7 +268,7 @@
                     go = [ "gofmt" ];
                     cpp = [ "clang-format" ];
                     c = [ "clang-format" ];
-					cs = [ "csharpier" ];
+                    cs.__raw = "{ lsp_format = 'prefer' }";
                     php = [ "php_cs_fixer" ];
 
                     # fallback
@@ -374,16 +395,22 @@
                 settings = {
                   max_lines = 5;
                   mode = "topline";
-				  line_numbers = false;
+                  line_numbers = false;
                 };
               };
               render-markdown.enable = true;
+              image = {
+                enable = true;
+                settings = {
+                  backend = "kitty";
+                };
+              };
 
               # MISC
               neocord.enable = true;
               zen-mode.enable = true;
 
-              # IDE (AUTOCOMPLETE, LSP, ...)
+              # IDE (AUTOCOMPLETE, LSP, AGENTS, ...)
               lsp = {
                 enable = true;
 
@@ -513,30 +540,6 @@
                     ];
                   };
 
-                  # C# (OmniSharp)
-                  omnisharp = {
-                    enable = true;
-                    filetypes = [
-                      "cs"
-                      "cshtml"
-                    ];
-                    autostart = true;
-                    package = pkgs.omnisharp-roslyn;
-                    rootMarkers = [
-                      ".git"
-                      ".sln"
-                      ".csproj"
-                    ];
-                    /*
-                      settings = {
-                        organizeImportsOnFormat = false;
-                        enableEditorConfigSupport = true;
-                        enableMsBuildLoadProjectsOnDemand = false;
-                        enableRoslynAnalyzers = true;
-                      };
-                    */
-                  };
-
                   # PHP
                   phpactor = {
                     enable = true;
@@ -555,7 +558,16 @@
               lsp-lines.enable = true;
               #lsp-format.enable = true; !this is autoformatting on save, not for me
               #lspsaga.enable = true;
-            };
+
+              fidget.enable = true;
+              roslyn = {
+                enable = true;
+                settings = {
+                  # optional; roslyn.nvim defaults are fine to start with
+                  silent = true;
+                };
+              };
+           };
 
             extraPlugins = with pkgs.vimPlugins; [
               nvim-cokeline
@@ -615,12 +627,14 @@
                 action = "<C-r>";
                 options.desc = "Redo";
               }
-              {
-                mode = "n";
-                key = "<leader>f";
-                action = "<cmd>lua require('conform').format()<CR>";
-                options.desc = "Format buffer";
-              }
+              /*
+                {
+                  mode = "n";
+                  key = "<leader>format";
+                  action = "<cmd>lua require('conform').format()<CR>";
+                  options.desc = "Format buffer";
+                } -- I honestly never use this binding
+              */
               {
                 mode = "n";
                 key = "=";
@@ -655,7 +669,7 @@
               }
               {
                 mode = "n";
-                key = "qf";
+                key = "<leader>f";
                 action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
                 options.desc = "Quick fix";
               }
@@ -949,6 +963,28 @@
                 bar = false;
                 command = "RenderMarkdown toggle";
               };
+              LspRestart = {
+                bar = false;
+                command = /* lua */ ''
+                  lua << EOF
+                  local bufnr = vim.api.nvim_get_current_buf()
+                  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+                  if #clients == 0 then
+                    vim.notify("No LSP clients attached to this buffer", vim.log.levels.WARN)
+                    return
+                  end
+                  for _, client in ipairs(clients) do
+                    local name = client.name
+                    local config = client.config
+                    vim.lsp.stop_client(client.id, true)
+                    vim.defer_fn(function()
+                      vim.lsp.start(config, { bufnr = bufnr })
+                      vim.notify("Restarted LSP: " .. name, vim.log.levels.INFO)
+                    end, 200)
+                  end
+                  EOF
+                '';
+              };
             };
 
             extraConfigLua = /* lua */ ''
@@ -1035,6 +1071,17 @@
               vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
               	border = "rounded",
               })
+              vim.lsp.config("roslyn", {
+              	settings = {
+              		["csharp|completion"] = {
+              			dotnet_show_completion_items_from_unimported_namespaces = true,
+              		},
+              		["csharp|background_analysis"] = {
+              			dotnet_analyzer_diagnostics_scope = "openFiles",
+              			dotnet_compiler_diagnostics_scope = "openFiles",
+              		},
+              	},
+              })
             '';
           };
         };
@@ -1051,7 +1098,11 @@
       */
     in
     {
-	  imports = [ self.nixosModules.nvim-unity ];
+      imports = [
+        self.nixosModules.nvim-unity
+        self.nixosModules.nvim-agents
+      ];
+
       home-manager.users.${username} = home;
       #home-manager.users.${username} = home-static;
     };

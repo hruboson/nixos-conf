@@ -9,6 +9,11 @@
       ...
     }:
     {
+      imports = [
+        inputs.bootvine.nixosModules.default
+      ];
+      services.bootvine.enable = true;
+
       boot.loader.efi.canTouchEfiVariables = true;
       boot.loader.grub = {
         enable = true;
@@ -23,6 +28,10 @@
         options v4l2loopback exclusive_caps=1 card_label="Virtual Webcam"
       '';
       boot.extraModulePackages = [ pkgs.linuxPackages.v4l2loopback ];
+      boot.kernel.sysctl = {
+        "fs.inotify.max_user_watches" = 524288;
+        "fs.inotify.max_user_instances" = 1024;
+      };
 
       fileSystems."/mnt/DELTA" = {
         device = "/dev/disk/by-uuid/B8ACE2A5ACE25CFE";

@@ -53,6 +53,12 @@
       flake = false;
     };
 
+    # SYSTEM
+    bootvine = {
+      url = "git+https://codeberg.org/wvhulle/bootvine";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # DESKTOPS
     mango = {
       url = "github:mangowm/mango";
