@@ -210,6 +210,10 @@
             assertion = registry.models ? ${modelName};
             message = "services.llamaLocal.model = \"${modelName}\" is not in models.json (available: ${lib.concatStringsSep ", " (builtins.attrNames registry.models)})";
           }
+          {
+            assertion = lib.pathExists spec.path;
+            message = "Model file for \"${modelName}\" does not exist at path: ${spec.path}";
+          }
         ];
 
         # Not enabled at boot: start/stop with `systemctl --user start|stop llama-server`.
@@ -244,6 +248,12 @@
               ++ lib.optional (cfg.idleStopMinutes != null) "--metrics"
               ++ (spec.extraArgs or [ ])
               ++ cfg.extraArgs
+            );
+            ExecStartPre = lib.mkIf (!lib.pathExists spec.path) (
+              pkgs.writeShellScript "check-model" ''
+                echo "ERROR: Model file ${spec.path} not found." >&2
+                exit 1
+              ''
             );
             ExecStartPost = "${waitForHealth}";
             TimeoutStartSec = cfg.startupTimeoutSeconds + 30;
