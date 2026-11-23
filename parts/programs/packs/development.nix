@@ -10,6 +10,7 @@
     {
       imports = [
         self.nixosModules.nvim
+        inputs.nix-index-database.nixosModules.nix-index
       ];
 
       environment.systemPackages = with pkgs; [
@@ -31,6 +32,7 @@
       ];
 
       virtualisation.docker.enable = true;
+      programs.nix-index-database.comma.enable = true;
 
       home-manager.users.${username} = {
         programs.lazygit.enable = true;
