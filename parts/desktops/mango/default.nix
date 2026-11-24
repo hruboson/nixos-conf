@@ -847,6 +847,12 @@
                 "SUPER,f,togglefullscreen"
                 "SUPER+SHIFT,f,togglefloating"
 
+                # windows resize
+                "SUPER+SHIFT+CTRL,Left,resizewin,-50,+0"
+                "SUPER+SHIFT+CTRL,Right,resizewin,+50,+0"
+                "SUPER+SHIFT+CTRL,Up,resizewin,+0,-50"
+                "SUPER+SHIFT+CTRL,Down,resizewin,+0,+50"
+
                 # monitor nav
                 "SUPER+CTRL,Left,focusmon,left"
                 "SUPER+CTRL,Right,focusmon,right"
