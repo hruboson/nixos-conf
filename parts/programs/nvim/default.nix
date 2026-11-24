@@ -82,7 +82,7 @@
               # ufo folds
               foldcolumn = "1";
               foldmethod = "expr";
-              foldexpr = "nvim_treesitter#foldexpr()";
+              foldexpr = "v:lua.vim.treesitter.foldexpr()";
               foldlevel = 20;
               foldlevelstart = 20;
               foldenable = true;
@@ -148,6 +148,10 @@
                   javascript
                 ];
                 package = pkgs.vimPlugins.nvim-treesitter;
+              };
+              treesitter-textobjects = {
+                enable = true;
+                settings.select.lookahead = true;
               };
               nvim-tree = {
                 enable = true;
@@ -893,6 +897,42 @@
                 key = "=";
                 action = "<cmd>lua require('conform').format()<CR>";
                 options.desc = "Format selection";
+              }
+              {
+                mode = [
+                  "x"
+                  "o"
+                ];
+                key = "af";
+                action.__raw = ''function() require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects") end'';
+                options.desc = "Around function";
+              }
+              {
+                mode = [
+                  "x"
+                  "o"
+                ];
+                key = "if";
+                action.__raw = ''function() require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects") end'';
+                options.desc = "Inside function";
+              }
+              {
+                mode = [
+                  "x"
+                  "o"
+                ];
+                key = "ac";
+                action.__raw = ''function() require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects") end'';
+                options.desc = "Around class";
+              }
+              {
+                mode = [
+                  "x"
+                  "o"
+                ];
+                key = "ic";
+                action.__raw = ''function() require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects") end'';
+                options.desc = "Inside class";
               }
 
               # VISUAL BLOCK - void deletes

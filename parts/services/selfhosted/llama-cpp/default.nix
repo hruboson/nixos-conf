@@ -245,6 +245,12 @@
               ++ (spec.extraArgs or [ ])
               ++ cfg.extraArgs
             );
+            ExecStartPre = pkgs.writeShellScript "check-model" ''
+              if [ ! -f ${lib.escapeShellArg spec.path} ]; then
+                echo "ERROR: Model file ${spec.path} not found." >&2
+                exit 1
+              fi
+            '';
             ExecStartPost = "${waitForHealth}";
             TimeoutStartSec = cfg.startupTimeoutSeconds + 30;
             Restart = "on-failure";

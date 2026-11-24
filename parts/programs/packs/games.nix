@@ -70,7 +70,6 @@
       services.wivrn = {
         enable = true;
         openFirewall = true; # Required for wireless streaming
-        autoStart = true;
         highPriority = true;
         steam.enable = true;
       };
@@ -91,29 +90,6 @@
 
             };
           };
-
-          xdg.configFile."openxr/1/active_runtime.json".source =
-            "${osConfig.services.wivrn.package}/share/openxr/1/openxr_wivrn.json";
-
-          xdg.configFile."openvr/openvrpaths.vrpath".text = ''
-             {
-              "config" :
-              [
-                "${config.xdg.dataHome}/Steam/config"
-              ],
-              "external_drivers" : null,
-              "jsonid" : "vrpathreg",
-              "log" :
-              [
-                "${config.xdg.dataHome}/Steam/logs"
-              ],
-              "runtime" :
-              [
-                "${pkgs.opencomposite}/lib/opencomposite"
-              ],
-              "version" : 1
-            }
-          '';
         };
     };
 }
