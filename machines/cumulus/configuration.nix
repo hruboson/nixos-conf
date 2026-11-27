@@ -32,9 +32,10 @@
         self.nixosModules.selfhostedMatrix
         self.nixosModules.selfhostedMinecraftServer
         self.nixosModules.selfhostedNextcloud
-		self.nixosModules.selfhostedPaperless
-        self.nixosModules.selfhostedPlikd
+        self.nixosModules.selfhostedPaperless
         self.nixosModules.selfhostedPihole
+        self.nixosModules.selfhostedPlikd
+        self.nixosModules.selfhostedSuwayomi
         self.nixosModules.selfhostedTailscale
         self.nixosModules.selfhostedTandoor
         self.nixosModules.selfhostedThesis
@@ -153,10 +154,12 @@
       nix.settings.auto-optimise-store = true; # optimise /nix/store space
 
       # garbage collector
-	  # --- now handled by nh
-      /*nix.gc = {
-        automatic = true;
-        options = "--delete-older-than 14d";
-      };*/
+      # --- now handled by nh
+      /*
+        nix.gc = {
+          automatic = true;
+          options = "--delete-older-than 14d";
+        };
+      */
     };
 }
