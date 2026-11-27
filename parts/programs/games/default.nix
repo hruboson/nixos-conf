@@ -8,6 +8,10 @@
       ...
     }:
     {
+      imports = [
+        self.nixosModules.gamesExeTool
+      ];
+
       environment.systemPackages =
         with pkgs;
         let
