@@ -143,7 +143,7 @@
               width = 300;
               height = 300;
               frame_width = 1;
-              frame_color = "#606079"; # vague base03
+              frame_color = "#ddca9e";
               separator_color = "frame";
               font = "JetBrainsMono Nerd Font 10";
               corner_radius = 6;
