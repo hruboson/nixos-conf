@@ -55,7 +55,7 @@
           [Desktop Entry]
           Type=Service
           MimeType=${builtins.concatStringsSep ";" mimes};
-          Actions=shortcut;heroic;mango;winecfg;winetricks;prefix;kill;
+          Actions=localprefix;shortcut;heroic;install;plain;mango;winecfg;winetricks;prefix;kill;
           X-KDE-Submenu=Windows game
           Icon=wine
 
@@ -68,6 +68,21 @@
           Name=Add to Heroic Games Launcher
           Icon=heroic
           Exec=exe-tool heroic %f
+
+          [Desktop Action localprefix]
+          Name=Create portable prefix next to this exe
+          Icon=drive-harddisk
+          Exec=exe-tool localprefix %f
+
+          [Desktop Action install]
+          Name=Run as installer (new prefix next to it)
+          Icon=system-software-install
+          Exec=exe-tool install %f
+
+          [Desktop Action plain]
+          Name=Run normally (not as installer)
+          Icon=media-playback-start
+          Exec=exe-tool plain %f
 
           [Desktop Action mango]
           Name=Run with MangoHud overlay
