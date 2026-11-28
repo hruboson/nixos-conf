@@ -131,6 +131,53 @@
           vista-fonts
         ];
 
+        services.dunst = {
+          enable = true;
+          settings = {
+            global = {
+              monitor = "DP-2";
+              follow = "none"; # do not follow mouse/keyboard
+
+              origin = "bottom-right";
+              offset = "10x10";
+              width = 300;
+              height = 300;
+              frame_width = 1;
+              frame_color = "#606079"; # vague base03
+              separator_color = "frame";
+              font = "JetBrainsMono Nerd Font 10";
+              corner_radius = 6;
+              transparency = 10;
+              padding = 8;
+              horizontal_padding = 8;
+              gap_size = 8;
+              text_icon_padding = 8;
+              icon_position = "left";
+              max_icon_size = 32;
+              format = "<b>%s</b>\n%b";
+            };
+
+            urgency_low = {
+              background = "#141415"; # vague base00
+              foreground = "#cdcdcd"; # vague base05
+              timeout = 5;
+            };
+
+            urgency_normal = {
+              background = "#141415";
+              foreground = "#cdcdcd";
+              timeout = 8;
+            };
+
+            urgency_critical = {
+              background = "#141415";
+              foreground = "#d8647e"; # vague base08
+              frame_color = "#d8647e";
+              timeout = 0;
+            };
+          };
+        };
+
         environment.systemPackages =
           with pkgs;
           [
